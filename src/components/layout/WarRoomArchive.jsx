@@ -83,7 +83,8 @@ export default function WarRoomArchive() {
   })
 
   // Sektor 2: von unten (100%) hoch auf 0% — Start/Ende je kurz gehalten.
-  const sector2Y = useTransform(scrollYProgress, [0.1, 0.9], ["100%", "0%"])
+  // Push erst spät starten: erst ab 55% Scroll fährt der Archiv-Sektor hoch (langer Vorlauf).
+  const sector2Y = useTransform(scrollYProgress, [0.55, 1], ["100%", "0%"])
 
   // Scroll-Linked Glow der Combat-Matrix.
   const glow = useTransform(scrollYProgress, [0, 0.5, 1], [0.25, 0.7, 0.25])
