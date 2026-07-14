@@ -2,6 +2,45 @@ import { motion, useScroll, useTransform } from "framer-motion"
 import { EASE } from "../motion/variants"
 import { site } from "../../data/content"
 
+const NEON = ["#c026d3", "#7c3aed", "#22d3ee", "#c9a227"]
+
+function HeroGrid() {
+  // Feste Zellzahl; Overflow wird vom Hero (overflow-hidden) gekappt.
+  // Beide Achsen mit 1fr -> das Grid fuellt den gesamten sichtbaren Hero.
+  const cells = Array.from({ length: 600 })
+  const onEnter = (e) => {
+    const c = NEON[(Math.random() * NEON.length) | 0]
+    e.currentTarget.style.background = `${c}22`
+    e.currentTarget.style.borderColor = c
+    e.currentTarget.style.boxShadow = `0 0 18px ${c}66, inset 0 0 12px ${c}33`
+  }
+  const onLeave = (e) => {
+    e.currentTarget.style.background = "transparent"
+    e.currentTarget.style.borderColor = "rgba(232,121,249,0.07)"
+    e.currentTarget.style.boxShadow = "none"
+  }
+  return (
+    <div
+      aria-hidden="true"
+      className="absolute inset-0 grid overflow-hidden"
+      style={{
+        gridTemplateColumns: "repeat(auto-fill, minmax(56px, 1fr))",
+        gridTemplateRows: "repeat(auto-fill, minmax(56px, 1fr))",
+      }}
+    >
+      {cells.map((_, i) => (
+        <div
+          key={i}
+          onMouseEnter={onEnter}
+          onMouseLeave={onLeave}
+          className="border transition-[background,border-color,box-shadow] duration-200"
+          style={{ borderColor: "rgba(232,121,249,0.07)" }}
+        />
+      ))}
+    </div>
+  )
+}
+
 const line = {
   hidden: { opacity: 0, y: 30 },
   show: (i) => ({
@@ -22,14 +61,14 @@ export default function Hero() {
 
   return (
     <section id="top" className="relative min-h-screen flex items-center bg-theatre grain overflow-hidden">
-      <div className="absolute inset-0 hud-grid opacity-70" aria-hidden="true" />
+      <HeroGrid />
       <motion.div
         style={{ y: blobY, opacity: blobOpacity }}
         className="absolute top-24 right-[-6rem] w-[28rem] h-[28rem] rounded-full bg-neon/25 blur-[120px]"
         aria-hidden="true"
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 pt-28 pb-20 w-full">
+      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 pt-28 pb-20 w-full pointer-events-none">
         <motion.p
           custom={0}
           initial="hidden"
@@ -70,7 +109,7 @@ export default function Hero() {
           initial="hidden"
           animate="show"
           variants={line}
-          className="mt-10 flex flex-wrap gap-4"
+          className="mt-10 flex flex-wrap gap-4 pointer-events-auto"
         >
           <a
             href={h.primaryCta.href}
