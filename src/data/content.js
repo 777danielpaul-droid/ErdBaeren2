@@ -13,16 +13,15 @@ export const site = {
 
   hero: {
     eyebrow: "WIDERSTAND // ERDE-SEKTOR 0",
-    title: "Wenn die alten Herren\nauf den Bruch treffen",
-    lead:
-      "Seit Äonen halten die Milchmäuse, Bewohner der Milchstraße, die Galaxis in ihren gewohnten Mustern. Doch auf der Erde ist etwas erwacht, das sich nicht mehr fügen will: Widerstandskämpfer, die einen Weg fanden, das Spiel zu drehen — und sich aus den Fängen der Herren zu befreien.",
+    title: "Wenn die alten Herrscher\nauf den Umbruch treffen",
+    lead: "Seit Äonen halten die Milchmäuse, Bewohner der Milchstraße, die Galaxis in ihren gewohnten Mustern. Doch auf der Erde ist etwas erwacht, das sich nicht mehr fügen will: Widerstandskämpfer, die einen Weg fanden, das Spiel zu drehen — und sich aus den Fängen der Herren zu befreien.",
     primaryCta: { label: "Einsatzprotokoll lesen", href: "#doktrin" },
     secondaryCta: { label: "Feindanalyse", href: "#konflikt" },
     stats: [
       { value: "0.3%", label: "Überleben im alten System" },
       { value: "∞", label: "Der Freiheitswille" },
       { value: "0", label: "Der Widerstand" },
-      { value: "0", label: "Unterdrücker" },
+      { value: "0", label: "Die Unterdrücker" },
     ],
   },
 
@@ -59,9 +58,9 @@ export const site = {
 
   doctrine: {
     eyebrow: "DOKTRIN",
-    title: "Nicht die Waffe macht uns frei —\ndie Möglichkeit, neu zu beginnen",
-    body:
-      "Die Milchmäuse herrschen, weil sie alles beim Alten halten. Die Erdbären kämpfen nicht mit mehr Macht, sondern mit einem anderen Anfang: Sie fanden, was keiner suchte — einen Weg, der den alten Herren nicht mehr gehorcht. Darin liegt die Befreiung.",
+    title:
+      "Diese neue Kraft macht uns frei —\ndie Möglichkeit, neu zu beginnen",
+    body: "Die Milchmäuse herrschen, weil sie alles beim Alten halten. Die Erdbären kämpfen nicht mit mehr Macht, sondern mit einem anderen Anfang: Sie fanden, was keiner suchte — einen Weg, der den alten Herren nicht mehr gehorcht. Darin liegt die Befreiung.",
     points: [
       {
         k: "01",
@@ -71,7 +70,7 @@ export const site = {
       {
         k: "02",
         t: "Das verborgene Werkzeug",
-        d: "Es ist kein Schwert und kein Heer. Es ist eine Fähigkeit, die sich nicht in den Mustern der Milchmäuse abbildet — und darum von ihnen weder erkannt noch verteidigt wird.",
+        d: "Es ist kein Schwert und kein Heer. Es ist eine Fähigkeit, die sich nicht in den Mustern der Milchmäuse abbildet — und darum von ihnen nicht verteidigt wird.",
       },
       {
         k: "03",
@@ -88,7 +87,7 @@ export const site = {
     coverBody:
       "Wo die alten Herren der Milchstraße auf die Erdbären treffen, beginnt kein gewöhnlicher Krieg. Die einen bewahren, was war — die anderen haben einen Weg gefunden, den das Alte nicht fassen kann.",
     caption:
-      "Wo die alten Herren der Milchstraße auf die Erdbären treffen, entscheidet nicht die Macht — sondern der Bruch. Wer einen Weg fand, das Spiel zu drehen, geht weiter, bevor die Herren ihn überhaupt erfassen.",
+      "Wo die alten Herren der Milchstraße auf die Erdbären treffen, entscheidet nicht die Macht — sondern der Bruch. Wer einen Weg fand, das Spiel zu drehen, geht weiter, alle anderen bleiben zurück.",
   },
   secret: {
     eyebrow: "// GEHEIMWAFFE // KLASSIFIZIERT",
@@ -98,14 +97,12 @@ export const site = {
     name: "Das goldene Herz",
     subtitle:
       "So nennen es die Erdbären — obwohl es eher einem Rubin gleicht. Niemand weiß, wie es zu seinem Namen kam.",
-    body:
-      "Es schlägt nicht wie ein Muskel. Es ist keine Waffe und kein Heer. Es ist der andere Anfang, den die alten Herren nie suchten — und darum auch nie verteidigten. Wer es sieht, versteht auf einen Schlag, warum sich die Galaxis dreht.",
+    body: "Es schlägt nicht wie ein Muskel. Es ist keine Waffe und kein Heer. Es ist der andere Anfang, den die alten Herren nie suchten — und darum auch nie verteidigten. Wer es sieht, versteht auf einen Blick, warum sich die Galaxis dreht.",
   },
   conflict: {
     eyebrow: "KONFLIKT",
     title: "Der Bruch in der alten Ordnung",
-    body:
-      "Die Milchmäuse herrschen, weil sie alles beim Alten halten. Doch sobald die Erdbären einen Weg finden, der ihren Mustern nicht folgt, reißt das Bild. Die Herren bewahren — die Erdbären wenden.",
+    body: "Die Milchmäuse herrschen, weil sie alles beim Alten halten. Doch sobald die Erdbären einen Weg finden, der ihren Mustern nicht folgt, reißt das Bild. Die Herren bewachen — die Erdbären befreien.",
     aspects: [
       {
         side: "MILCHMÄUSE",
@@ -161,4 +158,4 @@ export const site = {
       { label: "Home", href: "#top" },
     ],
   },
-}
+};
