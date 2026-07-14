@@ -2,8 +2,9 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { site } from "../../data/content"
 
-// Neon-Palette wie im Hero-Grid: beim Hover zufällig getönt.
-const NEON = ["#c026d3", "#7c3aed", "#22d3ee", "#c9a227"]
+// Neon-Palette wie im Hero-Grid, ABER ohne cyan — cyan ist der Default,
+// sonst würde ein zufälliges cyan beim Hover keinen sichtbaren Wechsel ergeben.
+const NEON = ["#c026d3", "#7c3aed", "#c9a227"]
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
