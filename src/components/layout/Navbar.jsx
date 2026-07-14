@@ -2,8 +2,17 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { site } from "../../data/content"
 
+// Neon-Palette wie im Hero-Grid: beim Hover zufällig getönt.
+const NEON = ["#c026d3", "#7c3aed", "#22d3ee", "#c9a227"]
+
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  // Pro Link eine zufällige Neon-Farbe, die beim Hover gesetzt wird.
+  const [hover, setHover] = useState({})
+
+  const randomNeon = (key) => setHover((h) => ({ ...h, [key]: NEON[(Math.random() * NEON.length) | 0] }))
+  // Verlassen -> Default (türkis) wiederherstellen.
+  const resetNeon = (key) => setHover((h) => ({ ...h, [key]: "#22d3ee" }))
   return (
     <motion.header
       initial={{ y: -80, opacity: 0 }}
@@ -28,7 +37,10 @@ export default function Navbar() {
               <li key={n.href}>
                 <a
                   href={n.href}
-                  className="mono-label text-bone/70 hover:text-neon transition-colors"
+                  onMouseEnter={() => randomNeon(n.href)}
+                  onMouseLeave={() => resetNeon(n.href)}
+                  style={{ color: hover[n.href] || "#22d3ee" }}
+                  className="mono-label text-cyan hover:text-cyan transition-colors"
                 >
                   {n.label}
                 </a>
@@ -65,8 +77,11 @@ export default function Navbar() {
                   <li key={n.href}>
                     <a
                       href={n.href}
+                      onMouseEnter={() => randomNeon(n.href)}
+                      onMouseLeave={() => resetNeon(n.href)}
                       onClick={() => setOpen(false)}
-                      className="mono-label text-bone/80"
+                      style={{ color: hover[n.href] || "#22d3ee" }}
+                      className="mono-label text-cyan"
                     >
                       {n.label}
                     </a>
