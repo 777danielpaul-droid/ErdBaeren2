@@ -21,7 +21,7 @@ export const site = {
     stats: [
       { value: "0.3%", label: "Überleben im alten System" },
       { value: "∞", label: "Der Freiheitswille" },
-      { value: "1", label: "Der Widerstand" },
+      { value: "0", label: "Der Widerstand" },
       { value: "0", label: "Unterdrücker" },
     ],
   },
