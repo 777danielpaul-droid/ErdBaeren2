@@ -25,8 +25,7 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
           <a href="#top" className="flex items-center gap-3 group">
             <span className="relative grid place-items-center w-8 h-8 rounded-md bg-neon/15 border border-neon/40">
-              <span className="block w-3.5 h-3.5 rounded-full border-2 border-neon" />
-              <span className="absolute w-1.5 h-1.5 rounded-full bg-gold" />
+              <span className="text-base leading-none">🐻</span>
             </span>
             <span className="font-display font-bold tracking-[0.18em] text-sm">
               {site.brand}
