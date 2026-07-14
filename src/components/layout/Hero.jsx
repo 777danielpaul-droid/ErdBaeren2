@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion"
 import { EASE } from "../motion/variants"
 import { site } from "../../data/content"
+import { useVotes } from "../../lib/votes"
 
 const NEON = ["#c026d3", "#7c3aed", "#22d3ee", "#c9a227"]
 
@@ -53,6 +54,14 @@ const line = {
 export default function Hero() {
   const h = site.hero
   const [t1, t2] = h.title.split("\n")
+  const votes = useVotes()
+
+  // Live-Votes ersetzen die statischen Zähler: Widerstand=Erdbären, Unterdrücker=Milchmäuse.
+  const liveValue = (label) => {
+    if (label === "Der Widerstand") return String(votes.erdbaeren)
+    if (label === "Unterdrücker") return String(votes.milchmaeuse)
+    return null
+  }
 
   // Scroll-Linked Parallax: Aurora-Blob driftet beim Scrollen.
   const { scrollY } = useScroll()
@@ -130,12 +139,12 @@ export default function Hero() {
           initial="hidden"
           animate="show"
           variants={line}
-          className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-px bg-white/5 border border-white/10 rounded-xl overflow-hidden max-w-3xl"
+          className="mt-16 grid grid-cols-1 sm:grid-cols-4 gap-px bg-white/5 border border-white/10 rounded-xl overflow-hidden max-w-4xl"
         >
           {h.stats.map((s) => (
             <div key={s.label} className="bg-white/5 px-6 py-6 backdrop-blur-sm">
               <div className="font-display font-bold text-3xl text-gold text-glow-gold">
-                {s.value}
+                {liveValue(s.label) ?? s.value}
               </div>
               <div className="mono-label text-bone/50 mt-2">{s.label}</div>
             </div>

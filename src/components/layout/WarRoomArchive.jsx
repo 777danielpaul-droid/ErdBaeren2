@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion"
 import Reveal from "../motion/Reveal"
 import { site } from "../../data/content"
 import { stagger, EASE } from "../motion/variants"
+import { useVotes, castVote } from "../../lib/votes"
 
 const FACTIONS = {
   erdbaeren: {
@@ -56,7 +57,24 @@ function StatBar({ k, v, color }) {
 // VOR Sektor 1 (z-20 > z-10) — komplett opak, OHNE Blur/Fade.
 export default function WarRoomArchive() {
   const [active, setActive] = useState("erdbaeren")
+  const [busy, setBusy] = useState(false)
+  const votes = useVotes()
   const f = FACTIONS[active]
+
+  // Klick = Fraktion wählen + Stimme abgeben. Server dedupliziert per IP
+  // (eine Stimme; erneuter Klick auf andere Fraktion bucht um).
+  const handleVote = async (key) => {
+    setActive(key)
+    if (busy) return
+    setBusy(true)
+    try {
+      await castVote(key)
+    } catch {
+      /* Fehler still: Anzeige bleibt beim letzten bekannten Stand */
+    } finally {
+      setBusy(false)
+    }
+  }
 
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({
@@ -90,7 +108,7 @@ export default function WarRoomArchive() {
                 </h2>
               </Reveal>
 
-              <div className="flex flex-wrap justify-center gap-4 mb-10">
+              <div className="flex flex-wrap justify-center gap-4 mb-4">
                 {Object.entries(FACTIONS).map(([key, fac]) => (
                   <button
                     key={key}
@@ -106,6 +124,13 @@ export default function WarRoomArchive() {
                   </button>
                 ))}
               </div>
+              <Reveal className="mb-8 text-center">
+                <p className="mono-label text-bone/30">
+                  {votes.mine
+                    ? "// DEINE STIMME IST GEZÄHLT · WÄHLE ERNEUT ZUM WECHSELN"
+                    : "// EINE STIMME PRO KÄMPFER · GIB SIE IM DOSSIER AB"}
+                </p>
+              </Reveal>
 
               <motion.div
                 key={active}
@@ -143,6 +168,23 @@ export default function WarRoomArchive() {
                       {f.verdict}
                     </p>
                   </div>
+
+                  <button
+                    onClick={() => handleVote(active)}
+                    disabled={busy}
+                    className="mt-8 w-full mono-label px-6 py-4 rounded-sm border transition-all disabled:opacity-60 flex items-center justify-center gap-3"
+                    style={{
+                      borderColor: f.color,
+                      color: f.color,
+                      background: `${f.color}12`,
+                      boxShadow: votes.mine === active ? `0 0 30px ${f.color}55` : "none",
+                    }}
+                  >
+                    {votes.mine === active ? "DEINE STIMME ✓" : `STIMME FÜR ${f.name}`}
+                    <span className="tabular-nums text-bone/90">
+                      {active === "erdbaeren" ? votes.erdbaeren : votes.milchmaeuse}
+                    </span>
+                  </button>
                 </div>
               </motion.div>
 
