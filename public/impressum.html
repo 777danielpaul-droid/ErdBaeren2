@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="de" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Impressum — ERDBÄREN</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --ink: #0a0a0b; --bone: #e8e4dc; --neon: #c026d3; --mute: rgba(232,228,220,0.55); }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--ink); color: var(--bone);
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      line-height: 1.6; min-height: 100vh;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 3px),
+        radial-gradient(circle at 50% 0%, rgba(192,38,211,0.12), transparent 60%);
+    }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 5rem 1.5rem 3rem; }
+    .brand { font-family: "Space Mono", monospace; letter-spacing: 0.3em; font-size: 0.8rem; color: var(--neon); margin-bottom: 2rem; }
+    h1 { font-size: clamp(1.8rem, 6vw, 2.6rem); letter-spacing: 0.04em; margin-bottom: 2rem; }
+    h2 { font-family: "Space Mono", monospace; letter-spacing: 0.18em; font-size: 0.85rem; color: var(--neon); margin: 2rem 0 0.75rem; text-transform: uppercase; }
+    p { color: var(--mute); margin-bottom: 0.4rem; }
+    p.lead { color: var(--bone); }
+    a.back {
+      display: inline-block; margin-top: 3rem; font-family: "Space Mono", monospace;
+      letter-spacing: 0.18em; font-size: 0.8rem; color: var(--bone);
+      text-decoration: none; border: 1px solid rgba(192,38,211,0.5);
+      padding: 0.6rem 1.2rem; border-radius: 2px; transition: all 0.2s;
+    }
+    a.back:hover { color: var(--neon); border-color: var(--neon); box-shadow: 0 0 18px rgba(192,38,211,0.4); }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="brand">🐻 ERDBÄREN</div>
+    <h1>Impressum</h1>
+
+    <h2>Angaben gemäß § 5 TMG / § 18 Abs. 2 MStV</h2>
+    <p class="lead">Daniel Paul</p>
+    <p>Imhoffstücken 18</p>
+    <p>21423 Winsen (Luhe)</p>
+    <p>Kontakt: paul-daniel@t-online.de</p>
+
+    <h2>Hinweis zum Angebot</h2>
+    <p>Diese Website ist ein privates, nicht-kommerzielles Fan-/Lore-Projekt. Es erfolgt keine gewerbliche Nutzung und keine Gewinnerzielungsabsicht.</p>
+
+    <h2>Verantwortlich für den Inhalt</h2>
+    <p>Daniel Paul (Anschrift und Kontakt siehe oben).</p>
+
+    <a class="back" href="./">← ZURÜCK ZUR STARTSEITE</a>
+  </main>
+</body>
+</html>

@@ -151,11 +151,45 @@ export const site = {
   },
 
   footer: {
-    note: "ERDBÄREN — Eigenständiges Lore-Projekt. Keine Verbindung zu kommerziellen Franchises.",
+    note: "ERDBÄREN — Eigenständiges, nicht-kommerzielles Lore-Projekt. Keine Verbindung zu kommerziellen Franchises.",
     links: [
-      { label: "AGB", href: "#agb" },
-      { label: "Datenschutz", href: "#datenschutz" },
+      { label: "Impressum", href: "./impressum.html" },
+      { label: "AGB", href: "./agb.html" },
+      { label: "Datenschutz", href: "./datenschutz.html" },
       { label: "Home", href: "#top" },
+    ],
+  },
+
+  // --- RECHTLICHES (privat / non-kommerziell) ---
+  legal: {
+    provider: {
+      name: "Daniel Paul",
+      street: "Imhoffstücken 18",
+      city: "21423 Winsen (Luhe)",
+      email: "paul-daniel@t-online.de",
+    },
+    impressum: [
+      "Angaben gemäß § 5 TMG / § 18 Abs. 2 MStV:",
+      "Daniel Paul",
+      "Imhoffstücken 18",
+      "21423 Winsen (Luhe)",
+      "Kontakt: paul-daniel@t-online.de",
+      "Diese Website ist ein privates, nicht-kommerzielles Fan-/Lore-Projekt. Es erfolgt keine gewerbliche Nutzung und keine Gewinnerzielungsabsicht.",
+    ],
+    agb: [
+      { h: "1. Gegenstand", t: "Diese Allgemeinen Geschäftsbedingungen regeln das Angebot der Website ERDBÄREN. Da es sich um ein kostenloses, nicht-kommerzielles Projekt handelt, bestehen keine entgeltlichen Vertragsverhältnisse zwischen Betreiber und Besucher." },
+      { h: "2. Nutzung der Inhalte", t: "Alle Texte, Bilder und das eingesetzte Lore-Setting sind frei erfunden. Eine Verbindung zu real existierenden Marken, Franchises oder Personen ist weder beabsichtigt noch gegeben. Eine kommerzielle Nutzung oder Vervielfältigung der Inhalte ist ohne vorherige schriftliche Zustimmung nicht gestattet." },
+      { h: "3. Voting / Live-Abstimmung", t: "Die auf der Seite eingebundene Live-Abstimmung dient ausschließlich unterhaltsamen Zwecken. Es werden keine Gewinne ausgeschüttet und keine Teilnahmebedingungen im wettbewerbsrechtlichen Sinne begründet." },
+      { h: "4. Haftungsausschluss", t: "Die Inhalte wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität wird keine Gewähr übernommen. Als privater, nicht-kommerzieller Anbieter hafte ich gemäß § 7 Abs. 1 TMG für eigene Inhalte nach den allgemeinen Gesetzen; für fremde Inhalte nur nach den §§ 8–10 TMG." },
+      { h: "5. Änderungen", t: "Diese AGB können jederzeit ohne vorherige Ankündigung angepasst werden." },
+    ],
+    privacy: [
+      { h: "Verantwortlicher", t: "Verantwortlich für die Datenverarbeitung auf dieser Website ist Daniel Paul (Kontakt siehe Impressum)." },
+      { h: "Erhebung und Speicherung von Daten", t: "Diese Website erhebt und speichert KEINE personenbezogenen Daten dauerhaft. Es werden keine Analysetools, keine Tracking-Cookies und keine Werbe-Pixel eingesetzt. Es findet keine Profilbildung statt." },
+      { h: "IP-Adresse bei der Live-Abstimmung", t: "Beim Abgeben eines Votes in der integrierten Live-Abstimmung wird deine IP-Adresse serverseitig (Cloudflare Worker) ausschließlich zur Vermeidung von Doppelvotings kurzzeitig verarbeitet und als Einweg-Hash gespeichert. Die Klartext-IP wird nicht aufgezeichnet und nicht mit anderen Daten verknüpft. Eine darüber hinausgehende Verarbeitung oder Weitergabe an Dritte findet nicht statt." },
+      { h: "Hosting", t: "Die Website wird über GitHub Pages (GitHub Inc., USA) ausgeliefert; die Vote-Funktion läuft über Cloudflare Workers (Cloudflare Inc., USA). Dabei können technisch bedingt Verbindungsdaten (IP-Adresse, Zeitstempel) im Rahmen des Standard-Betriebs kurzzeitig anfallen. Ein Transfer in Drittländer erfolgt im Übrigen nicht darüber hinaus." },
+      { h: "Deine Rechte", t: "Da keine dauerhaften personenbezogenen Daten gespeichert werden, entfällt in der Regel eine Auskunfts- oder Löschpflicht. Du hast nach der DSGVO das Recht auf Auskunft, Berichtigung und Löschung deiner Daten, sofern solche bei uns vorliegen. Anfragen richtest du an die im Impressum genannte E-Mail-Adresse." },
+      { h: "Kontakt", t: "Fragen zum Datenschutz beantwortet dir der Betreiber unter paul-daniel@t-online.de." },
     ],
   },
 };

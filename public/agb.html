@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="de" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AGB — ERDBÄREN</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --ink: #0a0a0b; --bone: #e8e4dc; --neon: #c026d3; --mute: rgba(232,228,220,0.55); }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--ink); color: var(--bone);
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      line-height: 1.6; min-height: 100vh;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 3px),
+        radial-gradient(circle at 50% 0%, rgba(192,38,211,0.12), transparent 60%);
+    }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 5rem 1.5rem 3rem; }
+    .brand { font-family: "Space Mono", monospace; letter-spacing: 0.3em; font-size: 0.8rem; color: var(--neon); margin-bottom: 2rem; }
+    h1 { font-size: clamp(1.8rem, 6vw, 2.6rem); letter-spacing: 0.04em; margin-bottom: 2rem; }
+    h2 { font-family: "Space Mono", monospace; letter-spacing: 0.12em; font-size: 1rem; color: var(--bone); margin: 1.8rem 0 0.5rem; }
+    p { color: var(--mute); }
+    a.back {
+      display: inline-block; margin-top: 3rem; font-family: "Space Mono", monospace;
+      letter-spacing: 0.18em; font-size: 0.8rem; color: var(--bone);
+      text-decoration: none; border: 1px solid rgba(192,38,211,0.5);
+      padding: 0.6rem 1.2rem; border-radius: 2px; transition: all 0.2s;
+    }
+    a.back:hover { color: var(--neon); border-color: var(--neon); box-shadow: 0 0 18px rgba(192,38,211,0.4); }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="brand">🐻 ERDBÄREN</div>
+    <h1>Allgemeine Geschäftsbedingungen</h1>
+
+    <h2>1. Gegenstand</h2>
+    <p>Diese Allgemeinen Geschäftsbedingungen regeln das Angebot der Website ERDBÄREN. Da es sich um ein kostenloses, nicht-kommerzielles Projekt handelt, bestehen keine entgeltlichen Vertragsverhältnisse zwischen Betreiber und Besucher.</p>
+
+    <h2>2. Nutzung der Inhalte</h2>
+    <p>Alle Texte, Bilder und das eingesetzte Lore-Setting sind frei erfunden. Eine Verbindung zu real existierenden Marken, Franchises oder Personen ist weder beabsichtigt noch gegeben. Eine kommerzielle Nutzung oder Vervielfältigung der Inhalte ist ohne vorherige schriftliche Zustimmung nicht gestattet.</p>
+
+    <h2>3. Voting / Live-Abstimmung</h2>
+    <p>Die auf der Seite eingebundene Live-Abstimmung dient ausschließlich unterhaltsamen Zwecken. Es werden keine Gewinne ausgeschüttet und keine Teilnahmebedingungen im wettbewerbsrechtlichen Sinne begründet.</p>
+
+    <h2>4. Haftungsausschluss</h2>
+    <p>Die Inhalte wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität wird keine Gewähr übernommen. Als privater, nicht-kommerzieller Anbieter hafte ich gemäß § 7 Abs. 1 TMG für eigene Inhalte nach den allgemeinen Gesetzen; für fremde Inhalte nur nach den §§ 8–10 TMG.</p>
+
+    <h2>5. Änderungen</h2>
+    <p>Diese AGB können jederzeit ohne vorherige Ankündigung angepasst werden.</p>
+
+    <a class="back" href="./">← ZURÜCK ZUR STARTSEITE</a>
+  </main>
+</body>
+</html>

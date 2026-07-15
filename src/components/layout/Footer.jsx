@@ -14,7 +14,6 @@ export default function Footer() {
 
   return (
     <motion.footer
-      id="agb"
       style={{ borderTopColor: "rgba(192,38,211,1)", boxShadow: borderGlow }}
       className="border-t-4 bg-ink"
     >
@@ -38,7 +37,7 @@ export default function Footer() {
           ))}
         </nav>
       </div>
-      <div id="datenschutz" className="border-t border-white/5">
+      <div className="border-t border-white/5">
         <p className="max-w-7xl mx-auto px-5 sm:px-8 py-5 mono-label text-bone/35">
           {f.note}
         </p>
