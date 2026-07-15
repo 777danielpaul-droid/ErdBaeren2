@@ -51,6 +51,15 @@ const line = {
   }),
 }
 
+// Mehrstufiger, gestaffelter Schatten = 3D-Extrusion in SCHWARZ: Buchstaben
+// wirken wie aus der Flaeche herausragend (schwarzer Keil nach rechts-unten,
+// weiter versetzt + leicht transparent).
+const TITLE_SHADOW =
+  "2px 2px rgba(0,0,0,0.55), 4px 4px rgba(0,0,0,0.5), 6px 6px rgba(0,0,0,0.45), " +
+  "8px 8px rgba(0,0,0,0.4), 10px 10px rgba(0,0,0,0.38), 12px 12px rgba(0,0,0,0.34), " +
+  "14px 14px rgba(0,0,0,0.3), 16px 16px rgba(0,0,0,0.28), 18px 18px rgba(0,0,0,0.25), " +
+  "20px 20px rgba(0,0,0,0.22), 24px 24px 10px rgba(0,0,0,0.3)"
+
 export default function Hero() {
   const h = site.hero
   const [t1, t2] = h.title.split("\n")
@@ -88,7 +97,10 @@ export default function Hero() {
           {h.eyebrow}
         </motion.p>
 
-        <h1 className="font-display font-bold leading-[0.95] tracking-tight text-5xl sm:text-7xl lg:text-8xl max-w-4xl">
+        <h1
+          className="font-display font-bold leading-[0.95] tracking-tight text-5xl sm:text-7xl lg:text-8xl max-w-4xl"
+          style={{ textShadow: TITLE_SHADOW }}
+        >
           <motion.span custom={1} initial="hidden" animate="show" variants={line} className="block">
             {t1}
           </motion.span>
@@ -97,7 +109,8 @@ export default function Hero() {
             initial="hidden"
             animate="show"
             variants={line}
-            className="block neon-text"
+            className="block"
+            style={{ color: "#c026d3", textShadow: TITLE_SHADOW }}
           >
             {t2}
           </motion.span>
