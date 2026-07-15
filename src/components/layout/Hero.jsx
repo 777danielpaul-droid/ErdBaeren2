@@ -6,6 +6,11 @@ import { useVotes } from "../../lib/votes"
 const NEON = ["#c026d3", "#7c3aed", "#22d3ee", "#c9a227"]
 
 function HeroGrid() {
+  // Auf schwachen/schmalen Geraeten (Mobile) das Grid komplett weglassen:
+  // 600 DOM-Nodes + Hover-Transitions wuergen alte Handys (z.B. Galaxy A20) ab.
+  if (typeof window !== "undefined" && window.matchMedia("(max-width: 640px)").matches) {
+    return null
+  }
   // Feste Zellzahl; Overflow wird vom Hero (overflow-hidden) gekappt.
   // Beide Achsen mit 1fr -> das Grid fuellt den gesamten sichtbaren Hero.
   const cells = Array.from({ length: 600 })
@@ -82,7 +87,7 @@ export default function Hero() {
       <HeroGrid />
       <motion.div
         style={{ y: blobY, opacity: blobOpacity }}
-        className="absolute top-24 right-[-6rem] w-[28rem] h-[28rem] rounded-full bg-neon/25 blur-[120px]"
+        className="absolute top-24 right-[-6rem] w-[18rem] h-[18rem] sm:w-[28rem] sm:h-[28rem] rounded-full bg-neon/25 blur-[60px] sm:blur-[120px]"
         aria-hidden="true"
       />
 
@@ -98,7 +103,7 @@ export default function Hero() {
         </motion.p>
 
         <h1
-          className="font-display font-bold leading-[0.95] tracking-tight text-5xl sm:text-7xl lg:text-8xl max-w-4xl"
+          className="font-display font-bold leading-[1.05] tracking-tight text-3xl sm:text-7xl lg:text-8xl max-w-4xl break-words"
           style={{ textShadow: TITLE_SHADOW }}
         >
           <motion.span custom={1} initial="hidden" animate="show" variants={line} className="block">
