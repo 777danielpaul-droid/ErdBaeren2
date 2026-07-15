@@ -94,12 +94,12 @@ export default function WarRoomArchive() {
     <section ref={ref} id="kriegskonsole" className="relative">
       {/* PIN-BÜHNE */}
       <div className="relative h-[200vh]">
-        <div className="sticky top-0 h-screen overflow-hidden">
+        <div className="sticky top-0 h-screen overflow-y-auto sm:overflow-hidden">
 
           {/* SEKTOR 1 — KRIEGSKONSOLE (Basis, z-10, opak) */}
-          <div className="absolute inset-0 z-10 bg-ink-soft border-y border-white/5 overflow-hidden">
+          <div className="absolute inset-0 z-10 bg-ink-soft border-y border-white/5 overflow-y-auto sm:overflow-hidden">
             <div className="absolute inset-0 hud-grid opacity-50" aria-hidden="true" />
-            <div className="relative h-full max-w-7xl mx-auto px-5 sm:px-8 flex flex-col justify-center py-12">
+            <div className="relative min-h-full max-w-7xl mx-auto px-5 sm:px-8 flex flex-col justify-start sm:justify-center py-12">
               <Reveal className="mb-8 text-center">
                 <p className="mono-label text-neon mb-4">// KRIEGSKONSOLE // ECHTZEIT-SIM</p>
                 <h2 className="font-display font-bold text-4xl sm:text-6xl tracking-tight">

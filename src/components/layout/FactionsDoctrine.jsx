@@ -35,11 +35,11 @@ export default function FactionsDoctrine() {
     <section ref={ref} id="fraktionen" className="relative">
       {/* PIN-BÜHNE */}
       <div className="relative h-[200vh]">
-        <div className="sticky top-0 h-screen overflow-hidden">
+        <div className="sticky top-0 h-screen overflow-y-auto sm:overflow-hidden">
 
           {/* SEKTOR 1 — FRAKTIONEN (Basis, z-10, opak) */}
-          <div className="absolute inset-0 z-10 bg-ink">
-            <div className="h-full max-w-7xl mx-auto px-5 sm:px-8 flex flex-col justify-center py-12">
+          <div className="absolute inset-0 z-10 bg-ink overflow-y-auto sm:overflow-hidden">
+            <div className="min-h-full max-w-7xl mx-auto px-5 sm:px-8 flex flex-col justify-start sm:justify-center py-12">
               <p className="mono-label text-gold mb-4">// FRAKTIONEN</p>
               <h2 className="font-display font-bold text-4xl sm:text-5xl tracking-tight mb-12">
                 Zwei Mächte. Eine Erde.
