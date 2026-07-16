@@ -80,7 +80,7 @@ export default function Battle() {
                 style={{ y: captionY, opacity: captionOpacity }}
                 className="relative z-30 -mt-6 sm:-mt-8 text-center max-w-3xl"
               >
-                <p className="text-bone/80 text-sm sm:text-base max-w-3xl leading-relaxed">
+                <p className="battle-caption text-bone/80 text-sm sm:text-base max-w-3xl leading-relaxed">
                   {s.caption}
                 </p>
               </motion.div>

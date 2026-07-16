@@ -290,6 +290,11 @@
   color: #fff;
 }
 
+/* Battle-Caption im Light Mode lila statt türkis (nur Light Mode) */
+[data-theme="light"] .battle-caption {
+  color: var(--color-neon) !important;
+}
+
 /* Hero-Überschrift: bunter Fade (Lavendel->Violett->Indigo->Cyan),
    wie das "Das goldene Herz"-Bild. Gilt in BEIDEN Modes. */
 .title-rainbow {
