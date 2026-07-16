@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { site } from "../../data/content"
+import { getInitialTheme, toggleTheme } from "../../lib/theme"
 
 // Neon-Palette wie im Hero-Grid, ABER ohne cyan — cyan ist der Default,
 // sonst würde ein zufälliges cyan beim Hover keinen sichtbaren Wechsel ergeben.
@@ -8,12 +9,15 @@ const NEON = ["#c026d3", "#7c3aed", "#c9a227"]
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  // Theme-State für den Toggle-Button (Initial aus DOM lesen).
+  const [theme, setTheme] = useState(() => getInitialTheme())
   // Pro Link eine zufällige Neon-Farbe, die beim Hover gesetzt wird.
   const [hover, setHover] = useState({})
 
   const randomNeon = (key) => setHover((h) => ({ ...h, [key]: NEON[(Math.random() * NEON.length) | 0] }))
   // Verlassen -> Default (türkis) wiederherstellen.
   const resetNeon = (key) => setHover((h) => ({ ...h, [key]: "#22d3ee" }))
+  const onToggle = () => setTheme(toggleTheme())
   return (
     <motion.header
       initial={{ y: -80, opacity: 0 }}
@@ -54,6 +58,15 @@ export default function Navbar() {
           >
             Protokoll
           </a>
+
+          <button
+            type="button"
+            aria-label={theme === "dark" ? "Zu Light Mode wechseln" : "Zu Dark Mode wechseln"}
+            onClick={onToggle}
+            className="hidden md:grid place-items-center w-10 h-10 rounded-md border border-white/10 hover:border-neon/50 text-bone transition-colors"
+          >
+            <span className="text-lg leading-none">{theme === "dark" ? "☀" : "☾"}</span>
+          </button>
 
           <button
             aria-label="Menü"

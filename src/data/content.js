@@ -14,12 +14,12 @@ export const site = {
   hero: {
     eyebrow: "WIDERSTAND // ERDE-SEKTOR 0",
     title: "Wenn die alten Herrscher\nauf den Umbruch treffen",
-    lead: "Seit Äonen halten die Milchmäuse, Bewohner der Milchstraße, die Galaxis in ihren gewohnten Mustern. Doch auf der Erde ist etwas erwacht, das sich nicht mehr fügen will: Widerstandskämpfer, die einen Weg fanden, das Spiel zu drehen — und sich aus den Fängen der Herren zu befreien.",
+    lead: "Sie nennen sich Erdbären — doch den Namen gaben ihnen die Milchmäuse selbst. Als die Erdbären deren Kommunikationsnetz anzapften, hörten sie, wie die alten Herren sie verächtlich die 'Bären der Erde' nannten — wegen einer Stärke, die kein Raster der Herren je fasste. Sie übernahmen den Namen und tragen ihn stolz.",
     primaryCta: { label: "Einsatzprotokoll lesen", href: "#doktrin" },
     secondaryCta: { label: "Feindanalyse", href: "#konflikt" },
     stats: [
-      { value: "0.3%", label: "Überleben im alten System" },
-      { value: "∞", label: "Der Freiheitswille" },
+      { value: "3", label: "Anführer der ersten Stunde" },
+      { value: "1. Welle", label: "im Alleingang abgewehrt" },
       { value: "0", label: "Der Widerstand" },
       { value: "0", label: "Die Unterdrücker" },
     ],
@@ -34,10 +34,10 @@ export const site = {
       accent: "neon",
       quote: "Wir sind der Bruch in ihrer Ordnung.",
       traits: [
-        "Ein Volk, das sich nicht mehr fügen will",
-        "Fanden einen Weg, das Spiel zu drehen",
-        "Befreien sich aus den Fängen der Herren",
-        "Ein Funke, der die alten Muster sprengt",
+        "Menschen — von den Milchmäusen 'Bären' genannt, weil ihre Stärke kein Raster fasste",
+        "Zapften deren Netz an, hörten den Namen — und nahmen ihn stolz an",
+        "Nach dem Sieg schlossen sich ihnen unzählige Rebellen an",
+        "Ein Funke, der die alten Muster der Herren sprengt",
       ],
     },
     {
@@ -49,8 +49,8 @@ export const site = {
       quote: "Was war, soll bleiben, wie es war.",
       traits: [
         "Bewohner der Milchstraße — seit Äonen an der Macht",
-        "Alte Herrscher der Galaxis",
-        "Verteidigen ihre gewohnten Muster",
+        "Verließen sich auf Gewohnheit statt auf Stärke",
+        "Die erste Welle kehrte nie zurück — und niemand weiß warum",
         "Wo sich nichts Neues regt, bleibt ihr Griff",
       ],
     },
@@ -60,17 +60,17 @@ export const site = {
     eyebrow: "DOKTRIN",
     title:
       "Diese neue Kraft macht uns frei —\ndie Möglichkeit, neu zu beginnen",
-    body: "Die Milchmäuse herrschen, weil sie alles beim Alten halten. Die Erdbären kämpfen nicht mit mehr Macht, sondern mit einem anderen Anfang: Sie fanden, was keiner suchte — einen Weg, der den alten Herren nicht mehr gehorcht. Darin liegt die Befreiung.",
+    body: "Die Milchmäuse herrschen, weil sie alles beim Alten halten. Die Erdbären aber sind stärker, als ihre Ordnung je rechnen konnte — und genau deshalb fürchtet sie niemand mehr. Was als drei Anführer begann, die allein eine ganze Angriffswelle zurückschlugen, wurde zum Zeichen: Überall auf der Erde erhoben sich Rebellen und schlossen sich den Erdbären an. Darin liegt die Befreiung.",
     points: [
       {
         k: "01",
-        t: "Der andere Anfang",
-        d: "Wer nur bewahrt, was ist, bleibt gefangen im Gewohnten. Die Erdbären begannen dort neu, wo die alten Herren längst aufgehört hatten zu fragen. Darum können sie nicht gerechnet werden.",
+        t: "Die Stärke, die keiner erwartete",
+        d: "Die Herren kannten nur Gewohnheit. Dass Menschen Bären gleichen konnten — so stark, dass einer eine Stoßtruppe stoppt — passte nicht in ihr Weltbild. Darum konnten sie nicht rechnen, was kam.",
       },
       {
         k: "02",
-        t: "Das verborgene Werkzeug",
-        d: "Es ist kein Schwert und kein Heer. Es ist eine Fähigkeit, die sich nicht in den Mustern der Milchmäuse abbildet — und darum von ihnen nicht verteidigt wird.",
+        t: "Die drei von der ersten Welle",
+        d: "Als die erste Welle über die Erde brach, standen drei Anführer allein dagegen — und warfen sie zurück. Dieser Sieg wurde zum Funken, an dem sich jeder Rebell entzündete.",
       },
       {
         k: "03",
@@ -87,7 +87,7 @@ export const site = {
     coverBody:
       "Wo die alten Herren der Milchstraße auf die Erdbären treffen, beginnt kein gewöhnlicher Krieg. Die einen bewahren, was war — die anderen haben einen Weg gefunden, den das Alte nicht fassen kann.",
     caption:
-      "Wo die alten Herren der Milchstraße auf die Erdbären treffen, entscheidet nicht die Macht — sondern der Bruch. Wer einen Weg fand, das Spiel zu drehen, geht weiter, alle anderen bleiben zurück.",
+      "Wo die alten Herren der Milchstraße auf die Erdbären treffen, entscheidet nicht die Zahl — sondern ihre Stärke. Drei Anführer warfen einst die erste Welle allein zurück; seitdem folgen ihnen Rebellen aus aller Welt, und die alte Ordnung bricht.",
   },
   secret: {
     eyebrow: "// GEHEIMWAFFE // KLASSIFIZIERT",
@@ -102,22 +102,22 @@ export const site = {
   conflict: {
     eyebrow: "KONFLIKT",
     title: "Der Bruch in der alten Ordnung",
-    body: "Die Milchmäuse herrschen, weil sie alles beim Alten halten. Doch sobald die Erdbären einen Weg finden, der ihren Mustern nicht folgt, reißt das Bild. Die Herren bewachen — die Erdbären befreien.",
+    body: "Die Milchmäuse herrschen, weil sie alles beim Alten halten. Doch als ihre erste Angriffswelle über die Erde brach, trafen sie auf drei Anführer, die sie allein zurückschlugen. Seitdem wissen die Herren: Ihre Gewohnheit reicht nicht gegen eine Stärke, die sie nie berechnet haben. Die Erdbären befreien — die Herren bewachen.",
     aspects: [
       {
         side: "MILCHMÄUSE",
         items: [
           "Alte Herrscher: bewahren, was war",
-          "Verteidigen ihre gewohnten Muster",
-          "Fatal: wo sich nichts Neues regt, schwindet der Griff",
+          "Verließen sich auf Gewohnheit, nicht auf Stärke",
+          "Fatal: die erste Welle kehrte nie zurück",
         ],
       },
       {
         side: "ERDBÄREN",
         items: [
-          "Der Widerstand: beginnt neu, folgt nicht",
-          "Fand den Weg, das Spiel zu drehen",
-          "Befreit sich aus den Fängen der Herren",
+          "Drei Anführer warfen die erste Welle allein zurück",
+          "Ihre Stärke sprengt jede Rechnung der Herren",
+          "Befreit sich — und zieht Rebellen aus aller Welt an",
         ],
       },
     ],
@@ -129,13 +129,13 @@ export const site = {
     entries: [
       {
         code: "EB-001",
-        title: "Das Erwachen",
-        text: "Nur 0,3 % überstehen das alte System — nicht durch Stärke, sondern weil sie aufhörten, sich zu fügen. Den Rest hält die Gewohnheit der Herren fest.",
+        title: "Der Namensursprung",
+        text: "Den Namen 'Erdbären' gaben ihnen die Milchmäuse selbst. Als die Erdbären deren Kommunikationsnetz anzapften, hörten sie, wie die alten Herren sie wegen ihrer unbegreiflichen Stärke verächtlich 'Bären der Erde' nannten. Sie übernahmen den Namen — und tragen ihn stolz.",
       },
       {
         code: "EB-014",
-        title: "Die Wende ohne Vorwarnung",
-        text: "Feldtests: Die Erdbären handeln in dem Augenblick, in dem sich die Lage dreht. Wer nur bewahrt, braucht Zeit, bis er die Bewegung benennt — Zeit, die er nicht hat.",
+        title: "Die erste Welle",
+        text: "Feldbericht: Als die erste Angriffswelle über die Erde brach, standen drei Anführer allein dagegen — und warfen sie zurück. Die Herren haben diesen Verlust nie verwunden.",
       },
       {
         code: "MM-007",
@@ -143,9 +143,9 @@ export const site = {
         text: "Die Einheiten der Milchmäuse folgen der alten Ordnung. Sobald ein Umstand nicht ins Gewohnte passt, stockt ihr Wirken, statt einen Ausweg zu finden.",
       },
       {
-        code: "MM-031",
-        title: "Der Riss bei Abweichung",
-        text: "Beobachtung: Sobald die Erdbären den Mustern nicht folgen, bricht die geordnete Herrschaft der Milchmäuse. Ein Schritt, der nicht gehorcht, lässt sich nicht fassen — und darum nicht wehren.",
+        code: "EB-031",
+        title: "Der Zulauf der Rebellen",
+        text: "Beobachtung: Seit dem Sieg über die erste Welle schlossen sich den Erdbären unzählige Rebellen aus aller Welt an. Aus drei Anführern wurde ein Heer — und die alte Herrschaft bröckelt.",
       },
     ],
   },

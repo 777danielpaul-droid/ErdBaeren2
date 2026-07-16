@@ -1,4 +1,5 @@
 import { motion, useScroll, useTransform } from "framer-motion"
+import { useEffect, useState } from "react"
 import { EASE } from "../motion/variants"
 import { site } from "../../data/content"
 import { useVotes } from "../../lib/votes"
@@ -70,10 +71,38 @@ export default function Hero() {
   const [t1, t2] = h.title.split("\n")
   const votes = useVotes()
 
-  // Live-Votes ersetzen die statischen Zähler: Widerstand=Erdbären, Unterdrücker=Milchmäuse.
+  // Count-up-Hook: zählt sanft von `from` auf den Zielwert, sobald geladen.
+  const useCountUp = (target, from = 0) => {
+    const [v, setV] = useState(from)
+    useEffect(() => {
+      if (!votes.loaded) return
+      let raf, start
+      const dur = 1200
+      const step = (t) => {
+        if (!start) start = t
+        const p = Math.min((t - start) / dur, 1)
+        setV(Math.round(from + p * (target - from)))
+        if (p < 1) raf = requestAnimationFrame(step)
+      }
+      raf = requestAnimationFrame(step)
+      return () => cancelAnimationFrame(raf)
+    }, [votes.loaded, target, from])
+    return v
+  }
+
+  // Basis-Stand der Milchmäuse (lore-seitig höher als der Widerstand).
+  const MILCHMAEUSE_BASE = 17171
+
+  const nWiderstand = useCountUp(votes.loaded ? votes.erdbaeren : 0)
+  const nUnterdruecker = useCountUp(
+    votes.loaded ? MILCHMAEUSE_BASE + votes.milchmaeuse : MILCHMAEUSE_BASE,
+    MILCHMAEUSE_BASE
+  )
+
+  // Live-Zähler ersetzen die statischen Werte.
   const liveValue = (label) => {
-    if (label === "Der Widerstand") return String(votes.erdbaeren)
-    if (label === "Unterdrücker") return String(votes.milchmaeuse)
+    if (label === "Der Widerstand") return nWiderstand.toLocaleString("de-DE")
+    if (label === "Die Unterdrücker") return nUnterdruecker.toLocaleString("de-DE")
     return null
   }
 
@@ -104,9 +133,9 @@ export default function Hero() {
 
         <h1
           className="font-display font-bold leading-[1.05] tracking-tight text-3xl sm:text-7xl lg:text-8xl max-w-4xl break-words"
-          style={{ textShadow: TITLE_SHADOW }}
+          style={{ filter: "drop-shadow(2px 2px rgba(0,0,0,0.55)) drop-shadow(4px 4px rgba(0,0,0,0.5)) drop-shadow(8px 8px rgba(0,0,0,0.4)) drop-shadow(12px 12px rgba(0,0,0,0.34)) drop-shadow(18px 18px rgba(0,0,0,0.25)) drop-shadow(24px 24px 10px rgba(0,0,0,0.3))" }}
         >
-          <motion.span custom={1} initial="hidden" animate="show" variants={line} className="block">
+          <motion.span custom={1} initial="hidden" animate="show" variants={line} className="block title-rainbow">
             {t1}
           </motion.span>
           <motion.span
@@ -114,8 +143,7 @@ export default function Hero() {
             initial="hidden"
             animate="show"
             variants={line}
-            className="block"
-            style={{ color: "#c026d3", textShadow: TITLE_SHADOW }}
+            className="block title-rainbow"
           >
             {t2}
           </motion.span>
