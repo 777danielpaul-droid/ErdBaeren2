@@ -1,0 +1,7 @@
+name = "delicate-hat-1706"
+main = "vote-worker.js"
+compatibility_date = "2026-01-01"
+
+[[kv_namespaces]]
+binding = "VOTES"
+id = "1d4fa548b9324eb18b31462815f8db73"
