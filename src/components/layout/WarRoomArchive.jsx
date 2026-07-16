@@ -4,8 +4,8 @@ import Reveal from "../motion/Reveal"
 import { site } from "../../data/content"
 import { EASE } from "../motion/variants"
 import { useVotes, castVote } from "../../lib/votes"
-import PhyrexianText, { T } from "../PhyrexianText"
-import { useLang } from "../PhyrexianContext"
+import RunenText, { T } from "../RunenText"
+import { useLang } from "../RunenContext"
 
 const FACTIONS = {
   erdbaeren: {
@@ -55,7 +55,7 @@ function StatBar({ k, v, color }) {
   )
 }
 
-// Eine abgefangene Nachricht: zeigt Phyrexian-Glyphen; Klick klappt Klartext auf.
+// Eine abgefangene Nachricht: zeigt Runen-Glyphen; Klick klappt Klartext auf.
 // Beim Sichtbarwerden "dealt" sich die Karte ein einmal aus der Grid-Mitte in
 // ihr Feld. x/y = Start-Versatz zur Grid-Mitte (nur sm+, mobil kein Deal).
 function InterceptCard({ msg, delay, z }) {
@@ -97,7 +97,7 @@ function InterceptCard({ msg, delay, z }) {
           <span className="mono-label text-cyan">{msg.code}</span>
           <span className="mono-label text-bone/35">{open ? (mode === "en" ? "DECRYPTED" : "DECHIFFRIERT") : (mode === "en" ? "▸ DECRYPT" : "▸ DECHIFFRIEREN")}</span>
         </div>
-        <PhyrexianText text={msg.cipher} className="text-2xl sm:text-3xl min-h-[4rem] sm:min-h-[4.5rem]" />
+        <RunenText text={msg.cipher} className="text-2xl sm:text-3xl min-h-[4rem] sm:min-h-[4.5rem]" />
         <AnimatePresence initial={false}>
           {open && (
             <motion.p
@@ -387,7 +387,7 @@ export default function WarRoomArchive() {
                 ))}
               </div>
 
-              {/* ABGEFANGENE TRANSMISSIONEN (Phyrexian-Schrift, Klick dechiffriert) */}
+              {/* ABGEFANGENE TRANSMISSIONEN (Runen-Schrift, Klick dechiffriert) */}
               <Intercepts data={site.archive.intercepts} />
             </div>
           </motion.div>

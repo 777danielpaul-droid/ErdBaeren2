@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion"
 import { site } from "../../data/content"
 import { asset } from "../../lib/asset"
 import { EASE } from "../motion/variants"
-import { T } from "../PhyrexianText"
+import { T } from "../RunenText"
 
 // Scroll-Linked Enthüllung mit PIN (gleiche Technik wie SecretWeapon):
 // Die Sektion pinnt sich (sticky), während man scrollt — die Seite "steht still",

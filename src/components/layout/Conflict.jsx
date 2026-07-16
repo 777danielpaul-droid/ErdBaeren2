@@ -1,6 +1,6 @@
 import Reveal from "../motion/Reveal"
 import { site } from "../../data/content"
-import { T } from "../PhyrexianText"
+import { T } from "../RunenText"
 
 export default function Conflict() {
   const c = site.conflict

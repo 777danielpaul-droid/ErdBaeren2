@@ -2,7 +2,7 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { site } from "../../data/content"
 import { getInitialTheme, toggleTheme } from "../../lib/theme"
-import { useLang } from "../PhyrexianContext"
+import { useLang } from "../RunenContext"
 import TerminalModal from "../TerminalModal"
 
 // Neon-Palette wie im Hero-Grid, ABER ohne cyan — cyan ist der Default,

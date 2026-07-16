@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion"
 import { site } from "../../data/content"
 import { asset } from "../../lib/asset"
 import { stagger, EASE } from "../motion/variants"
-import { T } from "../PhyrexianText"
+import { T } from "../RunenText"
 
 // Statische Klassen-Map (Tailwind v4 JIT erkennt keine dynamischen Template-Strings)
 const ACCENT = {

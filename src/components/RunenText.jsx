@@ -1,6 +1,6 @@
-import { useLang } from "./PhyrexianContext"
+import { useLang } from "./RunenContext"
 
-// PhyrexianText — rendert lateinischen Text in selbstgebauten Phyrexian-Glyphen (SVG).
+// RunenText — rendert lateinischen Text in selbstgebauten Runen-Glyphen (SVG).
 // HORIZONTALE Orientierung: das "Rückgrat" jeder Glyphe ist eine waagerechte
 // Grundlinie (y=40), die über die volle Breite läuft. Aneinandergereiht ergeben
 // die Glyphen EINE durchgehende horizontale Linie; Merkmale hängen darüber/darunter.
@@ -105,7 +105,7 @@ function Glyph({ ch }) {
   return (
     <svg
       viewBox="0 0 80 80"
-      className="phyrexian-glyph"
+      className="runen-glyph"
       aria-hidden="true"
       fill="none"
       stroke="currentColor"
@@ -126,12 +126,12 @@ function normalize(ch) {
 }
 
 // Rendert einen ganzen String; Nicht-Buchstaben (Space, Satzzeichen) = Wortabstand.
-export default function PhyrexianText({ text, className = "" }) {
+export default function RunenText({ text, className = "" }) {
   const chars = [...text].flatMap((ch) => [...normalize(ch)])
   return (
-    <span className={`phyrexian ${className}`} role="img" aria-label="Abgefangene Nachricht in unbekannter Schrift">
+    <span className={`runen ${className}`} role="img" aria-label="Abgefangene Nachricht in unbekannter Schrift">
       {chars.map((ch, i) => {
-        if (!/[a-z]/i.test(ch)) return <span key={i} className="phyrexian-space" />
+        if (!/[a-z]/i.test(ch)) return <span key={i} className="runen-space" />
         return <Glyph key={i} ch={ch} />
       })}
     </span>
@@ -144,7 +144,7 @@ export default function PhyrexianText({ text, className = "" }) {
 export function T({ children, en, className = "" }) {
   const text = typeof children === "string" ? children : String(children);
   const { mode } = useLang();
-  if (mode === "runes") return <PhyrexianText text={text} className={className} />;
+  if (mode === "runes") return <RunenText text={text} className={className} />;
   if (mode === "en" && en) return <span className={className}>{en}</span>;
   return <span className={className}>{text}</span>;
 }

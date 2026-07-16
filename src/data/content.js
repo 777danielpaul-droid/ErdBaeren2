@@ -201,7 +201,7 @@ export const site = {
         },
       },
     ],
-    // Abgefangene Milchmaus-Funksprueche (Phyrexian-Schrift). 'cipher' wird in Glyphen
+    // Abgefangene Milchmaus-Funksprueche (Runen-Schrift). 'cipher' wird in Glyphen
     // gerendert (nur a-z zaehlt), 'plain' ist die entschluesselte Klartext-Uebersetzung.
     intercepts: {
       eyebrow: { de: "// ABGEFANGEN // MILCHMAUS-FUNK", en: "// INTERCEPTED // MILKICE COMMS" },

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { getInitialLang, applyLang, cycleLang } from "../lib/phyrexian";
+import { getInitialLang, applyLang, cycleLang } from "../lib/runen";
 
 const LangContext = createContext({ mode: "de", cycle: () => {} });
 

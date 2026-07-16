@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform } from "framer-motion"
 import { site } from "../../data/content"
-import { T } from "../PhyrexianText"
+import { T } from "../RunenText"
 
 export default function Footer() {
   const f = site.footer

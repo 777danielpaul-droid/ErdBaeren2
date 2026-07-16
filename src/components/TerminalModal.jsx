@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import PhyrexianText from "./PhyrexianText"
+import RunenText from "./RunenText"
 
 // Terminal-Gimmick: Klick auf „Terminal" öffnet ein Overlay. Der User tippt
-// Klartext — jede Zeile wird LIVE als Runenschrift (PhyrexianText-Renderer)
+// Klartext — jede Zeile wird LIVE als Runenschrift (RunenText-Renderer)
 // übersetzt. Enter = Zeile ins Log; Escape / X schließt.
 export default function TerminalModal({ open, onClose }) {
   const [lines, setLines] = useState([])
@@ -84,12 +84,12 @@ export default function TerminalModal({ open, onClose }) {
               <p className="text-cyan text-xs leading-relaxed mt-2">User/Secret:</p>
               {lines.map((l, i) => (
                 <div key={i} className="flex gap-3 items-center flex-wrap">
-                  <PhyrexianText text={l} className="text-xl sm:text-2xl" />
+                  <RunenText text={l} className="text-xl sm:text-2xl" />
                 </div>
               ))}
               {/* Aktuelle Eingabe (live als Runen) + Cursor */}
               <div className="flex gap-3 items-center flex-wrap">
-                <PhyrexianText text={current} className="text-xl sm:text-2xl" />
+                <RunenText text={current} className="text-xl sm:text-2xl" />
                 <span className="inline-block w-2.5 h-5 bg-cyan/80 animate-pulse ml-0.5" />
               </div>
             </div>

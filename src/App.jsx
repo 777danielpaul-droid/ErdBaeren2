@@ -7,7 +7,7 @@ import Battle from "./components/layout/Battle"
 import WarRoomArchive from "./components/layout/WarRoomArchive"
 import Footer from "./components/layout/Footer"
 import { ScrollProgress } from "./components/motion/ScrollFX"
-import { LangProvider } from "./components/PhyrexianContext"
+import { LangProvider } from "./components/RunenContext"
 
 export default function App() {
   return (

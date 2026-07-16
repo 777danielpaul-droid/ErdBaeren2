@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { EASE } from "../motion/variants"
 import { site } from "../../data/content"
 import { useVotes } from "../../lib/votes"
-import { T } from "../PhyrexianText"
+import { T } from "../RunenText"
 import HoloEarthLazy from "../HoloEarthLazy"
 
 const NEON = ["#c026d3", "#7c3aed", "#22d3ee", "#c9a227"]

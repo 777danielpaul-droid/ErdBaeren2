@@ -1,7 +1,7 @@
 // Sprach-/Schrift-Modus der Seite. Drei Zustände, die der Button zyklisch durchschaltet:
 //   "de"    (default) — deutscher Klartext
 //   "en"               — englischer Klartext
-//   "runes"            — Runenschrift (Phyrexian-Glyphen)
+//   "runes"            — Runenschrift (Runen-Glyphen)
 // Persistiert in localStorage; als data-lang auf <html> für CSS-Regeln.
 
 const KEY = "erdbaeren-lang";
