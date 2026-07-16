@@ -2,9 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import PhyrexianText from "./PhyrexianText"
 
-const PROMPT = "milchmaus@erdbaeren:~$"
-
-// Terminal-Gimmick: Klick auf „Protokoll" öffnet ein Overlay. Der User tippt
+// Terminal-Gimmick: Klick auf „Terminal" öffnet ein Overlay. Der User tippt
 // Klartext — jede Zeile wird LIVE als Runenschrift (PhyrexianText-Renderer)
 // übersetzt. Enter = Zeile ins Log; Escape / X schließt.
 export default function TerminalModal({ open, onClose }) {
@@ -71,18 +69,17 @@ export default function TerminalModal({ open, onClose }) {
             >
               {lines.length === 0 && (
                 <p className="text-bone/30 text-xs leading-relaxed">
-                  // TIPPE ETWAS — ES WIRD IN RUNENSCHRIFT ÜBERSETZT. ENTER = NEUE ZEILE. ESC = SCHLIESSEN.
+                  //Knack den Code um das uralte Geheimnis zu offenbaren//
                 </p>
               )}
+              <p className="text-cyan text-xs leading-relaxed mt-2">User/Secret:</p>
               {lines.map((l, i) => (
                 <div key={i} className="flex gap-3 items-center flex-wrap">
-                  <span className="text-cyan/60 shrink-0 select-none">{PROMPT}</span>
                   <PhyrexianText text={l} className="text-xl sm:text-2xl" />
                 </div>
               ))}
               {/* Aktuelle Eingabe (live als Runen) + Cursor */}
               <div className="flex gap-3 items-center flex-wrap">
-                <span className="text-cyan/60 shrink-0 select-none">{PROMPT}</span>
                 <PhyrexianText text={current} className="text-xl sm:text-2xl" />
                 <span className="inline-block w-2.5 h-5 bg-cyan/80 animate-pulse ml-0.5" />
               </div>
