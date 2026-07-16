@@ -11,9 +11,13 @@ export default function TerminalModal({ open, onClose }) {
   const inputRef = useRef(null)
   const logRef = useRef(null)
 
-  // Autofokus beim Öffnen + Escape schließt.
+  // Autofokus beim Öffnen + Escape schließt + beim Schließen Eingabe zurücksetzen.
   useEffect(() => {
-    if (!open) return
+    if (!open) {
+      setLines([])
+      setCurrent("")
+      return
+    }
     const t = setTimeout(() => inputRef.current?.focus(), 60)
     const onKey = (e) => { if (e.key === "Escape") onClose() }
     window.addEventListener("keydown", onKey)
