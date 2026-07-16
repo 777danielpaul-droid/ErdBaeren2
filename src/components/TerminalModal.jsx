@@ -33,7 +33,7 @@ export default function TerminalModal({ open, onClose }) {
     const v = current.trim()
     if (!v) return
     // Geheimbefehl: öffnet das verborgene Bild (16:9, fullscreen) in einem neuen Tab.
-    if (v.toLowerCase() === "jesus is the shepherd") {
+    if (v.toLowerCase() === "jesus") {
       window.open(`${import.meta.env.BASE_URL}shepherd.html`, "_blank", "noopener")
     }
     setLines((l) => [...l, v])
