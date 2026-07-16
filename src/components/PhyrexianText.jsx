@@ -1,4 +1,4 @@
-import { usePhyrexian } from "./PhyrexianContext"
+import { useLang } from "./PhyrexianContext"
 
 // PhyrexianText — rendert lateinischen Text in selbstgebauten Phyrexian-Glyphen (SVG).
 // HORIZONTALE Orientierung: das "Rückgrat" jeder Glyphe ist eine waagerechte
@@ -138,11 +138,13 @@ export default function PhyrexianText({ text, className = "" }) {
   )
 }
 
-// <T> — Text-Wrapper: im Phyrexian-Mode als Glyphen, sonst als Klartext.
-// Gebrauch: <T>Widerstand bricht auf</T> statt {text}.
-export function T({ children, className = "" }) {
-  const text = typeof children === "string" ? children : String(children)
-  const { on } = usePhyrexian()
-  if (!on) return <span className={className}>{text}</span>
-  return <PhyrexianText text={text} className={className} />
+// <T> — Text-Wrapper: im Runes-Mode als Glyphen, im EN-Mode englisch,
+// sonst (DE) als deutscher Klartext. Gebrauch:
+//   <T en="The old rulers meet the upheaval">Wenn die alten Herrscher auf den Umbruch treffen</T>
+export function T({ children, en, className = "" }) {
+  const text = typeof children === "string" ? children : String(children);
+  const { mode } = useLang();
+  if (mode === "runes") return <PhyrexianText text={text} className={className} />;
+  if (mode === "en" && en) return <span className={className}>{en}</span>;
+  return <span className={className}>{text}</span>;
 }

@@ -69,7 +69,8 @@ const TITLE_SHADOW =
 
 export default function Hero() {
   const h = site.hero
-  const [t1, t2] = h.title.split("\n")
+  const [t1, t2] = h.title.de.split("\n")
+  const [t1en, t2en] = h.title.en.split("\n")
   const votes = useVotes()
 
   // Count-up-Hook: zählt sanft von `from` auf den Zielwert, sobald geladen.
@@ -129,7 +130,7 @@ export default function Hero() {
           variants={line}
           className="mono-label text-neon mb-6"
         >
-          <T>{h.eyebrow}</T>
+          <T en={h.eyebrow.en}>{h.eyebrow.de}</T>
         </motion.p>
 
         <h1
@@ -137,7 +138,7 @@ export default function Hero() {
           style={{ filter: "drop-shadow(2px 2px rgba(0,0,0,0.55)) drop-shadow(4px 4px rgba(0,0,0,0.5)) drop-shadow(8px 8px rgba(0,0,0,0.4)) drop-shadow(12px 12px rgba(0,0,0,0.34)) drop-shadow(18px 18px rgba(0,0,0,0.25)) drop-shadow(24px 24px 10px rgba(0,0,0,0.3))" }}
         >
           <motion.span custom={1} initial="hidden" animate="show" variants={line} className="block title-rainbow">
-            <T>{t1}</T>
+            <T en={t1en}>{t1}</T>
           </motion.span>
           <motion.span
             custom={2}
@@ -146,7 +147,7 @@ export default function Hero() {
             variants={line}
             className="block title-rainbow"
           >
-            <T>{t2}</T>
+            <T en={t2en}>{t2}</T>
           </motion.span>
         </h1>
 
@@ -157,7 +158,7 @@ export default function Hero() {
           variants={line}
           className="mt-8 text-lg sm:text-xl text-bone/70 max-w-2xl leading-relaxed"
         >
-          <T>{h.lead}</T>
+          <T en={h.lead.en}>{h.lead.de}</T>
         </motion.p>
 
         <motion.div
@@ -171,13 +172,13 @@ export default function Hero() {
             href={h.primaryCta.href}
             className="mono-label bg-neon hover:bg-neon-2 transition-colors text-white px-6 py-3 rounded-sm shadow-[0_0_40px_rgba(192,38,211,0.45)]"
           >
-            <T>{h.primaryCta.label}</T>
+            <T en={h.primaryCta.label.en}>{h.primaryCta.label.de}</T>
           </a>
           <a
             href={h.secondaryCta.href}
             className="mono-label border border-white/15 hover:border-gold/60 text-bone px-6 py-3 rounded-sm transition-colors"
           >
-            <T>{h.secondaryCta.label}</T>
+            <T en={h.secondaryCta.label.en}>{h.secondaryCta.label.de}</T>
           </a>
         </motion.div>
 
@@ -191,9 +192,9 @@ export default function Hero() {
           {h.stats.map((s) => (
             <div key={s.label} className="bg-white/5 px-6 py-6 backdrop-blur-sm">
               <div className="font-display font-bold text-3xl text-gold text-glow-gold">
-                {liveValue(s.label) ?? s.value}
+                {liveValue(s.label.de) ?? s.value.de}
               </div>
-              <div className="mono-label text-bone/50 mt-2"><T>{s.label}</T></div>
+              <div className="mono-label text-bone/50 mt-2"><T en={s.label.en}>{s.label.de}</T></div>
             </div>
           ))}
         </motion.div>

@@ -1,22 +1,20 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { getInitialPhyrexian, applyPhyrexian, togglePhyrexian } from "../lib/phyrexian";
+import { getInitialLang, applyLang, cycleLang } from "../lib/phyrexian";
 
-const PhyrexianContext = createContext({ on: false, toggle: () => {} });
+const LangContext = createContext({ mode: "de", cycle: () => {} });
 
-export function PhyrexianProvider({ children }) {
-  const [on, setOn] = useState(() => getInitialPhyrexian() === "on");
+export function LangProvider({ children }) {
+  const [mode, setMode] = useState(() => getInitialLang());
   // DOM-Attribut setzen (für CSS-Regeln) + initial am Mount.
   useEffect(() => {
-    applyPhyrexian(on ? "on" : "off");
-  }, [on]);
-  const toggle = () => setOn(togglePhyrexian() === "on");
+    applyLang(mode);
+  }, [mode]);
+  const cycle = () => setMode(cycleLang());
   return (
-    <PhyrexianContext.Provider value={{ on, toggle }}>
-      {children}
-    </PhyrexianContext.Provider>
+    <LangContext.Provider value={{ mode, cycle }}>{children}</LangContext.Provider>
   );
 }
 
-export function usePhyrexian() {
-  return useContext(PhyrexianContext);
+export function useLang() {
+  return useContext(LangContext);
 }

@@ -2,7 +2,7 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { site } from "../../data/content"
 import { getInitialTheme, toggleTheme } from "../../lib/theme"
-import { usePhyrexian } from "../PhyrexianContext"
+import { useLang } from "../PhyrexianContext"
 import TerminalModal from "../TerminalModal"
 
 // Neon-Palette wie im Hero-Grid, ABER ohne cyan — cyan ist der Default,
@@ -14,7 +14,7 @@ export default function Navbar() {
   const [termOpen, setTermOpen] = useState(false)
   // Theme-State für den Toggle-Button (Initial aus DOM lesen).
   const [theme, setTheme] = useState(() => getInitialTheme())
-  const { on: phyOn, toggle: togglePhy } = usePhyrexian()
+  const { mode, cycle: cycleLang } = useLang()
   // Pro Link eine zufällige Neon-Farbe, die beim Hover gesetzt wird.
   const [hover, setHover] = useState({})
 
@@ -36,7 +36,7 @@ export default function Navbar() {
               <span className="text-base leading-none">🐻</span>
             </span>
             <span className="font-display font-bold tracking-[0.18em] text-sm">
-              {site.brand}
+              {site.brand.de}
             </span>
           </a>
 
@@ -50,7 +50,7 @@ export default function Navbar() {
                   style={{ color: hover[n.href] || "#22d3ee" }}
                   className="mono-label text-cyan hover:text-cyan transition-colors"
                 >
-                  {n.label}
+                  {n.label.de}
                 </a>
               </li>
             ))}
@@ -66,14 +66,21 @@ export default function Navbar() {
 
           <button
             type="button"
-            aria-label={phyOn ? "Fremde Schrift auschalten" : "Ganze Seite in fremder Schrift anzeigen"}
-            aria-pressed={phyOn}
-            onClick={togglePhy}
+            aria-label={
+              mode === "de"
+                ? "Auf Englisch umschalten"
+                : mode === "en"
+                ? "In fremder Schrift anzeigen"
+                : "Zurück zu Deutsch"
+            }
+            onClick={cycleLang}
             className={`hidden md:grid place-items-center w-10 h-10 rounded-md border text-bone transition-colors ${
-              phyOn ? "border-neon/60 text-neon" : "border-white/10 hover:border-neon/50"
+              mode === "runes" ? "border-neon/60 text-neon" : "border-white/10 hover:border-neon/50"
             }`}
           >
-            <span className="text-lg leading-none">{phyOn ? "᛭" : "⌘"}</span>
+            <span className="text-lg leading-none">
+              {mode === "de" ? "⌘" : mode === "en" ? "EN" : "᛭"}
+            </span>
           </button>
 
           <button

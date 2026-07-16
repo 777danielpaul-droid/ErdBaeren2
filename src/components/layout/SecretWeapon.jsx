@@ -74,10 +74,10 @@ export default function SecretWeapon() {
                 className="relative z-30 -mt-6 sm:-mt-8 text-center max-w-2xl"
               >
                 <h3 className="font-display font-bold text-4xl sm:text-6xl neon-text">
-                  <T>{s.name}</T>
+                  <T en={s.name.en}>{s.name.de}</T>
                 </h3>
-                <p className="mt-3 text-bone/80 text-lg max-w-xl mx-auto"><T>{s.subtitle}</T></p>
-                <p className="mt-5 text-bone/65 leading-relaxed max-w-2xl mx-auto"><T>{s.body}</T></p>
+                <p className="mt-3 text-bone/80 text-lg max-w-xl mx-auto"><T en={s.subtitle.en}>{s.subtitle.de}</T></p>
+                <p className="mt-5 text-bone/65 leading-relaxed max-w-2xl mx-auto"><T en={s.body.en}>{s.body.de}</T></p>
               </motion.div>
             </div>
 
@@ -88,9 +88,9 @@ export default function SecretWeapon() {
             >
               <div className="rounded-2xl neon-border glass sheen p-10 sm:p-14 text-center">
                 <h2 className="font-display font-bold text-4xl sm:text-5xl tracking-tight leading-[1.05]">
-                  <T>{s.titleCover}</T>
+                  <T en={s.titleCover.en}>{s.titleCover.de}</T>
                 </h2>
-                <p className="mt-6 text-bone/75 leading-relaxed text-lg"><T>{s.coverBody}</T></p>
+                <p className="mt-6 text-bone/75 leading-relaxed text-lg"><T en={s.coverBody.en}>{s.coverBody.de}</T></p>
                 <p className="mono-label text-neon mt-8 text-sm tracking-[0.2em]">
                   ↓ SCROLLE, UM ZU ENTHÜLLEN
                 </p>

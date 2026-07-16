@@ -22,7 +22,7 @@ export default function Footer() {
         <div className="flex items-center gap-3">
           <span className="text-2xl leading-none" aria-hidden="true">🐻</span>
           <span className="font-display font-bold tracking-[0.18em] text-sm">
-            <T>{site.brand}</T>
+            <T en={site.brand.en}>{site.brand.de}</T>
           </span>
         </div>
 
@@ -33,14 +33,14 @@ export default function Footer() {
               href={l.href}
               className="text-bone/70 hover:text-neon transition-colors text-sm font-medium tracking-wide"
             >
-              <T>{l.label}</T>
+              <T en={l.label.en}>{l.label.de}</T>
             </a>
           ))}
         </nav>
       </div>
       <div className="border-t border-white/5">
         <p className="max-w-7xl mx-auto px-5 sm:px-8 py-5 mono-label text-bone/35">
-          <T>{f.note}</T>
+          <T en={f.note.en}>{f.note.de}</T>
         </p>
       </div>
     </motion.footer>

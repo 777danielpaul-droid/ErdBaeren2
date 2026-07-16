@@ -48,7 +48,7 @@ export default function Battle() {
           <div className="relative w-full max-w-5xl mx-auto px-5 sm:px-8 h-full flex items-center justify-center">
             {/* REVEAL-SPALTE (unter dem Panel): Bild + Figcaption gestapelt, am Ende komplett sichtbar */}
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 z-10">
-              <p className="mono-label text-neon"><T>{s.eyebrow}</T></p>
+              <p className="mono-label text-neon"><T en={s.eyebrow.en}>{s.eyebrow.de}</T></p>
 
               <motion.div
                 style={{ y: imgY, scale: imgScale, opacity: imgOpacity, filter: imgFilter }}
@@ -82,7 +82,7 @@ export default function Battle() {
                 className="relative z-30 -mt-6 sm:-mt-8 text-center max-w-3xl"
               >
                 <p className="battle-caption text-bone/80 text-sm sm:text-base max-w-3xl leading-relaxed">
-                  <T>{s.caption}</T>
+                  <T en={s.caption.en}>{s.caption.de}</T>
                 </p>
               </motion.div>
             </div>
@@ -94,9 +94,9 @@ export default function Battle() {
             >
               <div className="rounded-2xl neon-border glass sheen p-10 sm:p-14 text-center">
                 <h2 className="font-display font-bold text-4xl sm:text-5xl tracking-tight leading-[1.05]">
-                  <T>{s.titleCover}</T>
+                  <T en={s.titleCover.en}>{s.titleCover.de}</T>
                 </h2>
-                <p className="mt-6 text-bone/75 leading-relaxed text-lg"><T>{s.coverBody}</T></p>
+                <p className="mt-6 text-bone/75 leading-relaxed text-lg"><T en={s.coverBody.en}>{s.coverBody.de}</T></p>
                 <p className="mono-label text-neon mt-8 text-sm tracking-[0.2em]">
                   ↓ SCROLLE, UM ZU ENTHÜLLEN
                 </p>

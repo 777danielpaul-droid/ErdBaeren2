@@ -7,11 +7,11 @@ import Battle from "./components/layout/Battle"
 import WarRoomArchive from "./components/layout/WarRoomArchive"
 import Footer from "./components/layout/Footer"
 import { ScrollProgress } from "./components/motion/ScrollFX"
-import { PhyrexianProvider } from "./components/PhyrexianContext"
+import { LangProvider } from "./components/PhyrexianContext"
 
 export default function App() {
   return (
-    <PhyrexianProvider>
+    <LangProvider>
       <ScrollProgress />
       <Navbar />
       <main>
@@ -23,6 +23,6 @@ export default function App() {
         <WarRoomArchive />
       </main>
       <Footer />
-    </PhyrexianProvider>
+    </LangProvider>
   )
 }

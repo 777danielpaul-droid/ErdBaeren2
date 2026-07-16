@@ -5,10 +5,12 @@ import { site } from "../../data/content"
 import { EASE } from "../motion/variants"
 import { useVotes, castVote } from "../../lib/votes"
 import PhyrexianText, { T } from "../PhyrexianText"
+import { useLang } from "../PhyrexianContext"
 
 const FACTIONS = {
   erdbaeren: {
     name: "ERDBÄREN",
+    nameEn: "EARTHBEARS",
     color: "#c026d3",
     stats: [
       { k: "WIDERSTAND", v: 98 },
@@ -20,6 +22,7 @@ const FACTIONS = {
   },
   milchmaeuse: {
     name: "MILCHMÄUSE",
+    nameEn: "MILKICE",
     color: "#22d3ee",
     stats: [
       { k: "ALTE HERRSCHAFT", v: 99 },
@@ -57,6 +60,7 @@ function StatBar({ k, v, color }) {
 // ihr Feld. x/y = Start-Versatz zur Grid-Mitte (nur sm+, mobil kein Deal).
 function InterceptCard({ msg, delay, z }) {
   const [open, setOpen] = useState(false)
+  const { mode } = useLang()
   const ref = useRef(null)
   const x = useMotionValue(0)
   const y = useMotionValue(0)
@@ -91,7 +95,7 @@ function InterceptCard({ msg, delay, z }) {
       >
         <div className="flex items-center justify-between mb-4">
           <span className="mono-label text-cyan">{msg.code}</span>
-          <span className="mono-label text-bone/35">{open ? "DECHIFFRIERT" : "▸ DECHIFFRIEREN"}</span>
+          <span className="mono-label text-bone/35">{open ? (mode === "en" ? "DECRYPTED" : "DECHIFFRIERT") : (mode === "en" ? "▸ DECRYPT" : "▸ DECHIFFRIEREN")}</span>
         </div>
         <PhyrexianText text={msg.cipher} className="text-2xl sm:text-3xl min-h-[4rem] sm:min-h-[4.5rem]" />
         <AnimatePresence initial={false}>
@@ -103,7 +107,7 @@ function InterceptCard({ msg, delay, z }) {
               transition={{ duration: 0.4, ease: EASE }}
               className="overflow-hidden text-bone/80 font-display text-lg italic border-t border-white/10 pt-4"
             >
-              „{msg.plain}“
+              „{mode === "en" ? msg.plain.en : msg.plain.de}“
             </motion.p>
           )}
         </AnimatePresence>
@@ -127,9 +131,9 @@ function Intercepts({ data }) {
   return (
     <div className="mt-16">
       <Reveal className="mb-8" variant="up">
-        <p className="mono-label text-cyan mb-3"><T>{data.eyebrow}</T></p>
-        <h3 className="font-display font-bold text-3xl sm:text-4xl tracking-tight"><T>{data.title}</T></h3>
-        <p className="mt-3 text-sm text-bone/50"><T>{data.hint}</T></p>
+        <p className="mono-label text-cyan mb-3"><T en={data.eyebrow.en}>{data.eyebrow.de}</T></p>
+        <h3 className="font-display font-bold text-3xl sm:text-4xl tracking-tight"><T en={data.title.en}>{data.title.de}</T></h3>
+        <p className="mt-3 text-sm text-bone/50"><T en={data.hint.en}>{data.hint.de}</T></p>
       </Reveal>
       <div className="relative grid grid-cols-1 sm:grid-cols-2 gap-4">
         {data.messages.map((m) => {
@@ -201,8 +205,8 @@ function ArchiveCard({ entry, index, count, progress }) {
       className="rounded-xl neon-border glass p-6 hover:border-gold/40 transition-colors"
     >
       <div className="mono-label text-neon">{entry.code}</div>
-      <h3 className="font-display font-semibold text-lg mt-3 text-bone"><T>{entry.title}</T></h3>
-      <p className="mt-3 text-sm text-bone/60 leading-relaxed"><T>{entry.text}</T></p>
+      <h3 className="font-display font-semibold text-lg mt-3 text-bone"><T en={entry.title.en}>{entry.title.de}</T></h3>
+      <p className="mt-3 text-sm text-bone/60 leading-relaxed"><T en={entry.text.en}>{entry.text.de}</T></p>
     </motion.article>
   )
 }
@@ -260,7 +264,7 @@ export default function WarRoomArchive() {
                 <p className="mono-label text-neon mb-4">// KRIEGSKONSOLE // ECHTZEIT-SIM</p>
                 <h2 className="font-display font-bold text-4xl sm:text-6xl tracking-tight">
                   <span className="glitch" data-text="WÄHLE DEINE FRAKTION" role="img" aria-label="Wähle deine Fraktion">
-                    WÄHLE DEINE FRAKTION
+                    <T en="CHOOSE YOUR FACTION">WÄHLE DEINE FRAKTION</T>
                   </span>
                 </h2>
               </Reveal>
@@ -277,15 +281,17 @@ export default function WarRoomArchive() {
                     }`}
                     style={active === key ? { boxShadow: `0 0 30px ${fac.color}55` } : {}}
                   >
-                    {fac.name}
+                    {<T en={fac.nameEn}>{fac.name}</T>}
                   </button>
                 ))}
               </div>
               <Reveal className="mb-8 text-center">
                 <p className="mono-label text-bone/30">
-                  <T>{votes.mine
-                    ? "// DEINE STIMME IST GEZÄHLT · WÄHLE ERNEUT ZUM WECHSELN"
-                    : "// EINE STIMME PRO KÄMPFER · GIB SIE IM DOSSIER AB"}</T>
+                  <T en={votes.mine ? "// YOUR VOTE IS COUNTED · VOTE AGAIN TO SWITCH" : "// ONE VOTE PER FIGHTER · CAST IT IN THE DOSSIER"}>
+                    {votes.mine
+                      ? "// DEINE STIMME IST GEZÄHLT · WÄHLE ERNEUT ZUM WECHSELN"
+                      : "// EINE STIMME PRO KÄMPFER · GIB SIE IM DOSSIER AB"}
+                  </T>
                 </p>
               </Reveal>
 
@@ -304,7 +310,7 @@ export default function WarRoomArchive() {
                 <div className="relative">
                   <div className="flex items-center justify-between mb-8">
                     <h3 className="font-display font-bold text-2xl" style={{ color: f.color }}>
-                      {f.name}
+                      <T en={f.nameEn}>{f.name}</T>
                     </h3>
                     <span className="mono-label text-bone/40">COMBAT-MATRIX v2.4</span>
                   </div>
@@ -316,7 +322,7 @@ export default function WarRoomArchive() {
                   </div>
 
                   <div className="mt-8 pt-6 border-t border-white/10">
-                    <p className="mono-label text-bone/40 mb-2"><T>PROGNOSE</T></p>
+                    <p className="mono-label text-bone/40 mb-2"><T en="FORECAST">PROGNOSE</T></p>
                     <p
                       className="font-display font-bold text-lg glitch"
                       data-text={f.verdict}
@@ -337,7 +343,9 @@ export default function WarRoomArchive() {
                       boxShadow: votes.mine === active ? `0 0 30px ${f.color}55` : "none",
                     }}
                   >
-                    <T>{votes.mine === active ? "DEINE STIMME ✓" : `STIMME FÜR ${f.name}`}</T>
+                    <T en={votes.mine === active ? "YOUR VOTE ✓" : `VOTE FOR ${f.nameEn}`}>
+                      {votes.mine === active ? "DEINE STIMME ✓" : `STIMME FÜR ${f.name}`}
+                    </T>
                     <span className="tabular-nums text-bone/90">
                       {active === "erdbaeren" ? votes.erdbaeren : votes.milchmaeuse}
                     </span>
@@ -361,9 +369,9 @@ export default function WarRoomArchive() {
           >
             <div className="min-h-full max-w-7xl mx-auto px-5 sm:px-8 flex flex-col justify-center py-12">
               <Reveal className="mb-12" variant="up">
-                <p className="mono-label text-gold mb-4"><T>{site.archive.eyebrow}</T></p>
+                <p className="mono-label text-gold mb-4"><T en={site.archive.eyebrow.en}>{site.archive.eyebrow.de}</T></p>
                 <h2 className="font-display font-bold text-4xl sm:text-5xl tracking-tight">
-                  <T>{site.archive.title}</T>
+                  <T en={site.archive.title.en}>{site.archive.title.de}</T>
                 </h2>
               </Reveal>
 
