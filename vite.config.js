@@ -7,5 +7,17 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   base: '/ErdBaeren2/',
   plugins: [react(), tailwindcss()],
-  server: { host: true }
+  server: { host: true },
+  build: {
+    chunkSizeWarningLimit: 1200,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/three') || id.includes('@react-three')) {
+            return 'three'
+          }
+        },
+      },
+    },
+  },
 })

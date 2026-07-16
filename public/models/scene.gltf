@@ -1,0 +1,509 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 2143,
+      "max": [
+        0.6411203742027283,
+        0.6411064863204956,
+        0.6413100361824036
+      ],
+      "min": [
+        -0.6411083340644836,
+        -0.6411222219467163,
+        -0.6413100361824036
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 25716,
+      "componentType": 5126,
+      "count": 2143,
+      "max": [
+        0.9996597766876221,
+        0.9996607303619385,
+        1.0
+      ],
+      "min": [
+        -0.9996596574783325,
+        -0.9996597766876221,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 2143,
+      "max": [
+        1.0000001192092896,
+        1.0
+      ],
+      "min": [
+        0.0,
+        -1.1920928955078125e-07
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 17144,
+      "componentType": 5126,
+      "count": 2143,
+      "max": [
+        1.0000001192092896,
+        1.0
+      ],
+      "min": [
+        0.0,
+        -1.1920928955078125e-07
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 11904,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 51432,
+      "componentType": 5126,
+      "count": 1559,
+      "max": [
+        0.6413629055023193,
+        0.6413082480430603,
+        0.0
+      ],
+      "min": [
+        -0.6413081884384155,
+        -0.6413628458976746,
+        -2.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 70140,
+      "componentType": 5126,
+      "count": 1559,
+      "max": [
+        1.0,
+        1.0,
+        0.32016879320144653
+      ],
+      "min": [
+        -1.0,
+        -0.9986263513565063,
+        -0.9999999403953552
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 34288,
+      "componentType": 5126,
+      "count": 1559,
+      "max": [
+        1.0000001192092896,
+        0.5
+      ],
+      "min": [
+        0.0,
+        0.00012201070785522461
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 47616,
+      "componentType": 5125,
+      "count": 6549,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 498,
+      "max": [
+        10.416666984558105
+      ],
+      "min": [
+        0.0416666679084301
+      ],
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5126,
+      "count": 498,
+      "max": [
+        0.4993710219860077,
+        0.7071068286895752,
+        0.7071067690849304,
+        0.7071068286895752
+      ],
+      "min": [
+        -0.7071067690849304,
+        -0.4968494772911072,
+        -0.49684709310531616,
+        -0.4993719756603241
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 1992,
+      "componentType": 5126,
+      "count": 498,
+      "max": [
+        10.416666984558105
+      ],
+      "min": [
+        0.0416666679084301
+      ],
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 4,
+      "byteOffset": 7968,
+      "componentType": 5126,
+      "count": 498,
+      "max": [
+        0.4993710517883301,
+        0.7071067690849304,
+        0.7071067690849304,
+        0.7071067690849304
+      ],
+      "min": [
+        -0.7071067690849304,
+        -0.4968494474887848,
+        -0.49684712290763855,
+        -0.4993719458580017
+      ],
+      "type": "VEC4"
+    }
+  ],
+  "animations": [
+    {
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "node": 4,
+            "path": "rotation"
+          }
+        },
+        {
+          "sampler": 1,
+          "target": {
+            "node": 6,
+            "path": "rotation"
+          }
+        }
+      ],
+      "name": "Scene",
+      "samplers": [
+        {
+          "input": 9,
+          "interpolation": "LINEAR",
+          "output": 10
+        },
+        {
+          "input": 11,
+          "interpolation": "LINEAR",
+          "output": 12
+        }
+      ]
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "IZ.MdVerz (https://sketchfab.com/IZ.MdVerz)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/earth-globe-hologram-2mb-looping-animation-37cac2803bbd4e9cad150a772215c343",
+      "title": "Earth globe hologram 2MB looping animation"
+    },
+    "generator": "Sketchfab-16.58.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 73812,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 46760,
+      "byteOffset": 73812,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 88848,
+      "byteOffset": 120572,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 3984,
+      "byteOffset": 209420,
+      "name": "floatBufferViews"
+    },
+    {
+      "buffer": 0,
+      "byteLength": 15936,
+      "byteOffset": 213404,
+      "byteStride": 16,
+      "name": "floatBufferViews"
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 229340,
+      "uri": "scene.bin"
+    }
+  ],
+  "extensionsUsed": [
+    "KHR_materials_emissive_strength"
+  ],
+  "images": [
+    {
+      "uri": "textures/Earth_Surface.002_baseColor.png"
+    },
+    {
+      "uri": "textures/Earth_Surface.002_emissive.png"
+    },
+    {
+      "uri": "textures/transparent.004_baseColor.png"
+    }
+  ],
+  "materials": [
+    {
+      "alphaMode": "BLEND",
+      "doubleSided": true,
+      "emissiveFactor": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveTexture": {
+        "index": 1
+      },
+      "name": "Earth_Surface.002",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0.0,
+        "roughnessFactor": 0.8211145618000169
+      }
+    },
+    {
+      "alphaMode": "BLEND",
+      "doubleSided": true,
+      "emissiveFactor": [
+        0.0,
+        0.6330339999999997,
+        1.0
+      ],
+      "extensions": {
+        "KHR_materials_emissive_strength": {
+          "emissiveStrength": 2.0
+        }
+      },
+      "name": "transparent.004",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.0,
+          0.6330339999999997,
+          1.0,
+          1.0
+        ],
+        "baseColorTexture": {
+          "index": 2
+        },
+        "metallicFactor": 0.0,
+        "roughnessFactor": 0.8826185245524251
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Earth_2_Earth Surface.002_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TEXCOORD_0": 2,
+            "TEXCOORD_1": 3
+          },
+          "indices": 4,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Earth rays_2_transparent.004_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 6,
+            "POSITION": 5,
+            "TEXCOORD_0": 7
+          },
+          "indices": 8,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        0.009999999776482582,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.009999999776482582,
+        0.0,
+        0.0,
+        -0.009999999776482582,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "14451120394e4dd890e906789247ac40.fbx"
+    },
+    {
+      "children": [
+        3
+      ],
+      "name": "Object_2"
+    },
+    {
+      "children": [
+        4,
+        6
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        5
+      ],
+      "name": "Earth_2",
+      "rotation": [
+        -0.7070509195327759,
+        0.008885626681149006,
+        0.008885626681149006,
+        0.7070509791374207
+      ],
+      "scale": [
+        99.99999237060547,
+        99.99999237060547,
+        100.0
+      ]
+    },
+    {
+      "mesh": 0,
+      "name": "Earth_2_Earth Surface.002_0"
+    },
+    {
+      "children": [
+        7
+      ],
+      "name": "Earth rays_2",
+      "rotation": [
+        -0.7070509791374207,
+        0.008885622024536133,
+        0.008885622955858707,
+        0.7070509195327759
+      ],
+      "scale": [
+        100.00027465820313,
+        100.00027465820313,
+        100.00027465820313
+      ]
+    },
+    {
+      "mesh": 1,
+      "name": "Earth rays_2_transparent.004_0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    }
+  ]
+}
