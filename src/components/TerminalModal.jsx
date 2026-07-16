@@ -27,7 +27,12 @@ export default function TerminalModal({ open, onClose }) {
 
   const submit = () => {
     const v = current.trim()
-    if (v) setLines((l) => [...l, v])
+    if (!v) return
+    // Geheimbefehl: öffnet das verborgene Bild in einem neuen Tab.
+    if (v.toLowerCase() === "jesus is the shepherd") {
+      window.open(`${import.meta.env.BASE_URL}shepherd-secret.jpg`, "_blank", "noopener")
+    }
+    setLines((l) => [...l, v])
     setCurrent("")
   }
 
