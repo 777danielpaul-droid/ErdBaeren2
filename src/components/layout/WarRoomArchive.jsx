@@ -130,9 +130,17 @@ function ArchiveCard({ entry, index, count, progress }) {
         center = g.left + g.width / 2 - (naturalLeft + r.width / 2)
       }
       const p = progress.get()
-      const factor = p < 0.62 ? 1 : p > 0.98 ? 0 : (0.98 - p) / (0.98 - 0.62)
+      // Stapel bis 0.70 halten, dann sanft (ease-out) bis 0.97 auseinanderfahren.
+      // Mehr Scroll-Raum (Pin-Bühne 280vh) + Ease → wirkt deutlich langsamer.
+      let factor
+      if (p < 0.70) factor = 1
+      else if (p > 0.97) factor = 0
+      else {
+        const t = (p - 0.70) / (0.97 - 0.70) // 0..1 linear
+        factor = 1 - Math.pow(t, 0.6)        // ease-out: langsam startend
+      }
       x.set(factor * center)
-      opacity.set(p < 0.6 ? Math.max(0, (p - 0.55) / 0.05) : 1)
+      opacity.set(p < 0.62 ? Math.max(0, (p - 0.55) / 0.07) : 1)
     }
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(apply) }
     window.addEventListener("scroll", onScroll, { passive: true })
@@ -145,7 +153,7 @@ function ArchiveCard({ entry, index, count, progress }) {
   }, [progress, x, opacity])
 
   const rel = index - (count - 1) / 2
-  const rotate = useTransform(progress, [0.62, 0.96], [rel * 3, 0])
+  const rotate = useTransform(progress, [0.70, 0.97], [rel * 3, 0])
   return (
     <motion.article
       ref={cardRef}
@@ -201,7 +209,7 @@ export default function WarRoomArchive() {
   return (
     <section ref={ref} id="kriegskonsole" className="relative">
       {/* PIN-BÜHNE */}
-      <div className="relative h-[200vh]">
+      <div className="relative h-[280vh]">
         <div className="sticky top-0 h-screen overflow-y-auto sm:overflow-hidden">
 
           {/* SEKTOR 1 — KRIEGSKONSOLE (Basis, z-10, opak) */}
