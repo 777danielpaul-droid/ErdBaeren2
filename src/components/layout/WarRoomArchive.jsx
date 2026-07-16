@@ -1,9 +1,8 @@
-import { useState } from "react"
-import { useRef } from "react"
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
+import { useState, useRef, useLayoutEffect, useEffect } from "react"
+import { motion, useScroll, useTransform, AnimatePresence, useMotionValue } from "framer-motion"
 import Reveal from "../motion/Reveal"
 import { site } from "../../data/content"
-import { stagger, EASE } from "../motion/variants"
+import { EASE } from "../motion/variants"
 import { useVotes, castVote } from "../../lib/votes"
 import PhyrexianText from "../PhyrexianText"
 
@@ -102,6 +101,64 @@ function Intercepts({ data }) {
   )
 }
 
+// FÄCHER-EFFEKT (nur lg+): Die 4 Archiv-Karten liegen anfangs KOMPLETT übereinander
+// (nur die oberste sichtbar), nachdem der Archiv-Sektor voll steht (ab 55%). Beim
+// Weiterscrollen (62→98%) fahren die Karten von der Container-Mitte in ihre
+// Grid-Positionen auseinander. Zentrierung in px (kein %-Overflow → keine Scrollbar).
+function ArchiveCard({ entry, index, count, progress }) {
+  const cardRef = useRef(null)
+  const x = useMotionValue(0)
+  const opacity = useMotionValue(0)
+
+  // Scroll-gebundener Fächer (nur lg+): gestapelt (x=center) bis 0.62, dann in
+  // Grid-Slot (0) bis 0.98. Eigener scroll-Listener + progress.get() → robust
+  // gegen framer-motion Transform-Timing. center = px-Versatz zur Grid-Mitte.
+  useEffect(() => {
+    let raf = 0
+    const apply = () => {
+      raf = 0
+      const card = cardRef.current
+      const grid = card && card.parentElement
+      if (!grid) return
+      const stacked = window.matchMedia("(min-width: 1024px)").matches
+      // Natürliche Kartenposition (ohne aktuellen Transform x).
+      let center = 0
+      if (stacked) {
+        const g = grid.getBoundingClientRect()
+        const r = card.getBoundingClientRect()
+        const naturalLeft = r.left - x.get()
+        center = g.left + g.width / 2 - (naturalLeft + r.width / 2)
+      }
+      const p = progress.get()
+      const factor = p < 0.62 ? 1 : p > 0.98 ? 0 : (0.98 - p) / (0.98 - 0.62)
+      x.set(factor * center)
+      opacity.set(p < 0.6 ? Math.max(0, (p - 0.55) / 0.05) : 1)
+    }
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(apply) }
+    window.addEventListener("scroll", onScroll, { passive: true })
+    apply() // initial
+    window.addEventListener("resize", apply)
+    return () => {
+      window.removeEventListener("scroll", onScroll)
+      window.removeEventListener("resize", apply)
+    }
+  }, [progress, x, opacity])
+
+  const rel = index - (count - 1) / 2
+  const rotate = useTransform(progress, [0.62, 0.96], [rel * 3, 0])
+  return (
+    <motion.article
+      ref={cardRef}
+      style={{ x, rotate, opacity, zIndex: count - index }}
+      className="rounded-xl neon-border glass p-6 hover:border-gold/40 transition-colors"
+    >
+      <div className="mono-label text-neon">{entry.code}</div>
+      <h3 className="font-display font-semibold text-lg mt-3 text-bone">{entry.title}</h3>
+      <p className="mt-3 text-sm text-bone/60 leading-relaxed">{entry.text}</p>
+    </motion.article>
+  )
+}
+
 // STACKING-PUSH: Sektor 1 (Kriegskonsole) liegt anfangs voll sichtbar/opak.
 // Beim Scrollen schiebt sich Sektor 2 (Archiv) von unten hoch und landet
 // VOR Sektor 1 (z-20 > z-10) — komplett opak, OHNE Blur/Fade.
@@ -127,14 +184,15 @@ export default function WarRoomArchive() {
   }
 
   const ref = useRef(null)
+  const archiveGridRef = useRef(null)
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end end"],
   })
 
-  // Sektor 2: von unten (100%) hoch auf 0% — Start/Ende je kurz gehalten.
-  // Push erst spät starten: erst ab 55% Scroll fährt der Archiv-Sektor hoch (langer Vorlauf).
-  const sector2Y = useTransform(scrollYProgress, [0.55, 1], ["100%", "0%"])
+  // Sektor 2: von unten (100%) hoch auf 0% — früh fertig (bei 55%), damit der
+  // Archiv-Sektor voll sichtbar steht, BEVOR der Fächer-Effekt einsetzt.
+  const sector2Y = useTransform(scrollYProgress, [0.2, 0.55], ["100%", "0%"])
 
   // Scroll-Linked Glow der Combat-Matrix.
   const glow = useTransform(scrollYProgress, [0, 0.5, 1], [0.25, 0.7, 0.25])
@@ -251,7 +309,7 @@ export default function WarRoomArchive() {
           <motion.div
             id="archiv"
             style={{ y: sector2Y }}
-            className="absolute inset-0 z-20 bg-ink-soft border-t border-white/10 overflow-y-auto"
+            className="absolute inset-0 z-20 bg-ink-soft border-t border-white/10 overflow-y-auto overflow-x-hidden archiv-scroll"
           >
             <div className="min-h-full max-w-7xl mx-auto px-5 sm:px-8 flex flex-col justify-center py-12">
               <Reveal className="mb-12" variant="up">
@@ -261,29 +319,17 @@ export default function WarRoomArchive() {
                 </h2>
               </Reveal>
 
-              <motion.div
-                variants={stagger}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, amount: 0.15 }}
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
-              >
-                {site.archive.entries.map((e) => (
-                  <motion.article
+              <div ref={archiveGridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {site.archive.entries.map((e, i) => (
+                  <ArchiveCard
                     key={e.code}
-                    variants={{
-                      hidden: { opacity: 0, y: 24 },
-                      show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
-                    }}
-                    whileHover={{ y: -6, transition: { duration: 0.4, ease: EASE } }}
-                    className="rounded-xl neon-border glass p-6 hover:border-gold/40 transition-colors"
-                  >
-                    <div className="mono-label text-neon">{e.code}</div>
-                    <h3 className="font-display font-semibold text-lg mt-3 text-bone">{e.title}</h3>
-                    <p className="mt-3 text-sm text-bone/60 leading-relaxed">{e.text}</p>
-                  </motion.article>
+                    entry={e}
+                    index={i}
+                    count={site.archive.entries.length}
+                    progress={scrollYProgress}
+                  />
                 ))}
-              </motion.div>
+              </div>
 
               {/* ABGEFANGENE TRANSMISSIONEN (Phyrexian-Schrift, Klick dechiffriert) */}
               <Intercepts data={site.archive.intercepts} />
