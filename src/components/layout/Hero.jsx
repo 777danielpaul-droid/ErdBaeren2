@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { EASE } from "../motion/variants"
 import { site } from "../../data/content"
 import { useVotes } from "../../lib/votes"
+import { T } from "../PhyrexianText"
 
 const NEON = ["#c026d3", "#7c3aed", "#22d3ee", "#c9a227"]
 
@@ -128,7 +129,7 @@ export default function Hero() {
           variants={line}
           className="mono-label text-neon mb-6"
         >
-          {h.eyebrow}
+          <T>{h.eyebrow}</T>
         </motion.p>
 
         <h1
@@ -136,7 +137,7 @@ export default function Hero() {
           style={{ filter: "drop-shadow(2px 2px rgba(0,0,0,0.55)) drop-shadow(4px 4px rgba(0,0,0,0.5)) drop-shadow(8px 8px rgba(0,0,0,0.4)) drop-shadow(12px 12px rgba(0,0,0,0.34)) drop-shadow(18px 18px rgba(0,0,0,0.25)) drop-shadow(24px 24px 10px rgba(0,0,0,0.3))" }}
         >
           <motion.span custom={1} initial="hidden" animate="show" variants={line} className="block title-rainbow">
-            {t1}
+            <T>{t1}</T>
           </motion.span>
           <motion.span
             custom={2}
@@ -145,7 +146,7 @@ export default function Hero() {
             variants={line}
             className="block title-rainbow"
           >
-            {t2}
+            <T>{t2}</T>
           </motion.span>
         </h1>
 
@@ -156,7 +157,7 @@ export default function Hero() {
           variants={line}
           className="mt-8 text-lg sm:text-xl text-bone/70 max-w-2xl leading-relaxed"
         >
-          {h.lead}
+          <T>{h.lead}</T>
         </motion.p>
 
         <motion.div
@@ -170,13 +171,13 @@ export default function Hero() {
             href={h.primaryCta.href}
             className="mono-label bg-neon hover:bg-neon-2 transition-colors text-white px-6 py-3 rounded-sm shadow-[0_0_40px_rgba(192,38,211,0.45)]"
           >
-            {h.primaryCta.label}
+            <T>{h.primaryCta.label}</T>
           </a>
           <a
             href={h.secondaryCta.href}
             className="mono-label border border-white/15 hover:border-gold/60 text-bone px-6 py-3 rounded-sm transition-colors"
           >
-            {h.secondaryCta.label}
+            <T>{h.secondaryCta.label}</T>
           </a>
         </motion.div>
 
@@ -192,7 +193,7 @@ export default function Hero() {
               <div className="font-display font-bold text-3xl text-gold text-glow-gold">
                 {liveValue(s.label) ?? s.value}
               </div>
-              <div className="mono-label text-bone/50 mt-2">{s.label}</div>
+              <div className="mono-label text-bone/50 mt-2"><T>{s.label}</T></div>
             </div>
           ))}
         </motion.div>

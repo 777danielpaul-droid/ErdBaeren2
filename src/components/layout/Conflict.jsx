@@ -1,5 +1,6 @@
 import Reveal from "../motion/Reveal"
 import { site } from "../../data/content"
+import { T } from "../PhyrexianText"
 
 export default function Conflict() {
   const c = site.conflict
@@ -7,11 +8,11 @@ export default function Conflict() {
     <section id="konflikt" className="relative py-28 bg-ink">
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         <Reveal className="mb-14 max-w-3xl" variant="up">
-          <p className="mono-label text-neon mb-4">{c.eyebrow}</p>
+          <p className="mono-label text-neon mb-4"><T>{c.eyebrow}</T></p>
           <h2 className="font-display font-bold text-4xl sm:text-5xl tracking-tight">
-            {c.title}
+            <T>{c.title}</T>
           </h2>
-          <p className="mt-5 text-bone/65 leading-relaxed">{c.body}</p>
+          <p className="mt-5 text-bone/65 leading-relaxed"><T>{c.body}</T></p>
         </Reveal>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -29,7 +30,7 @@ export default function Conflict() {
                     side.side === "MILCHMÄUSE" ? "text-cyan" : "text-neon"
                   }`}
                 >
-                  {side.side}
+                  <T>{side.side}</T>
                 </div>
                 <ul className="space-y-4">
                   {side.items.map((it) => (
@@ -42,7 +43,7 @@ export default function Conflict() {
                           side.side === "MILCHMÄUSE" ? "bg-cyan" : "bg-neon"
                         }`}
                       />
-                      {it}
+                      <T>{it}</T>
                     </li>
                   ))}
                 </ul>

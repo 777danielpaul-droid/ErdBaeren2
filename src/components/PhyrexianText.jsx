@@ -1,8 +1,9 @@
+import { usePhyrexian } from "./PhyrexianContext"
+
 // PhyrexianText — rendert lateinischen Text in selbstgebauten Phyrexian-Glyphen (SVG).
-// HORIZONTALE Orientierung wie auf der Karte: das "Rueckgrat" jeder Glyphe ist eine
-// waagerechte Grundlinie (y=40), die ueber die volle Breite laeuft. Aneinandergereiht
-// ergeben die Glyphen EINE durchgehende horizontale Linie; die Merkmale (Kaemme,
-// Kreuze, Sterne, Beine) haengen darueber/darunter.
+// HORIZONTALE Orientierung: das "Rückgrat" jeder Glyphe ist eine waagerechte
+// Grundlinie (y=40), die über die volle Breite läuft. Aneinandergereiht ergeben
+// die Glyphen EINE durchgehende horizontale Linie; Merkmale hängen darüber/darunter.
 //
 // Grundformen (aus dem Alphabet-Key, um 90 Grad gedreht):
 //   Vokale a e i o u  -> Grundlinie + 3 Zinken nach unten ("Kamm")
@@ -26,8 +27,8 @@ function Star({ x, y, r = 7 }) {
   )
 }
 
-// Waagerechte Grundlinie, ueber beide Raender hinausgezogen (-6..86) -> benachbarte
-// Glyphen ueberlappen minimal und bilden EINE nahtlose durchgehende Linie.
+// Waagerechte Grundlinie, über beide Ränder hinaus (-6..86) → benachbarte
+// Glyphen überlappen minimal und bilden EINE nahtlose durchgehende Linie.
 const BASE = <line x1="-6" y1="40" x2="86" y2="40" />
 const X = (
   <>
@@ -43,7 +44,6 @@ const X_LOW = (
     <line x1="56" y1="40" x2="28" y2="70" />
   </>
 )
-
 const COMB = (
   <>
     {BASE}
@@ -117,9 +117,17 @@ function Glyph({ ch }) {
   )
 }
 
+// Normalisiert deutsche Sonderzeichen + Großbuchstaben für den Glyphen-Atlas.
+// ä->ae, ö->oe, ü->ue, ß->ss, A-Z->a-z. Nicht-Buchstaben = Wortabstand.
+function normalize(ch) {
+  const map = { ä: "ae", ö: "oe", ü: "ue", ß: "ss", " ": " " }
+  if (map[ch] !== undefined) return map[ch]
+  return ch.toLowerCase()
+}
+
 // Rendert einen ganzen String; Nicht-Buchstaben (Space, Satzzeichen) = Wortabstand.
 export default function PhyrexianText({ text, className = "" }) {
-  const chars = [...text]
+  const chars = [...text].flatMap((ch) => [...normalize(ch)])
   return (
     <span className={`phyrexian ${className}`} role="img" aria-label="Abgefangene Nachricht in unbekannter Schrift">
       {chars.map((ch, i) => {
@@ -128,4 +136,13 @@ export default function PhyrexianText({ text, className = "" }) {
       })}
     </span>
   )
+}
+
+// <T> — Text-Wrapper: im Phyrexian-Mode als Glyphen, sonst als Klartext.
+// Gebrauch: <T>Widerstand bricht auf</T> statt {text}.
+export function T({ children, className = "" }) {
+  const text = typeof children === "string" ? children : String(children)
+  const { on } = usePhyrexian()
+  if (!on) return <span className={className}>{text}</span>
+  return <PhyrexianText text={text} className={className} />
 }

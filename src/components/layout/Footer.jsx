@@ -1,5 +1,6 @@
 import { motion, useScroll, useTransform } from "framer-motion"
 import { site } from "../../data/content"
+import { T } from "../PhyrexianText"
 
 export default function Footer() {
   const f = site.footer
@@ -21,7 +22,7 @@ export default function Footer() {
         <div className="flex items-center gap-3">
           <span className="text-2xl leading-none" aria-hidden="true">🐻</span>
           <span className="font-display font-bold tracking-[0.18em] text-sm">
-            {site.brand}
+            <T>{site.brand}</T>
           </span>
         </div>
 
@@ -32,14 +33,14 @@ export default function Footer() {
               href={l.href}
               className="text-bone/70 hover:text-neon transition-colors text-sm font-medium tracking-wide"
             >
-              {l.label}
+              <T>{l.label}</T>
             </a>
           ))}
         </nav>
       </div>
       <div className="border-t border-white/5">
         <p className="max-w-7xl mx-auto px-5 sm:px-8 py-5 mono-label text-bone/35">
-          {f.note}
+          <T>{f.note}</T>
         </p>
       </div>
     </motion.footer>

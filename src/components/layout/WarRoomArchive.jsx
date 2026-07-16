@@ -4,7 +4,7 @@ import Reveal from "../motion/Reveal"
 import { site } from "../../data/content"
 import { EASE } from "../motion/variants"
 import { useVotes, castVote } from "../../lib/votes"
-import PhyrexianText from "../PhyrexianText"
+import PhyrexianText, { T } from "../PhyrexianText"
 
 const FACTIONS = {
   erdbaeren: {
@@ -127,9 +127,9 @@ function Intercepts({ data }) {
   return (
     <div className="mt-16">
       <Reveal className="mb-8" variant="up">
-        <p className="mono-label text-cyan mb-3">{data.eyebrow}</p>
-        <h3 className="font-display font-bold text-3xl sm:text-4xl tracking-tight">{data.title}</h3>
-        <p className="mt-3 text-sm text-bone/50">{data.hint}</p>
+        <p className="mono-label text-cyan mb-3"><T>{data.eyebrow}</T></p>
+        <h3 className="font-display font-bold text-3xl sm:text-4xl tracking-tight"><T>{data.title}</T></h3>
+        <p className="mt-3 text-sm text-bone/50"><T>{data.hint}</T></p>
       </Reveal>
       <div className="relative grid grid-cols-1 sm:grid-cols-2 gap-4">
         {data.messages.map((m) => {
@@ -201,8 +201,8 @@ function ArchiveCard({ entry, index, count, progress }) {
       className="rounded-xl neon-border glass p-6 hover:border-gold/40 transition-colors"
     >
       <div className="mono-label text-neon">{entry.code}</div>
-      <h3 className="font-display font-semibold text-lg mt-3 text-bone">{entry.title}</h3>
-      <p className="mt-3 text-sm text-bone/60 leading-relaxed">{entry.text}</p>
+      <h3 className="font-display font-semibold text-lg mt-3 text-bone"><T>{entry.title}</T></h3>
+      <p className="mt-3 text-sm text-bone/60 leading-relaxed"><T>{entry.text}</T></p>
     </motion.article>
   )
 }
@@ -283,9 +283,9 @@ export default function WarRoomArchive() {
               </div>
               <Reveal className="mb-8 text-center">
                 <p className="mono-label text-bone/30">
-                  {votes.mine
+                  <T>{votes.mine
                     ? "// DEINE STIMME IST GEZÄHLT · WÄHLE ERNEUT ZUM WECHSELN"
-                    : "// EINE STIMME PRO KÄMPFER · GIB SIE IM DOSSIER AB"}
+                    : "// EINE STIMME PRO KÄMPFER · GIB SIE IM DOSSIER AB"}</T>
                 </p>
               </Reveal>
 
@@ -316,7 +316,7 @@ export default function WarRoomArchive() {
                   </div>
 
                   <div className="mt-8 pt-6 border-t border-white/10">
-                    <p className="mono-label text-bone/40 mb-2">PROGNOSE</p>
+                    <p className="mono-label text-bone/40 mb-2"><T>PROGNOSE</T></p>
                     <p
                       className="font-display font-bold text-lg glitch"
                       data-text={f.verdict}
@@ -337,7 +337,7 @@ export default function WarRoomArchive() {
                       boxShadow: votes.mine === active ? `0 0 30px ${f.color}55` : "none",
                     }}
                   >
-                    {votes.mine === active ? "DEINE STIMME ✓" : `STIMME FÜR ${f.name}`}
+                    <T>{votes.mine === active ? "DEINE STIMME ✓" : `STIMME FÜR ${f.name}`}</T>
                     <span className="tabular-nums text-bone/90">
                       {active === "erdbaeren" ? votes.erdbaeren : votes.milchmaeuse}
                     </span>
@@ -361,9 +361,9 @@ export default function WarRoomArchive() {
           >
             <div className="min-h-full max-w-7xl mx-auto px-5 sm:px-8 flex flex-col justify-center py-12">
               <Reveal className="mb-12" variant="up">
-                <p className="mono-label text-gold mb-4">{site.archive.eyebrow}</p>
+                <p className="mono-label text-gold mb-4"><T>{site.archive.eyebrow}</T></p>
                 <h2 className="font-display font-bold text-4xl sm:text-5xl tracking-tight">
-                  {site.archive.title}
+                  <T>{site.archive.title}</T>
                 </h2>
               </Reveal>
 

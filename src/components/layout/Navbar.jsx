@@ -2,6 +2,7 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { site } from "../../data/content"
 import { getInitialTheme, toggleTheme } from "../../lib/theme"
+import { usePhyrexian } from "../PhyrexianContext"
 
 // Neon-Palette wie im Hero-Grid, ABER ohne cyan — cyan ist der Default,
 // sonst würde ein zufälliges cyan beim Hover keinen sichtbaren Wechsel ergeben.
@@ -11,6 +12,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
   // Theme-State für den Toggle-Button (Initial aus DOM lesen).
   const [theme, setTheme] = useState(() => getInitialTheme())
+  const { on: phyOn, toggle: togglePhy } = usePhyrexian()
   // Pro Link eine zufällige Neon-Farbe, die beim Hover gesetzt wird.
   const [hover, setHover] = useState({})
 
@@ -58,6 +60,18 @@ export default function Navbar() {
           >
             Protokoll
           </a>
+
+          <button
+            type="button"
+            aria-label={phyOn ? "Phyrexianisch auschalten" : "Ganze Seite auf Phyrexianisch übersetzen"}
+            aria-pressed={phyOn}
+            onClick={togglePhy}
+            className={`hidden md:grid place-items-center w-10 h-10 rounded-md border text-bone transition-colors ${
+              phyOn ? "border-neon/60 text-neon" : "border-white/10 hover:border-neon/50"
+            }`}
+          >
+            <span className="text-lg leading-none">{phyOn ? "᛭" : "⌘"}</span>
+          </button>
 
           <button
             type="button"

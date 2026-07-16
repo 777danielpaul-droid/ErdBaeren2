@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion"
 import { site } from "../../data/content"
 import { asset } from "../../lib/asset"
 import { stagger, EASE } from "../motion/variants"
+import { T } from "../PhyrexianText"
 
 // Statische Klassen-Map (Tailwind v4 JIT erkennt keine dynamischen Template-Strings)
 const ACCENT = {
@@ -42,7 +43,7 @@ export default function FactionsDoctrine() {
             <div className="min-h-full max-w-7xl mx-auto px-5 sm:px-8 flex flex-col justify-start sm:justify-center py-12">
               <p className="mono-label text-gold mb-4">// FRAKTIONEN</p>
               <h2 className="font-display font-bold text-4xl sm:text-5xl tracking-tight mb-12">
-                Zwei Mächte. Eine Erde.
+                <T>Zwei Mächte. Eine Erde.</T>
               </h2>
 
               <motion.div
@@ -80,16 +81,16 @@ export default function FactionsDoctrine() {
                       </div>
 
                       <div className="p-7">
-                        <h3 className="font-display font-bold text-2xl tracking-tight">{f.name}</h3>
-                        <p className={`mono-label ${a.tag} mt-1`}>{f.role}</p>
+                        <h3 className="font-display font-bold text-2xl tracking-tight"><T>{f.name}</T></h3>
+                        <p className={`mono-label ${a.tag} mt-1`}><T>{f.role}</T></p>
                         <p className={`mt-4 text-bone/70 italic border-l-2 ${a.border} pl-4`}>
-                          „{f.quote}"
+                          „<T>{f.quote}</T>“
                         </p>
                         <ul className="mt-5 space-y-2.5">
                           {f.traits.map((t) => (
                             <li key={t} className="flex gap-3 text-sm text-bone/75">
                               <span className={`mt-1.5 w-1.5 h-1.5 rounded-full ${a.dot} shrink-0`} />
-                              {t}
+                              <T>{t}</T>
                             </li>
                           ))}
                         </ul>
@@ -109,11 +110,11 @@ export default function FactionsDoctrine() {
           >
             <div className="h-full max-w-7xl mx-auto px-5 sm:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 flex flex-col justify-center py-12">
               <div className="lg:col-span-5">
-                <p className="mono-label text-neon mb-4">{site.doctrine.eyebrow}</p>
+                <p className="mono-label text-neon mb-4"><T>{site.doctrine.eyebrow}</T></p>
                 <h2 className="font-display font-bold text-4xl sm:text-5xl leading-[1.02] tracking-tight whitespace-pre-line">
-                  {site.doctrine.title}
+                  <T>{site.doctrine.title}</T>
                 </h2>
-                <p className="mt-6 text-bone/65 leading-relaxed">{site.doctrine.body}</p>
+                <p className="mt-6 text-bone/65 leading-relaxed"><T>{site.doctrine.body}</T></p>
               </div>
 
               <motion.div
@@ -137,8 +138,8 @@ export default function FactionsDoctrine() {
                       {p.k}
                     </span>
                     <div>
-                      <h3 className="font-display font-semibold text-lg text-bone">{p.t}</h3>
-                      <p className="mt-1.5 text-bone/65 text-sm leading-relaxed">{p.d}</p>
+                      <h3 className="font-display font-semibold text-lg text-bone"><T>{p.t}</T></h3>
+                      <p className="mt-1.5 text-bone/65 text-sm leading-relaxed"><T>{p.d}</T></p>
                     </div>
                   </motion.div>
                 ))}

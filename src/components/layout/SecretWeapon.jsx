@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion"
 import { site } from "../../data/content"
 import { asset } from "../../lib/asset"
 import { EASE } from "../motion/variants"
+import { T } from "../PhyrexianText"
 
 // Scroll-Linked Enthüllung mit PIN:
 // Die Sektion pinnt sich (sticky), während man scrollt — die Seite "steht still",
@@ -73,10 +74,10 @@ export default function SecretWeapon() {
                 className="relative z-30 -mt-6 sm:-mt-8 text-center max-w-2xl"
               >
                 <h3 className="font-display font-bold text-4xl sm:text-6xl neon-text">
-                  {s.name}
+                  <T>{s.name}</T>
                 </h3>
-                <p className="mt-3 text-bone/80 text-lg max-w-xl mx-auto">{s.subtitle}</p>
-                <p className="mt-5 text-bone/65 leading-relaxed max-w-2xl mx-auto">{s.body}</p>
+                <p className="mt-3 text-bone/80 text-lg max-w-xl mx-auto"><T>{s.subtitle}</T></p>
+                <p className="mt-5 text-bone/65 leading-relaxed max-w-2xl mx-auto"><T>{s.body}</T></p>
               </motion.div>
             </div>
 
@@ -87,9 +88,9 @@ export default function SecretWeapon() {
             >
               <div className="rounded-2xl neon-border glass sheen p-10 sm:p-14 text-center">
                 <h2 className="font-display font-bold text-4xl sm:text-5xl tracking-tight leading-[1.05]">
-                  {s.titleCover}
+                  <T>{s.titleCover}</T>
                 </h2>
-                <p className="mt-6 text-bone/75 leading-relaxed text-lg">{s.coverBody}</p>
+                <p className="mt-6 text-bone/75 leading-relaxed text-lg"><T>{s.coverBody}</T></p>
                 <p className="mono-label text-neon mt-8 text-sm tracking-[0.2em]">
                   ↓ SCROLLE, UM ZU ENTHÜLLEN
                 </p>
