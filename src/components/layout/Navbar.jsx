@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { site } from "../../data/content"
 import { getInitialTheme, toggleTheme } from "../../lib/theme"
 import { usePhyrexian } from "../PhyrexianContext"
+import TerminalModal from "../TerminalModal"
 
 // Neon-Palette wie im Hero-Grid, ABER ohne cyan — cyan ist der Default,
 // sonst würde ein zufälliges cyan beim Hover keinen sichtbaren Wechsel ergeben.
@@ -10,6 +11,7 @@ const NEON = ["#c026d3", "#7c3aed", "#c9a227"]
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const [termOpen, setTermOpen] = useState(false)
   // Theme-State für den Toggle-Button (Initial aus DOM lesen).
   const [theme, setTheme] = useState(() => getInitialTheme())
   const { on: phyOn, toggle: togglePhy } = usePhyrexian()
@@ -54,12 +56,13 @@ export default function Navbar() {
             ))}
           </ul>
 
-          <a
-            href="#doktrin"
+          <button
+            type="button"
+            onClick={() => setTermOpen(true)}
             className="hidden md:inline-flex mono-label text-ink bg-bone hover:bg-gold transition-colors px-4 py-2 rounded-sm"
           >
             Protokoll
-          </a>
+          </button>
 
           <button
             type="button"
@@ -114,11 +117,22 @@ export default function Navbar() {
                     </a>
                   </li>
                 ))}
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => { setOpen(false); setTermOpen(true) }}
+                    className="mono-label text-bone"
+                  >
+                    Protokoll
+                  </button>
+                </li>
               </ul>
             </motion.div>
           )}
         </AnimatePresence>
       </nav>
+
+      <TerminalModal open={termOpen} onClose={() => setTermOpen(false)} />
     </motion.header>
   )
 }
