@@ -73,8 +73,8 @@ const NGLYPH = (
 )
 const STARX = (
   <>
-    {X}
-    <Star x={60} y={14} />
+    {BASE}
+    <circle cx="40" cy="40" r="22" />
   </>
 )
 const GGLYPH = (

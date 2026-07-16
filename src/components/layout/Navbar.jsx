@@ -63,7 +63,7 @@ export default function Navbar() {
 
           <button
             type="button"
-            aria-label={phyOn ? "Phyrexianisch auschalten" : "Ganze Seite auf Phyrexianisch übersetzen"}
+            aria-label={phyOn ? "Fremde Schrift auschalten" : "Ganze Seite in fremder Schrift anzeigen"}
             aria-pressed={phyOn}
             onClick={togglePhy}
             className={`hidden md:grid place-items-center w-10 h-10 rounded-md border text-bone transition-colors ${
