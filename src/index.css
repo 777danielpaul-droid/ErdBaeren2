@@ -313,3 +313,29 @@
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
+
+/* ===== PHYREXIAN-SCHRIFT (abgefangene Milchmaus-Funksprueche) ===== */
+.phyrexian {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+  row-gap: 0.35em;
+  line-height: 1;
+  color: var(--color-cyan);
+}
+.phyrexian-glyph {
+  width: 0.85em;
+  height: 0.85em;
+  flex: 0 0 auto;
+  overflow: visible;
+  filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.35));
+}
+.phyrexian-space {
+  width: 0.42em;
+  flex: 0 0 auto;
+}
+[data-theme="light"] .phyrexian { color: var(--color-cyan); }
+[data-theme="light"] .phyrexian-glyph {
+  filter: drop-shadow(0 0 4px rgba(14, 116, 144, 0.3));
+}

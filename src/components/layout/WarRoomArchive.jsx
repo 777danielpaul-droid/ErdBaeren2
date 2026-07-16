@@ -1,10 +1,11 @@
 import { useState } from "react"
 import { useRef } from "react"
-import { motion, useScroll, useTransform } from "framer-motion"
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import Reveal from "../motion/Reveal"
 import { site } from "../../data/content"
 import { stagger, EASE } from "../motion/variants"
 import { useVotes, castVote } from "../../lib/votes"
+import PhyrexianText from "../PhyrexianText"
 
 const FACTIONS = {
   erdbaeren: {
@@ -47,6 +48,55 @@ function StatBar({ k, v, color }) {
           className="h-full rounded-full bar-pulse"
           style={{ background: color }}
         />
+      </div>
+    </div>
+  )
+}
+
+// Eine abgefangene Nachricht: zeigt Phyrexian-Glyphen; Klick klappt Klartext auf.
+function InterceptCard({ msg }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <button
+      onClick={() => setOpen((o) => !o)}
+      className="text-left rounded-xl neon-border glass p-6 transition-colors hover:border-cyan/40 focus:outline-none focus:border-cyan/60"
+      aria-expanded={open}
+    >
+      <div className="flex items-center justify-between mb-4">
+        <span className="mono-label text-cyan">{msg.code}</span>
+        <span className="mono-label text-bone/35">{open ? "DECHIFFRIERT" : "▸ DECHIFFRIEREN"}</span>
+      </div>
+      <PhyrexianText text={msg.cipher} className="text-2xl sm:text-3xl" />
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.p
+            initial={{ opacity: 0, height: 0, marginTop: 0 }}
+            animate={{ opacity: 1, height: "auto", marginTop: 16 }}
+            exit={{ opacity: 0, height: 0, marginTop: 0 }}
+            transition={{ duration: 0.4, ease: EASE }}
+            className="overflow-hidden text-bone/80 font-display text-lg italic border-t border-white/10 pt-4"
+          >
+            „{msg.plain}“
+          </motion.p>
+        )}
+      </AnimatePresence>
+    </button>
+  )
+}
+
+function Intercepts({ data }) {
+  if (!data) return null
+  return (
+    <div className="mt-16">
+      <Reveal className="mb-8" variant="up">
+        <p className="mono-label text-cyan mb-3">{data.eyebrow}</p>
+        <h3 className="font-display font-bold text-3xl sm:text-4xl tracking-tight">{data.title}</h3>
+        <p className="mt-3 text-sm text-bone/50">{data.hint}</p>
+      </Reveal>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {data.messages.map((m) => (
+          <InterceptCard key={m.code} msg={m} />
+        ))}
       </div>
     </div>
   )
@@ -234,6 +284,9 @@ export default function WarRoomArchive() {
                   </motion.article>
                 ))}
               </motion.div>
+
+              {/* ABGEFANGENE TRANSMISSIONEN (Phyrexian-Schrift, Klick dechiffriert) */}
+              <Intercepts data={site.archive.intercepts} />
             </div>
           </motion.div>
 

@@ -148,6 +148,35 @@ export const site = {
         text: "Beobachtung: Seit dem Sieg über die erste Welle schlossen sich den Erdbären unzählige Rebellen aus aller Welt an. Aus drei Anführern wurde ein Heer — und die alte Herrschaft bröckelt.",
       },
     ],
+    // Abgefangene Milchmaus-Funksprueche (Phyrexian-Schrift). 'cipher' wird in Glyphen
+    // gerendert (nur a-z zaehlt), 'plain' ist die entschluesselte Klartext-Uebersetzung.
+    intercepts: {
+      eyebrow: "// ABGEFANGEN // MILCHMAUS-FUNK",
+      title: "Abgefangene Transmissionen",
+      hint: "Aufgezeichnete Funksprueche der Milchmaeuse — Klick dechiffriert.",
+      messages: [
+        {
+          code: "INT-118",
+          cipher: "the bears do not break",
+          plain: "Die Bären brechen nicht.",
+        },
+        {
+          code: "INT-207",
+          cipher: "three held the line",
+          plain: "Drei hielten die Linie.",
+        },
+        {
+          code: "INT-338",
+          cipher: "our patterns fail against them",
+          plain: "Unsere Muster versagen gegen sie.",
+        },
+        {
+          code: "INT-451",
+          cipher: "the old order is ending",
+          plain: "Die alte Ordnung geht zu Ende.",
+        },
+      ],
+    },
   },
 
   footer: {
