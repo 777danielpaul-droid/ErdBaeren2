@@ -2,7 +2,7 @@
 // Backend = Cloudflare Worker, Dedup serverseitig per IP-Hash.
 import { useEffect, useState } from "react"
 
-const API = "https://erdbaeren-votes.erdbaeren.workers.dev"
+const API = "https://delicate-hat-1706.erdbaeren.workers.dev"
 
 let state = { erdbaeren: 0, milchmaeuse: 0, mine: null, loaded: false }
 const subs = new Set()
