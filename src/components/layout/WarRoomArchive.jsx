@@ -53,34 +53,73 @@ function StatBar({ k, v, color }) {
 }
 
 // Eine abgefangene Nachricht: zeigt Phyrexian-Glyphen; Klick klappt Klartext auf.
-function InterceptCard({ msg }) {
+// Beim Sichtbarwerden "dealt" sich die Karte ein einmal aus der Grid-Mitte in
+// ihr Feld. x/y = Start-Versatz zur Grid-Mitte (nur sm+, mobil kein Deal).
+function InterceptCard({ msg, delay, z }) {
   const [open, setOpen] = useState(false)
+  const ref = useRef(null)
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+
+  useLayoutEffect(() => {
+    const card = ref.current
+    const grid = card && card.parentElement
+    if (!grid) return
+    if (!window.matchMedia("(min-width: 640px)").matches) return // mobil: kein Deal
+    // offsetLeft/Top sind layout-basiert → unabhängig vom Transform.
+    const gcx = grid.clientWidth / 2
+    const gcy = grid.clientHeight / 2
+    const ccx = card.offsetLeft + card.offsetWidth / 2
+    const ccy = card.offsetTop + card.offsetHeight / 2
+    x.set(gcx - ccx)
+    y.set(gcy - ccy)
+  }, [x, y])
+
   return (
-    <button
-      onClick={() => setOpen((o) => !o)}
-      className="text-left rounded-xl neon-border glass p-6 transition-colors hover:border-cyan/40 focus:outline-none focus:border-cyan/60"
-      aria-expanded={open}
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1, x: 0, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.8, delay, ease: EASE }}
+      style={{ x, y, zIndex: z }}
     >
-      <div className="flex items-center justify-between mb-4">
-        <span className="mono-label text-cyan">{msg.code}</span>
-        <span className="mono-label text-bone/35">{open ? "DECHIFFRIERT" : "▸ DECHIFFRIEREN"}</span>
-      </div>
-      <PhyrexianText text={msg.cipher} className="text-2xl sm:text-3xl" />
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.p
-            initial={{ opacity: 0, height: 0, marginTop: 0 }}
-            animate={{ opacity: 1, height: "auto", marginTop: 16 }}
-            exit={{ opacity: 0, height: 0, marginTop: 0 }}
-            transition={{ duration: 0.4, ease: EASE }}
-            className="overflow-hidden text-bone/80 font-display text-lg italic border-t border-white/10 pt-4"
-          >
-            „{msg.plain}“
-          </motion.p>
-        )}
-      </AnimatePresence>
-    </button>
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="w-full text-left rounded-xl neon-border glass p-6 transition-colors hover:border-cyan/40 focus:outline-none focus:border-cyan/60"
+        aria-expanded={open}
+      >
+        <div className="flex items-center justify-between mb-4">
+          <span className="mono-label text-cyan">{msg.code}</span>
+          <span className="mono-label text-bone/35">{open ? "DECHIFFRIERT" : "▸ DECHIFFRIEREN"}</span>
+        </div>
+        <PhyrexianText text={msg.cipher} className="text-2xl sm:text-3xl" />
+        <AnimatePresence initial={false}>
+          {open && (
+            <motion.p
+              initial={{ opacity: 0, height: 0, marginTop: 0 }}
+              animate={{ opacity: 1, height: "auto", marginTop: 16 }}
+              exit={{ opacity: 0, height: 0, marginTop: 0 }}
+              transition={{ duration: 0.4, ease: EASE }}
+              className="overflow-hidden text-bone/80 font-display text-lg italic border-t border-white/10 pt-4"
+            >
+              „{msg.plain}“
+            </motion.p>
+          )}
+        </AnimatePresence>
+      </button>
+    </motion.div>
   )
+}
+
+// Deal-Reihenfolge (einmalig beim Sichtbarwerden):
+// 118 zuerst (nach oben), dann 207 + 451 gleichzeitig (nach rechts) und 338
+// formiert das Schema. z: 118 liegt HINTER 338 im gestapelten Start.
+const DEAL = {
+  "INT-118": { delay: 0.2, z: 10 },
+  "INT-207": { delay: 0.95, z: 15 },
+  "INT-338": { delay: 0.95, z: 20 },
+  "INT-451": { delay: 0.95, z: 15 },
 }
 
 function Intercepts({ data }) {
@@ -92,10 +131,11 @@ function Intercepts({ data }) {
         <h3 className="font-display font-bold text-3xl sm:text-4xl tracking-tight">{data.title}</h3>
         <p className="mt-3 text-sm text-bone/50">{data.hint}</p>
       </Reveal>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {data.messages.map((m) => (
-          <InterceptCard key={m.code} msg={m} />
-        ))}
+      <div className="relative grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {data.messages.map((m) => {
+          const d = DEAL[m.code] || { delay: 0.4, z: 10 }
+          return <InterceptCard key={m.code} msg={m} delay={d.delay} z={d.z} />
+        })}
       </div>
     </div>
   )
