@@ -93,7 +93,7 @@ function InterceptCard({ msg, delay, z }) {
           <span className="mono-label text-cyan">{msg.code}</span>
           <span className="mono-label text-bone/35">{open ? "DECHIFFRIERT" : "▸ DECHIFFRIEREN"}</span>
         </div>
-        <PhyrexianText text={msg.cipher} className="text-2xl sm:text-3xl" />
+        <PhyrexianText text={msg.cipher} className="text-2xl sm:text-3xl min-h-[4rem] sm:min-h-[4.5rem]" />
         <AnimatePresence initial={false}>
           {open && (
             <motion.p
