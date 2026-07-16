@@ -53,7 +53,7 @@ export default function TerminalModal({ open, onClose }) {
           >
             {/* Titelzeile */}
             <div className="flex items-center justify-between px-4 py-2 border-b border-white/10 bg-ink">
-              <span className="mono-label text-cyan text-xs tracking-[0.2em]">RUNEN-TERMINAL</span>
+              <span className="mono-label text-cyan text-xs tracking-[0.2em]">TERMINAL</span>
               <button
                 onClick={onClose}
                 aria-label="Terminal schließen"

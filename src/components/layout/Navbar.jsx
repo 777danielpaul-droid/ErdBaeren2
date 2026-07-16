@@ -59,9 +59,9 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => setTermOpen(true)}
-            className="hidden md:inline-flex mono-label text-ink bg-bone hover:bg-gold transition-colors px-4 py-2 rounded-sm"
+            className="hidden md:inline-flex mono-label bg-ink text-cyan border border-cyan/50 hover:bg-cyan/10 transition-colors px-4 py-2 rounded-sm"
           >
-            Protokoll
+            Terminal
           </button>
 
           <button
@@ -121,9 +121,9 @@ export default function Navbar() {
                   <button
                     type="button"
                     onClick={() => { setOpen(false); setTermOpen(true) }}
-                    className="mono-label text-bone"
+                    className="mono-label text-cyan"
                   >
-                    Protokoll
+                    Terminal
                   </button>
                 </li>
               </ul>
