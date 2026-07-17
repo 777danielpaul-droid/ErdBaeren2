@@ -407,6 +407,32 @@
   97% { opacity: 0.72; }
   98% { opacity: 1; }
 }
+.text-glow-rose-pulse {
+  color: #d946ef;
+  text-shadow:
+    0 0 12px rgba(217,70,239,0.75),
+    0 0 30px rgba(217,70,239,0.45),
+    0 0 60px rgba(217,70,239,0.35),
+    0 0 100px rgba(217,70,239,0.22);
+  animation: rose-pulse 2.2s ease-in-out infinite;
+}
+@keyframes rose-pulse {
+  0%, 100% {
+    text-shadow:
+      0 0 12px rgba(217,70,239,0.75),
+      0 0 30px rgba(217,70,239,0.45),
+      0 0 60px rgba(217,70,239,0.35),
+      0 0 100px rgba(217,70,239,0.22);
+  }
+  50% {
+    text-shadow:
+      0 0 18px rgba(217,70,239,1),
+      0 0 40px rgba(217,70,239,0.65),
+      0 0 75px rgba(217,70,239,0.5),
+      0 0 130px rgba(217,70,239,0.32);
+  }
+}
+
 @keyframes holo-scan {
   0%   { top: 0%;   opacity: 0; }
   8%   { opacity: 1; }
