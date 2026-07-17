@@ -128,53 +128,86 @@ export default function MilkyWay() {
 
       const moonX = W * 0.10;
       const moonY = H * 0.13;
-      const moonR = Math.min(W, H) * 0.055;
-      const moonBreath = 1 + 0.18 * Math.sin(t * 0.6 + 0.9);
+      const moonR = Math.min(W, H) * 0.065;
+      const moonRX = moonR * 1.15;
+      const moonRY = moonR * 0.92;
 
-      const moonNebula = ctx.createRadialGradient(moonX, moonY, moonR * 1.05, moonX, moonY, moonR * 5.8);
-      moonNebula.addColorStop(0, "rgba(180,220,255,0.10)");
-      moonNebula.addColorStop(0.35, "rgba(140,170,255,0.07)");
-      moonNebula.addColorStop(0.65, "rgba(80,120,255,0.04)");
-      moonNebula.addColorStop(1, "rgba(255,255,255,0)");
+      const bodyGrad = ctx.createRadialGradient(moonX - moonRX * 0.25, moonY - moonRY * 0.25, moonRX * 0.05, moonX, moonY, moonRX);
+      bodyGrad.addColorStop(0, "rgba(255,252,242,0.98)");
+      bodyGrad.addColorStop(0.45, "rgba(250,246,230,0.94)");
+      bodyGrad.addColorStop(0.78, "rgba(225,212,185,0.72)");
+      bodyGrad.addColorStop(1, "rgba(160,148,125,0.45)");
       ctx.beginPath();
-      ctx.fillStyle = moonNebula;
-      ctx.arc(moonX, moonY, moonR * 5.8, 0, Math.PI * 2);
+      ctx.fillStyle = bodyGrad;
+      ctx.ellipse(moonX, moonY, moonRX, moonRY, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      const moonHalo = ctx.createRadialGradient(moonX, moonY, moonR * 0.2, moonX, moonY, moonR * 3.8);
-      moonHalo.addColorStop(0, `rgba(255,255,255,${(0.18 * moonBreath).toFixed(3)})`);
-      moonHalo.addColorStop(0.5, `rgba(180,210,255,${(0.08 * moonBreath).toFixed(3)})`);
-      moonHalo.addColorStop(1, "rgba(255,255,255,0)");
+      const craters = [
+        { dx: -0.28, dy: -0.32, rx: 0.22, ry: 0.18, d: 0.7 },
+        { dx: 0.14, dy: -0.1, rx: 0.18, ry: 0.14, d: 0.55 },
+        { dx: -0.12, dy: 0.28, rx: 0.2, ry: 0.17, d: 0.65 },
+        { dx: 0.25, dy: 0.2, rx: 0.14, ry: 0.11, d: 0.5 },
+        { dx: -0.05, dy: -0.05, rx: 0.12, ry: 0.1, d: 0.4 },
+      ];
+      for (const cr of craters) {
+        const cx = moonX + moonRX * cr.dx;
+        const cy = moonY + moonRY * cr.dy;
+        const cRx = moonRX * cr.rx;
+        const cRy = moonRY * cr.ry;
+        const shade = ctx.createRadialGradient(cx + cRx * 0.3, cy + cRy * 0.25, cRx * 0.05, cx, cy, cRx);
+        shade.addColorStop(0, "rgba(0,0,0,0)");
+        shade.addColorStop(0.65, `rgba(0,0,0,${(cr.d * 0.18).toFixed(3)})`);
+        shade.addColorStop(1, `rgba(0,0,0,${(cr.d * 0.4).toFixed(3)})`);
+        ctx.beginPath();
+        ctx.fillStyle = shade;
+        ctx.ellipse(cx, cy, cRx, cRy, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.save();
       ctx.beginPath();
-      ctx.fillStyle = moonHalo;
-      ctx.arc(moonX, moonY, moonR * 3.8, 0, Math.PI * 2);
+      ctx.ellipse(moonX, moonY, moonRX, moonRY, 0, 0, Math.PI * 2);
+      ctx.clip();
+
+      ctx.beginPath();
+      ctx.moveTo(moonX + moonRX * 0.7, moonY - moonRY * 0.15);
+      ctx.quadraticCurveTo(moonX + moonRX * 1.25, moonY - moonRY * 0.9, moonX + moonRX * 1.45, moonY - moonRY * 0.15);
+      ctx.quadraticCurveTo(moonX + moonRX * 1.55, moonY + moonRY * 0.55, moonX + moonRX * 0.9, moonY + moonRY * 0.75);
+      ctx.quadraticCurveTo(moonX + moonRX * 0.5, moonRY * 0.45, moonX + moonRX * 0.7, moonY - moonRY * 0.15);
+      ctx.closePath();
+      ctx.fillStyle = "rgba(10,10,20,0.65)";
       ctx.fill();
 
-      const moonGlow = ctx.createRadialGradient(moonX, moonY, moonR * 0.6, moonX, moonY, moonR * 3.2);
-      moonGlow.addColorStop(0, `rgba(255,255,255,${(0.12 * moonBreath).toFixed(3)})`);
-      moonGlow.addColorStop(1, "rgba(255,255,255,0)");
+      const holes = [
+        { dx: -0.28, dy: -0.25, r: 0.09 },
+        { dx: 0.08, dy: -0.35, r: 0.07 },
+        { dx: -0.18, dy: 0.32, r: 0.08 },
+        { dx: 0.3, dy: 0.05, r: 0.06 },
+        { dx: -0.06, dy: -0.1, r: 0.12 },
+      ];
+      for (const h of holes) {
+        ctx.beginPath();
+        ctx.arc(moonX + moonRX * h.dx, moonY + moonRY * h.dy, moonRX * h.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(0,0,0,0.38)";
+        ctx.fill();
+      }
+      ctx.restore();
+
+      const rim = ctx.createRadialGradient(moonX - moonRX * 0.35, moonY - moonRY * 0.35, moonRX * 0.05, moonX, moonY, moonRX);
+      rim.addColorStop(0, "rgba(255,255,255,0.18)");
+      rim.addColorStop(1, "rgba(255,255,255,0)");
       ctx.beginPath();
-      ctx.fillStyle = moonGlow;
-      ctx.arc(moonX, moonY, moonR * 3.2, 0, Math.PI * 2);
+      ctx.fillStyle = rim;
+      ctx.ellipse(moonX, moonY, moonRX, moonRY, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      const moonBody = ctx.createRadialGradient(moonX - moonR * 0.35, moonY - moonR * 0.35, moonR * 0.15, moonX, moonY, moonR);
-      moonBody.addColorStop(0, "rgba(255,255,255,0.95)");
-      moonBody.addColorStop(0.55, "rgba(245,245,255,0.85)");
-      moonBody.addColorStop(0.78, "rgba(235,235,245,0.7)");
-      moonBody.addColorStop(1, "rgba(225,225,235,0.55)");
+      const sideShadow = ctx.createRadialGradient(moonX + moonRX * 0.4, moonY + moonRY * 0.1, moonRX * 0.05, moonX, moonY, moonRX * 1.05);
+      sideShadow.addColorStop(0, "rgba(0,0,0,0)");
+      sideShadow.addColorStop(0.65, "rgba(0,0,0,0.08)");
+      sideShadow.addColorStop(1, "rgba(0,0,0,0.35)");
       ctx.beginPath();
-      ctx.fillStyle = moonBody;
-      ctx.arc(moonX, moonY, moonR, 0, Math.PI * 2);
-      ctx.fill();
-
-      const shadow = ctx.createRadialGradient(moonX + moonR * 0.4, moonY + moonR * 0.4, moonR * 0.08, moonX, moonY, moonR);
-      shadow.addColorStop(0, "rgba(0,0,0,0)");
-      shadow.addColorStop(0.6, "rgba(0,0,0,0.06)");
-      shadow.addColorStop(1, "rgba(0,0,0,0.28)");
-      ctx.beginPath();
-      ctx.fillStyle = shadow;
-      ctx.arc(moonX, moonY, moonR, 0, Math.PI * 2);
+      ctx.fillStyle = sideShadow;
+      ctx.ellipse(moonX, moonY, moonRX, moonRY, 0, 0, Math.PI * 2);
       ctx.fill();
 
       for (const s of stars) {
