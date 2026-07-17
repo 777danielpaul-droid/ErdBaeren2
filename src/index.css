@@ -34,10 +34,19 @@
     position: relative;
     z-index: 1; /* Content über der Milchstraße (z-index:-1) */
   }
-  /* Section-BGs transparent lassen, damit die Milchstraße überall
-     (auch beim Scrollen) als Hintergrund durchscheint. */
+  /* Section-BGs nur LEICHT transparent (0.85) lassen, damit die Milchstraße
+     dezent durchscheint, aber Hintergrund-Bilder (Hero-Globe, SecretWeapon-Mech,
+     hud-grid) NICHT durch die Sections nach oben durchscheinen. */
   #konflikt, #geheimwaffe, #fraktionen, #schlacht, #konsole, #archiv {
-    background: transparent !important;
+    background-color: rgba(7, 6, 13, 0.85) !important;
+  }
+  [data-theme="light"] #konflikt,
+  [data-theme="light"] #geheimwaffe,
+  [data-theme="light"] #fraktionen,
+  [data-theme="light"] #schlacht,
+  [data-theme="light"] #konsole,
+  [data-theme="light"] #archiv {
+    background-color: rgba(243, 240, 251, 0.85) !important;
   }
   ::selection {
     background: var(--color-neon);
