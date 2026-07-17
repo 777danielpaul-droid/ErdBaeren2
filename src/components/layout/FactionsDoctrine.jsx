@@ -101,52 +101,6 @@ export default function FactionsDoctrine() {
               </motion.div>
             </div>
           </div>
-
-          {/* SEKTOR 2 — DOKTRIN (schiebt von unten hoch, z-20, leicht transparent für Milchstraße) */}
-          <motion.div
-            id="doktrin"
-            style={{ y: sector2Y }}
-            className="absolute inset-0 z-20 bg-ink-soft/10 border-t border-white/10"
-          >
-            <div className="h-full max-w-7xl mx-auto px-5 sm:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 flex flex-col justify-center py-12">
-              <div className="lg:col-span-5">
-                <p className="mono-label text-neon mb-4"><T en={site.doctrine.eyebrow.en}>{site.doctrine.eyebrow.de}</T></p>
-                <h2 className="font-display font-bold text-4xl sm:text-5xl leading-[1.02] tracking-tight whitespace-pre-line">
-                  <T en={site.doctrine.title.en}>{site.doctrine.title.de}</T>
-                </h2>
-                <p className="mt-6 text-bone/65 leading-relaxed"><T en={site.doctrine.body.en}>{site.doctrine.body.de}</T></p>
-              </div>
-
-              <motion.div
-                variants={stagger}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, amount: 0.2 }}
-                className="lg:col-span-7 space-y-4"
-              >
-                {site.doctrine.points.map((p) => (
-                  <motion.div
-                    key={p.k}
-                    variants={{
-                      hidden: { opacity: 0, x: 32 },
-                      show: { opacity: 1, x: 0, transition: { duration: 0.6, ease: EASE } },
-                    }}
-                    whileHover={{ x: 6, transition: { duration: 0.35, ease: EASE } }}
-                    className="flex gap-5 rounded-xl neon-border glass p-6"
-                  >
-                    <span className="font-display font-bold text-2xl text-gold/80 shrink-0 w-12">
-                      {p.k}
-                    </span>
-                    <div>
-                      <h3 className="font-display font-semibold text-lg text-bone"><T en={p.t.en}>{p.t.de}</T></h3>
-                      <p className="mt-1.5 text-bone/65 text-sm leading-relaxed"><T en={p.d.en}>{p.d.de}</T></p>
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </div>
-          </motion.div>
-
         </div>
       </div>
     </section>
