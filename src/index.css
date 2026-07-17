@@ -343,12 +343,9 @@
   display: inline-block;
   background: linear-gradient(
     92deg,
-    #c084fc 0%,
-    #a21caf 18%,
-    #7c3aed 36%,
-    #4f46e5 54%,
-    #22d3ee 78%,
-    #22d3ee 100%
+    rgba(186, 245, 255, 0.6) 0%,
+    rgba(150, 230, 255, 0.58) 45%,
+    rgba(120, 215, 255, 0.55) 100%
   );
   -webkit-background-clip: text;
   background-clip: text;
