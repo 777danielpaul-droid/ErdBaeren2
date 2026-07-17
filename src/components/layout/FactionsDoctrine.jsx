@@ -38,8 +38,8 @@ export default function FactionsDoctrine() {
       <div className="relative h-[200vh]">
         <div className="sticky top-0 h-screen overflow-y-auto sm:overflow-hidden">
 
-          {/* SEKTOR 1 — FRAKTIONEN (Basis, z-10, opak) */}
-          <div className="absolute inset-0 z-10 bg-ink overflow-y-auto sm:overflow-hidden">
+          {/* SEKTOR 1 — FRAKTIONEN (Basis, z-10, halbtransparent für Milchstraße) */}
+          <div className="absolute inset-0 z-10 bg-ink/55 overflow-y-auto sm:overflow-hidden">
             <div className="min-h-full max-w-7xl mx-auto px-5 sm:px-8 flex flex-col justify-start sm:justify-center py-12">
               <p className="mono-label text-gold mb-4">// FRAKTIONEN</p>
               <h2 className="font-display font-bold text-4xl sm:text-5xl tracking-tight mb-12">
@@ -102,11 +102,11 @@ export default function FactionsDoctrine() {
             </div>
           </div>
 
-          {/* SEKTOR 2 — DOKTRIN (schiebt von unten hoch, z-20, opak, KEINE Transparenz) */}
+          {/* SEKTOR 2 — DOKTRIN (schiebt von unten hoch, z-20, halbtransparent für Milchstraße) */}
           <motion.div
             id="doktrin"
             style={{ y: sector2Y }}
-            className="absolute inset-0 z-20 bg-ink-soft border-t border-white/10"
+            className="absolute inset-0 z-20 bg-ink-soft/55 border-t border-white/10"
           >
             <div className="h-full max-w-7xl mx-auto px-5 sm:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 flex flex-col justify-center py-12">
               <div className="lg:col-span-5">

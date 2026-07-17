@@ -30,20 +30,106 @@
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
+  #root {
+    position: relative;
+    z-index: 1; /* Content über der Milchstraße (z-index:-1) */
+  }
+  /* Section-BGs transparent lassen, damit die Milchstraße überall
+     (auch beim Scrollen) als Hintergrund durchscheint. */
+  #konflikt, #geheimwaffe, #fraktionen, #schlacht, #konsole, #archiv {
+    background: transparent !important;
+  }
   ::selection {
     background: var(--color-neon);
     color: #fff;
   }
 }
 
-/* AURORA-HINTERGRUND: tief, glänzend, bewegt sich leicht */
+/* MILCHSTRASSE-HOLOGRAMM: fixer, vollflächiger, dezenter Hintergrund.
+   z-index:0 -> liegt über dem body-BG, aber unter dem Content (z-index:1).
+   pointer-events:none -> fängt keine Klicks ab. */
+.milkyway {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  background: transparent;
+}
+/* Das diffuse Galaxie-Band: leicht rotiert, lila->türkis->gold,
+   deutlich sichtbar, weichgezeichnet, langsam driftend. */
+.milkyway__band {
+  position: absolute;
+  left: -30%;
+  right: -30%;
+  top: 50%;
+  height: 60vh;
+  transform: translateY(-50%) rotate(-16deg);
+  background:
+    radial-gradient(60% 120% at 18% 50%, rgba(192, 38, 211, 0.40), transparent 70%),
+    radial-gradient(55% 120% at 44% 50%, rgba(124, 58, 237, 0.34), transparent 70%),
+    radial-gradient(50% 130% at 70% 50%, rgba(34, 211, 238, 0.30), transparent 72%),
+    radial-gradient(45% 120% at 88% 50%, rgba(245, 197, 66, 0.22), transparent 72%);
+  filter: blur(38px) saturate(130%);
+  opacity: 0.95;
+  animation: mw-drift 34s ease-in-out infinite alternate;
+}
+@keyframes mw-drift {
+  0%   { transform: translateY(-50%) rotate(-18deg) translateX(-2%); }
+  100% { transform: translateY(-50%) rotate(-14deg) translateX(3%); }
+}
+/* Sternenfeld: dichteres Punkte-Rauschen, deutlicher sichtbar, sanftes Twinkern. */
+.milkyway__stars {
+  position: absolute;
+  inset: -10%;
+  background-image:
+    radial-gradient(1.8px 1.8px at 10% 18%, rgba(255,255,255,0.85), transparent 60%),
+    radial-gradient(1.5px 1.5px at 22% 62%, rgba(232,200,255,0.75), transparent 60%),
+    radial-gradient(2.0px 2.0px at 35% 30%, rgba(255,255,255,0.80), transparent 60%),
+    radial-gradient(1.4px 1.4px at 48% 78%, rgba(180,235,255,0.72), transparent 60%),
+    radial-gradient(1.9px 1.9px at 60% 22%, rgba(255,255,255,0.82), transparent 60%),
+    radial-gradient(1.5px 1.5px at 72% 55%, rgba(255,225,180,0.70), transparent 60%),
+    radial-gradient(1.7px 1.7px at 84% 38%, rgba(255,255,255,0.78), transparent 60%),
+    radial-gradient(1.4px 1.4px at 92% 72%, rgba(232,200,255,0.68), transparent 60%),
+    radial-gradient(1.6px 1.6px at 6% 84%, rgba(255,255,255,0.72), transparent 60%),
+    radial-gradient(1.5px 1.5px at 16% 44%, rgba(255,255,255,0.70), transparent 60%),
+    radial-gradient(1.6px 1.6px at 40% 90%, rgba(180,235,255,0.66), transparent 60%),
+    radial-gradient(1.5px 1.5px at 54% 50%, rgba(255,255,255,0.74), transparent 60%),
+    radial-gradient(1.7px 1.7px at 68% 84%, rgba(255,225,180,0.66), transparent 60%),
+    radial-gradient(1.4px 1.4px at 78% 14%, rgba(232,200,255,0.68), transparent 60%),
+    radial-gradient(1.6px 1.6px at 88% 56%, rgba(255,255,255,0.72), transparent 60%);
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  opacity: 0.85;
+  animation: mw-twinkle 7s ease-in-out infinite alternate;
+}
+@keyframes mw-twinkle {
+  0%   { opacity: 0.6; }
+  100% { opacity: 0.95; }
+}
+
+/* Light Mode: Galaxie sichtbar, aber auf hell gedämpfter. */
+[data-theme="light"] .milkyway__band {
+  opacity: 0.6;
+  filter: blur(42px) saturate(115%);
+}
+[data-theme="light"] .milkyway__stars {
+  opacity: 0.5;
+}
+
+/* Reduced Motion: Animationen aus, statisches Schimmern bleibt. */
+@media (prefers-reduced-motion: reduce) {
+  .milkyway__band,
+  .milkyway__stars { animation: none; }
+}
 .bg-theatre {
   background:
     radial-gradient(1000px 700px at 80% -10%, rgba(192, 38, 211, 0.28), transparent 55%),
     radial-gradient(900px 800px at 5% 10%, rgba(124, 58, 237, 0.22), transparent 55%),
     radial-gradient(800px 700px at 50% 120%, rgba(34, 211, 238, 0.14), transparent 55%),
-    radial-gradient(600px 500px at 70% 60%, rgba(245, 197, 66, 0.10), transparent 60%),
-    linear-gradient(180deg, #0a0814 0%, #0c0918 50%, #080610 100%);
+    radial-gradient(600px 500px at 70% 60%, rgba(245, 197, 66, 0.10), transparent 60%);
+  /* KEINE opake lineare Basisfläche mehr -> die Milchstraße (z-index:-10)
+     scheint hinter dem Hero durch. Der body-Ink fängt den Rest auf. */
   position: relative;
 }
 .bg-theatre::before {
@@ -249,8 +335,8 @@
     radial-gradient(1000px 700px at 80% -10%, rgba(192, 38, 211, 0.16), transparent 55%),
     radial-gradient(900px 800px at 5% 10%, rgba(124, 58, 237, 0.14), transparent 55%),
     radial-gradient(800px 700px at 50% 120%, rgba(34, 211, 238, 0.12), transparent 55%),
-    radial-gradient(600px 500px at 70% 60%, rgba(245, 197, 66, 0.12), transparent 60%),
-    linear-gradient(180deg, #f7f4ff 0%, #f1ecfb 50%, #ece5fa 100%);
+    radial-gradient(600px 500px at 70% 60%, rgba(245, 197, 66, 0.12), transparent 60%);
+  /* keine opake Basisfläche -> gedämpfte Galaxie scheint durch */
 }
 [data-theme="light"] .bg-theatre::before {
   background:
