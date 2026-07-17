@@ -11,6 +11,7 @@ export default function MilkyWay() {
     let stars = [];
     let meteors = [];
     let ship = null;
+    let planets = [];
     let W, H, DPR;
 
     function rand(a, b) { return a + Math.random() * (b - a); }
@@ -99,6 +100,23 @@ export default function MilkyWay() {
         curveFreq: rand(0.35, 0.7),
         curvePh: Math.random() * Math.PI * 2,
       };
+
+      planets = [];
+      const planetCount = 4;
+      for (let i = 0; i < planetCount; i++) {
+        const hasRings = i === planetCount - 1;
+        planets.push({
+          x: rand(W * 0.08, W * 0.85),
+          y: rand(H * 0.08, H * 0.55),
+          r: rand(7, 16),
+          a: rand(0.25, 0.6),
+          c: i % 2 === 0 ? "255,255,255" : i % 3 === 0 ? "210,220,255" : "245,230,210",
+          tw: rand(0.25, 0.55),
+          ph: Math.random() * Math.PI * 2,
+          hasRings,
+          ringTilt: rand(0.35, 0.65),
+        });
+      }
     }
 
     let t = 0;
@@ -107,6 +125,37 @@ export default function MilkyWay() {
       t += 0.016;
       dx = (dx + 0.18) % W;
       ctx.clearRect(0, 0, W, H);
+
+      const moonX = W * 0.10;
+      const moonY = H * 0.13;
+      const moonR = Math.min(W, H) * 0.055;
+      const moonGlow = ctx.createRadialGradient(moonX, moonY, moonR * 0.6, moonX, moonY, moonR * 3.2);
+      moonGlow.addColorStop(0, "rgba(255,255,255,0.08)");
+      moonGlow.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.beginPath();
+      ctx.fillStyle = moonGlow;
+      ctx.arc(moonX, moonY, moonR * 3.2, 0, Math.PI * 2);
+      ctx.fill();
+
+      const moonBody = ctx.createRadialGradient(moonX - moonR * 0.35, moonY - moonR * 0.35, moonR * 0.15, moonX, moonY, moonR);
+      moonBody.addColorStop(0, "rgba(255,255,255,0.95)");
+      moonBody.addColorStop(0.55, "rgba(245,245,255,0.85)");
+      moonBody.addColorStop(0.78, "rgba(235,235,245,0.7)");
+      moonBody.addColorStop(1, "rgba(225,225,235,0.55)");
+      ctx.beginPath();
+      ctx.fillStyle = moonBody;
+      ctx.arc(moonX, moonY, moonR, 0, Math.PI * 2);
+      ctx.fill();
+
+      const shadow = ctx.createRadialGradient(moonX + moonR * 0.4, moonY + moonR * 0.4, moonR * 0.08, moonX, moonY, moonR);
+      shadow.addColorStop(0, "rgba(0,0,0,0)");
+      shadow.addColorStop(0.6, "rgba(0,0,0,0.06)");
+      shadow.addColorStop(1, "rgba(0,0,0,0.28)");
+      ctx.beginPath();
+      ctx.fillStyle = shadow;
+      ctx.arc(moonX, moonY, moonR, 0, Math.PI * 2);
+      ctx.fill();
+
       for (const s of stars) {
         const wave = Math.sin(t * s.tw + s.ph);
         const a = s.a * (0.15 + 0.85 * ((wave + 1) / 2));
@@ -117,6 +166,41 @@ export default function MilkyWay() {
         ctx.arc(sx, s.y, r, 0, Math.PI * 2);
         ctx.fill();
       }
+
+      for (const p of planets) {
+        const wave = Math.sin(t * p.tw + p.ph);
+        const pa = p.a * (0.75 + 0.25 * ((wave + 1) / 2));
+        ctx.save();
+        ctx.globalAlpha = pa;
+        const body = ctx.createRadialGradient(p.x - p.r * 0.3, p.y - p.r * 0.3, p.r * 0.1, p.x, p.y, p.r);
+        body.addColorStop(0, `rgba(255,255,255,0.95)`);
+        body.addColorStop(0.55, `rgba(${p.c},0.82)`);
+        body.addColorStop(0.78, `rgba(${p.c},0.65)`);
+        body.addColorStop(1, `rgba(${p.c},0.45)`);
+        ctx.beginPath();
+        ctx.fillStyle = body;
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        if (p.hasRings) {
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.ringTilt);
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(${p.c},0.18)`;
+          ctx.lineWidth = p.r * 0.28;
+          ctx.ellipse(0, 0, p.r * 2.0, p.r * 0.55, 0, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(${p.c},0.35)`;
+          ctx.lineWidth = p.r * 0.12;
+          ctx.ellipse(0, 0, p.r * 1.55, p.r * 0.4, 0, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        }
+        ctx.restore();
+      }
+
       for (const m of meteors) {
         m.x += m.vx;
         m.y += m.vy;
