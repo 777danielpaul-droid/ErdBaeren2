@@ -99,13 +99,18 @@ export default function FactionsDoctrine() {
                   )
                 })}
               </motion.div>
+            </div>
+          </div>
 
+          <div className="max-w-7xl mx-auto px-5 sm:px-8 py-12">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+              <div className="lg:col-span-5" />
               <motion.div
                 variants={stagger}
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true, amount: 0.2 }}
-                className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4"
+                className="lg:col-span-7 space-y-4"
               >
                 {site.doctrine.points.map((p) => (
                   <motion.div
@@ -114,8 +119,14 @@ export default function FactionsDoctrine() {
                       hidden: { opacity: 0, x: 32 },
                       show: { opacity: 1, x: 0, transition: { duration: 0.6, ease: EASE } },
                     }}
-                    className="rounded-xl neon-border glass p-6 min-h-[6rem]"
-                  />
+                    whileHover={{ x: 6, transition: { duration: 0.35, ease: EASE } }}
+                    className="flex gap-5 rounded-xl neon-border glass p-6"
+                  >
+                    <span className="font-display font-bold text-2xl text-gold/80 shrink-0 w-12">
+                      {p.k}
+                    </span>
+                    <div className="w-full min-h-[4rem]" />
+                  </motion.div>
                 ))}
               </motion.div>
             </div>
