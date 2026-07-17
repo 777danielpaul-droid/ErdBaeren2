@@ -10,9 +10,9 @@ const KEY = "erdbaeren-lang";
 export const MODE_ORDER = ["de", "en", "runes"];
 
 export function getInitialLang() {
-  if (typeof window === "undefined") return "de";
+  if (typeof window === "undefined") return "runes";
   const v = localStorage.getItem(KEY);
-  return MODE_ORDER.includes(v) ? v : "de";
+  return MODE_ORDER.includes(v) ? v : "runes";
 }
 
 export function applyLang(mode) {

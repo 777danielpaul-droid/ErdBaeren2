@@ -71,7 +71,7 @@ export default function Navbar() {
                 ? "Auf Englisch umschalten"
                 : mode === "en"
                 ? "In fremder Schrift anzeigen"
-                : "Zurück zu Deutsch"
+                : "Zu Deutsch wechseln"
             }
             onClick={cycleLang}
             className={`hidden md:grid place-items-center w-10 h-10 rounded-md border text-bone transition-colors ${
