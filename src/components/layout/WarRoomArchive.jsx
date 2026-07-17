@@ -365,7 +365,7 @@ export default function WarRoomArchive() {
           <motion.div
             id="archiv"
             style={{ y: sector2Y }}
-            className="absolute inset-0 z-20 bg-ink-soft/85 border-t border-white/10 overflow-y-auto overflow-x-hidden archiv-scroll"
+            className="absolute inset-0 z-20 bg-ink-soft/10 border-t border-white/10 overflow-y-auto overflow-x-hidden archiv-scroll"
           >
             <div className="min-h-full max-w-7xl mx-auto px-5 sm:px-8 flex flex-col justify-center py-12">
               <Reveal className="mb-12" variant="up">

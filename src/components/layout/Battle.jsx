@@ -39,7 +39,7 @@ export default function Battle() {
   const imgFilter = useTransform(imgBlur, (b) => `blur(${b}px)`)
 
   return (
-    <section id="schlacht" ref={ref} className="relative bg-ink border-y border-white/5">
+    <section id="schlacht" ref={ref} className="relative bg-ink/10 border-y border-white/5">
       <div className="absolute inset-0 hud-grid opacity-40" aria-hidden="true" />
 
       {/* PIN-BÜHNE: sticky, füllt Viewport, läuft über lange Scroll-Strecke ab */}
