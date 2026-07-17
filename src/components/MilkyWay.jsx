@@ -129,8 +129,29 @@ export default function MilkyWay() {
       const moonX = W * 0.10;
       const moonY = H * 0.13;
       const moonR = Math.min(W, H) * 0.055;
+      const moonBreath = 1 + 0.18 * Math.sin(t * 0.6 + 0.9);
+
+      const moonNebula = ctx.createRadialGradient(moonX, moonY, moonR * 1.05, moonX, moonY, moonR * 5.8);
+      moonNebula.addColorStop(0, "rgba(180,220,255,0.10)");
+      moonNebula.addColorStop(0.35, "rgba(140,170,255,0.07)");
+      moonNebula.addColorStop(0.65, "rgba(80,120,255,0.04)");
+      moonNebula.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.beginPath();
+      ctx.fillStyle = moonNebula;
+      ctx.arc(moonX, moonY, moonR * 5.8, 0, Math.PI * 2);
+      ctx.fill();
+
+      const moonHalo = ctx.createRadialGradient(moonX, moonY, moonR * 0.2, moonX, moonY, moonR * 3.8);
+      moonHalo.addColorStop(0, `rgba(255,255,255,${(0.18 * moonBreath).toFixed(3)})`);
+      moonHalo.addColorStop(0.5, `rgba(180,210,255,${(0.08 * moonBreath).toFixed(3)})`);
+      moonHalo.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.beginPath();
+      ctx.fillStyle = moonHalo;
+      ctx.arc(moonX, moonY, moonR * 3.8, 0, Math.PI * 2);
+      ctx.fill();
+
       const moonGlow = ctx.createRadialGradient(moonX, moonY, moonR * 0.6, moonX, moonY, moonR * 3.2);
-      moonGlow.addColorStop(0, "rgba(255,255,255,0.08)");
+      moonGlow.addColorStop(0, `rgba(255,255,255,${(0.12 * moonBreath).toFixed(3)})`);
       moonGlow.addColorStop(1, "rgba(255,255,255,0)");
       ctx.beginPath();
       ctx.fillStyle = moonGlow;
