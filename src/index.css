@@ -13,8 +13,8 @@
   --color-steel: #9aa0b5;
   --color-bone: #f4f1fb;
 
-  --font-display: "Space Grotesk", system-ui, sans-serif;
-  --font-mono: "Space Mono", ui-monospace, monospace;
+  --font-display: "Noto Sans Runic", "Space Grotesk", system-ui, sans-serif;
+  --font-mono: "Space Mono", "Noto Sans Runic", ui-monospace, monospace;
 }
 
 @layer base {
