@@ -9,6 +9,8 @@ export default function MilkyWay() {
     const ctx = canvas.getContext("2d");
     let raf;
     let stars = [];
+    let meteors = [];
+    let ship = null;
     let W, H, DPR;
 
     function rand(a, b) { return a + Math.random() * (b - a); }
@@ -69,6 +71,34 @@ export default function MilkyWay() {
           });
         }
       });
+
+      meteors = [];
+      for (let i = 0; i < 14; i++) {
+        meteors.push({
+          x: Math.random() * W,
+          y: Math.random() * H * 0.5,
+          vx: rand(-1.6, -0.6),
+          vy: rand(0.3, 1.0),
+          len: rand(18, 44),
+          a: rand(0.35, 0.85),
+          tw: rand(0.6, 1.4),
+          ph: Math.random() * Math.PI * 2,
+        });
+      }
+
+      ship = {
+        x: Math.random() * W * 0.8 + W * 0.1,
+        y: Math.random() * H * 0.3 + H * 0.1,
+        vx: rand(0.4, 0.9),
+        size: rand(8, 13),
+        a: rand(0.55, 0.85),
+        tw: rand(0.5, 1.2),
+        ph: Math.random() * Math.PI * 2,
+        blink: rand(0.8, 2.2),
+        curveAmp: rand(20, 55),
+        curveFreq: rand(0.35, 0.7),
+        curvePh: Math.random() * Math.PI * 2,
+      };
     }
 
     let t = 0;
@@ -86,6 +116,75 @@ export default function MilkyWay() {
         ctx.fillStyle = `rgba(${s.c},${a.toFixed(3)})`;
         ctx.arc(sx, s.y, r, 0, Math.PI * 2);
         ctx.fill();
+      }
+      for (const m of meteors) {
+        m.x += m.vx;
+        m.y += m.vy;
+        if (m.x < -60 || m.y > H + 60) {
+          m.x = W + Math.random() * 120;
+          m.y = Math.random() * H * 0.4;
+        }
+        const a = m.a * (0.7 + 0.3 * Math.sin(t * m.tw + m.ph));
+        const tailX = m.x - (m.vx / Math.hypot(m.vx, m.vy)) * m.len;
+        const tailY = m.y - (m.vy / Math.hypot(m.vx, m.vy)) * m.len;
+        const grad = ctx.createLinearGradient(tailX, tailY, m.x, m.y);
+        grad.addColorStop(0, `rgba(255,255,255,0)`);
+        grad.addColorStop(1, `rgba(255,255,255,${a.toFixed(3)})`);
+        ctx.beginPath();
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 1.2;
+        ctx.moveTo(tailX, tailY);
+        ctx.lineTo(m.x, m.y);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(255,255,255,${(a * 1.2).toFixed(3)})`;
+        ctx.arc(m.x, m.y, 1.3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      if (ship) {
+        ship.x += ship.vx;
+        if (ship.x > W + 90) ship.x = -90;
+        const baseY = Math.sin(t * ship.curveFreq + ship.curvePh) * ship.curveAmp;
+        const sy = ship.y + baseY;
+        const a = ship.a * (0.8 + 0.2 * Math.sin(t * ship.tw + ship.ph));
+        const pulse = 0.85 + 0.15 * Math.sin(t * ship.blink + ship.ph);
+        const s = ship.size;
+        ctx.save();
+        ctx.translate(ship.x, sy);
+        ctx.scale(1, 0.85 + 0.15 * pulse);
+        ctx.globalAlpha = a * pulse;
+
+        const flameGrad = ctx.createLinearGradient(-s * 2.6, 0, -s * 9.2, 0);
+        flameGrad.addColorStop(0, `rgba(255,255,255,0)`);
+        flameGrad.addColorStop(0.35, `rgba(255,255,255,0)`);
+        flameGrad.addColorStop(0.45, `rgba(124,58,237,${(a * 0.55).toFixed(3)})`);
+        flameGrad.addColorStop(0.72, `rgba(124,58,237,${(a * 0.95).toFixed(3)})`);
+        flameGrad.addColorStop(0.88, `rgba(217,70,239,${(a * 1.0).toFixed(3)})`);
+        flameGrad.addColorStop(1, `rgba(217,70,239,0)`);
+        ctx.beginPath();
+        ctx.moveTo(-s * 1.55, -s * 0.35);
+        ctx.bezierCurveTo(-s * 4.0, -s * 1.0, -s * 7.4, -s * 0.6, -s * 9.2, 0);
+        ctx.bezierCurveTo(-s * 7.4, s * 0.6, -s * 4.0, s * 1.0, -s * 1.55, s * 0.35);
+        ctx.closePath();
+        ctx.fillStyle = flameGrad;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(255,255,255,${(a * 0.95).toFixed(3)})`;
+        ctx.moveTo(-s * 1.55, -s * 0.38);
+        ctx.lineTo(s * 2.0, -s * 0.52);
+        ctx.lineTo(s * 2.4, 0);
+        ctx.lineTo(s * 2.0, s * 0.52);
+        ctx.lineTo(-s * 1.55, s * 0.38);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(255,255,255,0.18)`;
+        ctx.arc(-s * 0.35, 0, s * 0.8, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
       }
       raf = requestAnimationFrame(draw);
     }
