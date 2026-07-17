@@ -2,20 +2,28 @@ import { useEffect, useRef, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import RunenText from "./RunenText"
 
-// Terminal-Gimmick: Klick auf „Terminal" öffnet ein Overlay. Der User tippt
-// Klartext — jede Zeile wird LIVE als Runenschrift (RunenText-Renderer)
-// übersetzt. Enter = Zeile ins Log; Escape / X schließt.
+// URL des extern gehosteten Spiels (WebGL-Build auf itch.io)
+// Wird vom Terminal beim "go to war?"-Prompt via Y geöffnet.
+const GAME_URL = "https://coldasic3.itch.io/erdbren-verteidigung"
+
+// Valide Befehle – alles andere zählt als „falscher Befehl".
+const KNOWN_COMMANDS = ["jesus"]
+
 export default function TerminalModal({ open, onClose }) {
   const [lines, setLines] = useState([])
   const [current, setCurrent] = useState("")
+  const [wrongCount, setWrongCount] = useState(0)
+  const [warPrompt, setWarPrompt] = useState(false)
   const inputRef = useRef(null)
   const logRef = useRef(null)
 
-  // Autofokus beim Öffnen + Escape schließt + beim Schließen Eingabe zurücksetzen.
+  // Autofokus beim Öffnen + Escape schließt + Reset beim Schließen.
   useEffect(() => {
     if (!open) {
       setLines([])
       setCurrent("")
+      setWrongCount(0)
+      setWarPrompt(false)
       return
     }
     const t = setTimeout(() => inputRef.current?.focus(), 60)
@@ -27,16 +35,56 @@ export default function TerminalModal({ open, onClose }) {
   // Autoscroll ans Ende (bei neuer Zeile + live beim Tippen).
   useEffect(() => {
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight
-  }, [lines, current, open])
+  }, [lines, current, open, warPrompt])
+
+  const pushLines = (arr) => setLines((l) => [...l, ...arr])
 
   const submit = () => {
-    const v = current.trim()
+    const v = current.trim().toLowerCase()
     if (!v) return
-    // Geheimbefehl: öffnet das verborgene Bild (16:9, fullscreen) in einem neuen Tab.
-    if (v.toLowerCase() === "jesus") {
-      window.open(`${import.meta.env.BASE_URL}shepherd.html`, "_blank", "noopener")
+
+    // --- "go to war?" beantworten ---
+    if (warPrompt) {
+      if (v === "y") {
+        window.open(GAME_URL, "_blank", "noopener")
+        pushLines(["go to war? [y/n]", `> ${v}`, "// SPIEL WIRD GESTARTET... //"])
+        setWarPrompt(false)
+        setCurrent("")
+        return
+      }
+      if (v === "n") {
+        onClose()
+        return
+      }
+      // nur y/n gelten im War-Prompt
+      setCurrent("")
+      return
     }
-    setLines((l) => [...l, v])
+
+    // --- bekannte Befehle ---
+    if (v === "jesus") {
+      window.open(`${import.meta.env.BASE_URL}shepherd.html`, "_blank", "noopener")
+      pushLines([v, "// geheimnis offenbart //"])
+      setCurrent("")
+      return
+    }
+
+    // --- unbekannter Befehl -> Zähler hoch ---
+    if (!KNOWN_COMMANDS.includes(v)) {
+      const next = wrongCount + 1
+      setWrongCount(next)
+      if (next >= 3) {
+        pushLines([v, "// ZUGRIFF VERWEIGERT //", "go to war? [y/n]"])
+        setWarPrompt(true)
+      } else {
+        pushLines([v, `// unbekannter befehl (${next}/3) //`])
+      }
+      setCurrent("")
+      return
+    }
+
+    // valide (erweiterbar)
+    pushLines([v])
     setCurrent("")
   }
 
@@ -84,7 +132,11 @@ export default function TerminalModal({ open, onClose }) {
               <p className="text-cyan text-xs leading-relaxed mt-2">User/Secret:</p>
               {lines.map((l, i) => (
                 <div key={i} className="flex gap-3 items-center flex-wrap">
-                  <RunenText text={l} className="text-xl sm:text-2xl" />
+                  {l.startsWith("go to war?") ? (
+                    <span className="text-cyan text-lg font-bold tracking-wider animate-pulse">{l}</span>
+                  ) : (
+                    <RunenText text={l} className="text-xl sm:text-2xl" />
+                  )}
                 </div>
               ))}
               {/* Aktuelle Eingabe (live als Runen) + Cursor */}
