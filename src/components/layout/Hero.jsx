@@ -115,7 +115,7 @@ export default function Hero() {
   const blobOpacity = useTransform(scrollY, [0, 600], [1, 0.3])
 
   return (
-    <section id="top" className="relative min-h-screen flex items-center bg-theatre grain overflow-hidden">
+    <section id="top" className="hero-holo relative min-h-screen flex items-center bg-theatre grain overflow-hidden">
       <HeroGrid />
       <motion.div
         style={{ y: blobY, opacity: blobOpacity }}
@@ -138,7 +138,7 @@ export default function Hero() {
             </motion.p>
 
             <h1
-              className="holo font-display font-bold leading-[1.05] tracking-tight text-3xl sm:text-7xl lg:text-8xl max-w-4xl break-words"
+              className="font-display font-bold leading-[1.05] tracking-tight text-3xl sm:text-7xl lg:text-8xl max-w-4xl break-words"
               style={{ filter: "drop-shadow(0 0 18px rgba(80, 200, 255, 0.35)) drop-shadow(3px 3px rgba(40, 120, 200, 0.35)) drop-shadow(7px 7px rgba(20, 70, 140, 0.3)) drop-shadow(14px 14px 14px rgba(10, 40, 90, 0.35))" }}
             >
               <motion.span custom={1} initial="hidden" animate="show" variants={line} className="block title-rainbow">

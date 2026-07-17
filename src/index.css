@@ -64,6 +64,18 @@
   pointer-events: none;
   display: block;
 }
+
+/* Volumetrische WebGL-Wolken (CloudVolume.jsx): ueber der Milchstrasse (z:-1),
+   unter dem Content (z:1). Scheinen durch die fast-transparenten Sections. */
+.cloud-volume {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
 /* Das diffuse Galaxie-Band: leicht rotiert, lila->türkis->gold,
 /* Das diffuse Galaxie-Band + Sternenfeld werden jetzt per Canvas
    in MilkyWay.jsx gezeichnet (zuverlässiger als CSS-radial-gradient-Stapel). */
@@ -355,9 +367,9 @@
   animation: holo-flicker 5s infinite steps(40);
 }
 
-/* Scanlines + wandernder Refresh-Strahl über der Headline */
-h1.holo { position: relative; }
-h1.holo::after {
+/* Scanlines + wandernder Refresh-Strahl über dem GESAMTEN Hero */
+.hero-holo { position: relative; }
+.hero-holo::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -370,19 +382,19 @@ h1.holo::after {
     transparent 4px
   );
   mix-blend-mode: screen;
-  z-index: 1;
+  z-index: 50;
 }
-h1.holo::before {
+.hero-holo::before {
   content: "";
   position: absolute;
   left: 0; right: 0;
   top: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(175, 240, 255, 0.85), transparent);
-  box-shadow: 0 0 10px rgba(150, 230, 255, 0.8);
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(175, 240, 255, 0.9), transparent);
+  box-shadow: 0 0 12px rgba(150, 230, 255, 0.85);
   opacity: 0;
   pointer-events: none;
-  z-index: 2;
+  z-index: 51;
   animation: holo-scan 5.5s linear infinite;
 }
 
@@ -403,8 +415,8 @@ h1.holo::before {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .title-rainbow, h1.holo::before { animation: none; opacity: 1; }
-  h1.holo::before { display: none; }
+  .title-rainbow, .hero-holo::before { animation: none; opacity: 1; }
+  .hero-holo::before { display: none; }
 }
 
 /* ===== RUNEN-SCHRIFT (abgefangene Milchmaus-Funksprueche) ===== */
