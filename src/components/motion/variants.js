@@ -2,13 +2,13 @@
 import { useScroll, useTransform, motion } from "framer-motion"
 import { useRef } from "react"
 
-// Einheitliches Easing (expo-out) — überall verwendet für konsistente Bewegung.
-export const EASE = [0.22, 1, 0.36, 1]
+// Einheitliches Easing (weich/expo-out) — überall verwendet für konsistente Bewegung.
+export const EASE = [0.16, 1, 0.3, 1]
 export const EASE_SOFT = [0.16, 1, 0.3, 1]
 export const SPRING = { type: "spring", stiffness: 120, damping: 20, mass: 0.9 }
 
 // --- REVEAL-VARIANTEN (alle on-scroll, einmalig) ---
-const base = { duration: 0.75, ease: EASE }
+const base = { duration: 0.85, ease: EASE }
 
 export const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -50,11 +50,11 @@ export const fadeClip = {
 // Stagger-Container
 export const stagger = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.12, delayChildren: 0.06 } },
+  show: { transition: { staggerChildren: 0.18, delayChildren: 0.08 } },
 }
 export const staggerFast = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.07, delayChildren: 0.04 } },
+  show: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
 }
 
 // --- SCROLL-LINKED HELFER ---
