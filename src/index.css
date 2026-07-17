@@ -354,17 +354,22 @@
 /* Hologramm-Überschrift: eisblau leuchtend + Tiefe + Chromatic + Flicker */
 .title-rainbow {
   display: inline-block;
-  color: #c6f4ff;
+  color: #e02e4e;
+  opacity: 0.35;
   text-shadow:
-    0 0 5px rgba(150, 235, 255, 0.9),
-    0 0 12px rgba(90, 195, 255, 0.6),
-    0 0 26px rgba(70, 165, 255, 0.45),
-    0 1px 0 rgba(80, 180, 255, 0.45),
-    1px 2px 0 rgba(60, 150, 255, 0.35),
-    2px 4px 6px rgba(20, 60, 120, 0.5),
-    0.05em 0 0 rgba(255, 70, 120, 0.35),
-   -0.05em 0 0 rgba(70, 200, 255, 0.35);
-  animation: holo-flicker 5s infinite steps(40);
+    2px 0 rgba(0,255,255,0.9),
+    -2px 0 rgba(255,0,255,0.9),
+    0 0 18px rgba(224,46,78,0.8);
+  animation: glitch-skew 1.8s infinite linear alternate-reverse, holo-flicker 5s infinite steps(40);
+}
+
+@keyframes glitch-skew {
+  0% { transform: skewX(0deg); }
+  20% { transform: skewX(-1.2deg); }
+  40% { transform: skewX(0.3deg); }
+  60% { transform: skewX(1.6deg); }
+  80% { transform: skewX(-0.7deg); }
+  100% { transform: skewX(0deg); }
 }
 
 /* Scanlines + wandernder Refresh-Strahl über dem GESAMTEN Hero */
