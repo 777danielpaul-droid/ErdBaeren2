@@ -1,8 +1,9 @@
 import { useRef } from "react"
-import { motion, useScroll, useTransform } from "framer-motion"
+import { motion } from "framer-motion"
 import { site } from "../../data/content"
 import { asset } from "../../lib/asset"
 import { EASE } from "../motion/variants"
+import { useScrollRevealStage } from "../motion/ScrollRevealStage"
 import { T } from "../RunenText"
 
 // Scroll-Linked Enthüllung mit PIN (gleiche Technik wie SecretWeapon):
@@ -13,30 +14,17 @@ import { T } from "../RunenText"
 export default function Battle() {
   const s = site.battleMeta
   const ref = useRef(null)
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end end"],
-  })
-
-  // Bild: subtil nach unten gleitend ("aus dem Container heraus"), wird scharf + sichtbar.
-  const imgY = useTransform(scrollYProgress, [0, 0.5, 1], ["0%", "4%", "10%"])
-  const imgScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.12, 1.03, 1.0])
-  const imgOpacity = useTransform(scrollYProgress, [0, 0.3, 1], [0.0, 0.7, 1])
-  const imgBlur = useTransform(scrollYProgress, [0, 0.32], [18, 0])
-
-  // Text-Container: groß + opak (Glass-Stil wie die anderen Blöcke), wandert nach oben raus.
-  const panelY = useTransform(scrollYProgress, [0, 0.5, 1], ["0%", "-46%", "-58%"])
-  const panelOpacity = useTransform(scrollYProgress, [0, 0.45, 0.7], [1, 0.9, 0])
-
-  // Caption: erscheint über dem (nun voll sichtbaren) Bild, liegt VOR dem Bild.
-  const captionY = useTransform(scrollYProgress, [0.5, 1], ["36%", "0%"])
-  const captionOpacity = useTransform(scrollYProgress, [0.55, 0.8, 1], [0, 0.6, 1])
-
-  // Glow wächst mit Fokus.
-  const glow = useTransform(scrollYProgress, [0.3, 0.7, 1], [0.15, 0.5, 0.72])
-  const glowShadow = useTransform(glow, (g) => `0 0 ${30 + g * 80}px rgba(192,38,211,${g})`)
-  const imgFilter = useTransform(imgBlur, (b) => `blur(${b}px)`)
+  const {
+    imgY,
+    imgScale,
+    imgOpacity,
+    panelY,
+    panelOpacity,
+    captionY,
+    captionOpacity,
+    glowShadow,
+    imgFilter,
+  } = useScrollRevealStage(ref)
 
   return (
     <section id="schlacht" ref={ref} className="relative bg-ink/10 border-y border-white/5">

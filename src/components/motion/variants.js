@@ -4,7 +4,6 @@ import { useRef } from "react"
 
 // Einheitliches Easing (weich/expo-out) — überall verwendet für konsistente Bewegung.
 export const EASE = [0.16, 1, 0.3, 1]
-export const EASE_SOFT = [0.16, 1, 0.3, 1]
 export const SPRING = { type: "spring", stiffness: 120, damping: 20, mass: 0.9 }
 
 // --- REVEAL-VARIANTEN (alle on-scroll, einmalig) ---
@@ -45,6 +44,16 @@ export const fadeBlur = {
 export const fadeClip = {
   hidden: { opacity: 0, clipPath: "inset(0 0 100% 0)" },
   show: { opacity: 1, clipPath: "inset(0 0 0% 0)", transition: { duration: 0.9, ease: EASE } },
+}
+
+// Title line variant for Hero headline
+export const titleLine = {
+  hidden: { opacity: 0, y: 30 },
+  show: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: EASE, delay: 0.15 + i * 0.12 },
+  }),
 }
 
 // Stagger-Container

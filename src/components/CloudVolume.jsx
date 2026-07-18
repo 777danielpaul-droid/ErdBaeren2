@@ -145,6 +145,21 @@ void main(){
   float b2 = smoothstep(1.0 + l2, 0.62 + l2, rr2);
   float a2 = smoothstep(0.16, 0.52, dens) * b2 * 0.42;  // dezenter
 
+  // ===== Untere Wolkenbank (humblbee skill reuse overlay) =====
+  float botTop = mix(0.24, 0.30, vis);
+  float botWob = fbm(vec3(pS * 3.2, t * 0.85)) * 0.14 + sw * 0.05;
+  float botThreshold = botTop + botWob;
+  float botBody = 1.0 - smoothstep(botThreshold - 0.10, botThreshold + 0.04, uv.y);
+  botBody *= smoothstep(0.0, 0.09, uv.x + sw2 * 0.08)
+           * smoothstep(1.0, 0.91, uv.x - sw2 * 0.08);
+  botBody = clamp(botBody, 0.0, 1.0);
+  float botCloud = dens * botBody;
+  float botGap = fbm(vec3(p * 2.1 + vec2(1.3, 2.7), t * 0.6 + 5.0));
+  float botBreaker = smoothstep(0.36, 0.66, botGap);
+  botCloud *= mix(1.0, botBreaker, 0.36);
+  botCloud = clamp(botCloud, 0.0, 1.0);
+  float botAlpha = clamp(botCloud * 1.0, 0.0, 1.0);
+
   // ===== Zwei kleine LILA Wolken in den oberen Ecken (links + rechts) =====
   // WIE DIE HAUPTWOLKEN: Domain-Warp (n1/n2/n3) fuer fliessendes Morphen,
   // lokale fbm-Textur x weicher Gaussscher Falloff (randlos, kein Container).
@@ -181,6 +196,12 @@ void main(){
   // Alpha: türkis UND lila addieren sich (beides sichtbar, übereinander)
   alpha = clamp(tAlpha + cornerA * (1.0 - tAlpha), 0.0, 1.0);
   cloud = max(cloud, max(blobA, cornerA));
+
+  // untere Bank als Overlay über alles
+  float topA = clamp(alpha, 0.0, 1.0);
+  float botAdd = clamp(botAlpha * 0.92, 0.0, 1.0);
+  alpha = clamp(topA + botAdd - topA * botAdd, 0.0, 1.0);
+  cloud = max(cloud, botCloud);
 
   if(alpha < 0.008) discard;
 

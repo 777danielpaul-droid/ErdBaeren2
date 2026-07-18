@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform } from "framer-motion"
 import { useEffect, useRef, useState } from "react"
-import { EASE } from "../motion/variants"
+import { EASE, titleLine } from "../motion/variants"
 import { site } from "../../data/content"
 import { useVotes } from "../../lib/votes"
 import { T } from "../RunenText"
@@ -8,26 +8,37 @@ import HoloEarthLazy from "../HoloEarthLazy"
 
 const NEON = ["#c026d3", "#7c3aed", "#22d3ee", "#c9a227"]
 
+function randomNeon() {
+  return NEON[(Math.random() * NEON.length) | 0]
+}
+
 function HeroGrid() {
   // Auf schwachen/schmalen Geraeten (Mobile) das Grid komplett weglassen:
   // 600 DOM-Nodes + Hover-Transitions wuergen alte Handys (z.B. Galaxy A20) ab.
   if (typeof window !== "undefined" && window.matchMedia("(max-width: 640px)").matches) {
     return null
   }
+
+  // Event-Delegation statt 1200 individuellen Handlern pro Render.
+  const onGridOver = (e) => {
+    const cell = e.target.closest("div[data-grid-cell]")
+    if (!cell) return
+    const c = randomNeon()
+    cell.style.background = `${c}22`
+    cell.style.borderColor = c
+    cell.style.boxShadow = `0 0 18px ${c}66, inset 0 0 12px ${c}33`
+  }
+  const onGridOut = (e) => {
+    const cell = e.target.closest("div[data-grid-cell]")
+    if (!cell) return
+    cell.style.background = "transparent"
+    cell.style.borderColor = "rgba(232,121,249,0.07)"
+    cell.style.boxShadow = "none"
+  }
+
   // Feste Zellzahl; Overflow wird vom Hero (overflow-hidden) gekappt.
   // Beide Achsen mit 1fr -> das Grid fuellt den gesamten sichtbaren Hero.
   const cells = Array.from({ length: 600 })
-  const onEnter = (e) => {
-    const c = NEON[(Math.random() * NEON.length) | 0]
-    e.currentTarget.style.background = `${c}22`
-    e.currentTarget.style.borderColor = c
-    e.currentTarget.style.boxShadow = `0 0 18px ${c}66, inset 0 0 12px ${c}33`
-  }
-  const onLeave = (e) => {
-    e.currentTarget.style.background = "transparent"
-    e.currentTarget.style.borderColor = "rgba(232,121,249,0.07)"
-    e.currentTarget.style.boxShadow = "none"
-  }
   return (
     <div
       aria-hidden="true"
@@ -36,12 +47,13 @@ function HeroGrid() {
         gridTemplateColumns: "repeat(auto-fill, minmax(56px, 1fr))",
         gridTemplateRows: "repeat(auto-fill, minmax(56px, 1fr))",
       }}
+      onMouseOver={onGridOver}
+      onMouseOut={onGridOut}
     >
       {cells.map((_, i) => (
         <div
           key={i}
-          onMouseEnter={onEnter}
-          onMouseLeave={onLeave}
+          data-grid-cell
           className="border transition-[background,border-color,box-shadow] duration-200"
           style={{ borderColor: "rgba(232,121,249,0.07)" }}
         />
@@ -50,18 +62,6 @@ function HeroGrid() {
   )
 }
 
-const line = {
-  hidden: { opacity: 0, y: 30 },
-  show: (i) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, ease: EASE, delay: 0.15 + i * 0.12 },
-  }),
-}
-
-// Mehrstufiger, gestaffelter Schatten = 3D-Extrusion in SCHWARZ: Buchstaben
-// wirken wie aus der Flaeche herausragend (schwarzer Keil nach rechts-unten,
-// weiter versetzt + leicht transparent).
 const TITLE_SHADOW =
   "2px 2px rgba(0,0,0,0.55), 4px 4px rgba(0,0,0,0.5), 6px 6px rgba(0,0,0,0.45), " +
   "8px 8px rgba(0,0,0,0.4), 10px 10px rgba(0,0,0,0.38), 12px 12px rgba(0,0,0,0.34), " +
@@ -125,13 +125,13 @@ export default function Hero() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 pt-28 pb-20 w-full pointer-events-none">
         <div className="relative">
-          {/* LINKS: Headline + Copy + CTAs + Stats */}
+          {/* LINKS: HeadtitleLine + Copy + CTAs + Stats */}
           <div className="relative">
             <motion.p
               custom={0}
               initial="hidden"
               animate="show"
-              variants={line}
+              variants={titleLine}
               className="mono-label text-neon mb-6"
             >
               <T en={h.eyebrow.en}>{h.eyebrow.de}</T>
@@ -141,14 +141,14 @@ export default function Hero() {
               className="font-display font-bold leading-[1.05] tracking-tight text-3xl sm:text-7xl lg:text-8xl max-w-4xl break-words"
               style={{ filter: "drop-shadow(0 0 18px rgba(80, 200, 255, 0.35)) drop-shadow(3px 3px rgba(40, 120, 200, 0.35)) drop-shadow(7px 7px rgba(20, 70, 140, 0.3)) drop-shadow(14px 14px 14px rgba(10, 40, 90, 0.35))" }}
             >
-              <motion.span custom={1} initial="hidden" animate="show" variants={line} className="block title-rainbow">
+              <motion.span custom={1} initial="hidden" animate="show" variants={titleLine} className="block title-rainbow">
                 <T en={t1en}>{t1}</T>
               </motion.span>
               <motion.span
                 custom={2}
                 initial="hidden"
                 animate="show"
-                variants={line}
+                variants={titleLine}
                 className="block title-rainbow"
               >
                 <T en={t2en}>{t2}</T>
@@ -159,7 +159,7 @@ export default function Hero() {
               custom={3}
               initial="hidden"
               animate="show"
-              variants={line}
+              variants={titleLine}
               className="mt-8 text-lg sm:text-xl text-bone/70 max-w-2xl leading-relaxed"
             >
               <T en={h.lead.en}>{h.lead.de}</T>
@@ -169,7 +169,7 @@ export default function Hero() {
               custom={4}
               initial="hidden"
               animate="show"
-              variants={line}
+              variants={titleLine}
               className="mt-10 flex flex-wrap gap-4 pointer-events-auto"
             >
               <a
@@ -190,7 +190,7 @@ export default function Hero() {
               custom={5}
               initial="hidden"
               animate="show"
-              variants={line}
+              variants={titleLine}
               className="mt-16 grid grid-cols-1 sm:grid-cols-4 gap-px bg-white/5 border border-white/10 rounded-xl overflow-hidden max-w-4xl"
             >
               {h.stats.map((s) => (
