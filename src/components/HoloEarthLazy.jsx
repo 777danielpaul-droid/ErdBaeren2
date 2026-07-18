@@ -28,11 +28,8 @@ export default function HoloEarthLazy() {
   if (phase < 5) return null
   if (!ready) {
     return (
-      <div className="relative w-full h-full min-h-[360px]">
-        <div className="absolute inset-0 bg-black/60" />
-        <div className="absolute inset-0 grid place-items-center">
-          <div className="w-44 h-44 rounded-full bg-neon/25 blur-[80px] animate-pulse" />
-        </div>
+      <div className="relative w-full h-full min-h-[360px] grid place-items-center">
+        <div className="w-44 h-44 rounded-full bg-neon/25 blur-[80px] animate-pulse" />
       </div>
     )
   }
