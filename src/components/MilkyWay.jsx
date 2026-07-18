@@ -135,26 +135,25 @@ export default function MilkyWay() {
       };
 
       planets = [];
-      const planetCount = 4;
-      for (let i = 0; i < planetCount; i++) {
-        const hasRings = i === planetCount - 1;
+      const planetDefs = [
+        { x: W * 0.18, y: H * 0.15, r: 9, a: 0.35, c: "210,220,255", hasRings: true, ringTilt: 0.45 },
+        { x: W * 0.78, y: H * 0.12, r: 7, a: 0.28, c: "255,255,255", hasRings: false },
+        { x: W * 0.65, y: H * 0.35, r: 11, a: 0.32, c: "255,230,210", hasRings: false },
+        { x: W * 0.35, y: H * 0.42, r: 8, a: 0.25, c: "245,230,210", hasRings: true, ringTilt: 0.55 },
+      ];
+      planetDefs.forEach((d) => {
         planets.push({
-          x: rand(W * 0.08, W * 0.85),
-          y: rand(H * 0.08, H * 0.55),
-          r: rand(7, 16),
-          a: rand(0.25, 0.6),
-          c:
-            i % 2 === 0
-              ? "255,255,255"
-              : i % 3 === 0
-              ? "210,220,255"
-              : "245,230,210",
+          x: d.x,
+          y: d.y,
+          r: d.r,
+          a: d.a,
+          c: d.c,
           tw: rand(0.25, 0.55),
           ph: Math.random() * Math.PI * 2,
-          hasRings,
-          ringTilt: rand(0.35, 0.65),
+          hasRings: d.hasRings,
+          ringTilt: d.ringTilt,
         });
-      }
+      });
 
       starBGs = []; // headline-area constellations, aligned to a virtual grid
       const cellSize = 72; // ~matches HeroGrid cell rhythm
@@ -167,19 +166,15 @@ export default function MilkyWay() {
         for (let col = 1; col < gridW - 1; col++) {
           const x = col * cellSize + cellSize * 0.5
           const y = row * cellSize + cellSize * 0.5
-          // prefer upper headline band
-          const weight = y < H * 0.45 ? 2 : 1
-          candidates.push({ x, y, weight })
+          candidates.push({ x, y })
         }
       }
-      candidates.sort(() => Math.random() - 0.5)
 
-      const picks = []
-      for (const c of candidates) {
-        if (picks.length >= 3) break
-        const ok = !picks.some(p => Math.hypot(p.x - c.x, p.y - c.y) < cellSize * 1.8)
-        if (ok) picks.push({ x: c.x, y: c.y, name: `SEKTOR0${picks.length + 1}` })
-      }
+      const picks = [
+        { ...candidates[gridW * 2 + 2], name: 'SEKTOR01' },
+        { ...candidates[gridW * 4 + 5], name: 'SEKTOR02' },
+        { ...candidates[gridW * 1 + 3], name: 'SEKTOR03' },
+      ].filter(Boolean)
 
       const picked = picks.concat().map(p => ({ x: p.x, y: p.y, name: p.name }))
 
