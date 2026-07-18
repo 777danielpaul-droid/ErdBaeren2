@@ -118,7 +118,7 @@ export default function Hero() {
   const { phase } = useTimeline()
 
   return (
-    <section id="top" className="hero-holo relative min-h-screen flex items-center bg-theatre grain overflow-hidden">
+    <section id="top" style={{ opacity: phase >= 1 ? 1 : 0 }} className="hero-holo relative min-h-screen flex items-center bg-theatre grain overflow-hidden">
       <HeroGrid />
       <motion.div
         style={{ y: blobY, opacity: blobOpacity }}
@@ -130,33 +130,37 @@ export default function Hero() {
         <div className="relative">
           {/* LINKS: HeadtitleLine + Copy + CTAs + Stats */}
           <div className="relative">
+            {phase >= 1 && (
             <motion.p
               custom={0}
               initial="hidden"
-              animate={phase >= 1 ? "show" : "hidden"}
+              animate="show"
               variants={titleLine}
               className="mono-label text-neon mb-6"
             >
               <T en={h.eyebrow.en}>{h.eyebrow.de}</T>
             </motion.p>
+            )}
 
+            {phase >= 2 && (
             <h1
               className="font-display font-bold leading-[1.05] tracking-tight text-3xl sm:text-7xl lg:text-8xl max-w-4xl break-words"
               style={{ filter: "drop-shadow(0 0 18px rgba(80, 200, 255, 0.35)) drop-shadow(3px 3px rgba(40, 120, 200, 0.35)) drop-shadow(7px 7px rgba(20, 70, 140, 0.3)) drop-shadow(14px 14px 14px rgba(10, 40, 90, 0.35))" }}
             >
-              <motion.span custom={1} initial="hidden" animate={phase >= 2 ? "show" : "hidden"} variants={titleLine} className="block title-rainbow">
+              <motion.span custom={1} initial="hidden" animate="show" variants={titleLine} className="block title-rainbow">
                 <T en={t1en}>{t1}</T>
               </motion.span>
               <motion.span
                 custom={2}
                 initial="hidden"
-                animate={phase >= 2 ? "show" : "hidden"}
+                animate="show"
                 variants={titleLine}
                 className="block title-rainbow"
               >
                 <T en={t2en}>{t2}</T>
               </motion.span>
             </h1>
+            )}
 
             <motion.p
               custom={3}
