@@ -212,9 +212,30 @@ export default function MilkyWay() {
 
     let t = 0;
     let dx = 0;
+    const scopeTarget = { x: 0, y: 0, r: 1, a: 1 };
+    const scopeCur = { x: 0, y: 0, r: 1, a: 1 };
     function draw() {
       t += 0.016;
       dx = (dx + 0.18) % W;
+
+      if (hoveredSector) {
+        scopeTarget.x = hoveredSector.x;
+        scopeTarget.y = hoveredSector.y;
+        scopeTarget.r = hoveredSector.fog?.r || 90;
+        scopeTarget.a = 1;
+      } else {
+        scopeTarget.x = -9999;
+        scopeTarget.y = -9999;
+        scopeTarget.r = 1;
+        scopeTarget.a = 0;
+      }
+
+      const k = 1 - Math.exp(-6 * 0.016);
+      scopeCur.x += (scopeTarget.x - scopeCur.x) * k;
+      scopeCur.y += (scopeTarget.y - scopeCur.y) * k;
+      scopeCur.r += (scopeTarget.r - scopeCur.r) * k;
+      scopeCur.a += (scopeTarget.a - scopeCur.a) * k;
+
       ctx.clearRect(0, 0, W, H);
 
       for (const group of starBGs) {
@@ -235,34 +256,47 @@ export default function MilkyWay() {
           ctx.fill()
         }
 
-        if (group === hoveredSector) {
-          const hGrad = ctx.createRadialGradient(
-            group.x + hoverDir.x * group.fog?.r * 0.4 || 0,
-            group.y + hoverDir.y * group.fog?.r * 0.4 || 0,
-            group.fog?.r * 0.08 || 6,
-            group.x,
-            group.y,
-            group.fog?.r * 1.05 || 90
-          )
-          hGrad.addColorStop(0, "rgba(255,255,255,0.12)")
-          hGrad.addColorStop(0.45, "rgba(255,255,255,0.06)")
-          hGrad.addColorStop(1, "rgba(255,255,255,0)")
+        const isHovered = group === hoveredSector
+        const dimFactor = (hoveredSector && !isHovered) ? 0.28 : 1
+
+        if (isHovered) {
+          ctx.save()
+          ctx.globalAlpha = 0.18 * scopeCur.a
           ctx.beginPath()
-          ctx.fillStyle = hGrad
-          ctx.arc(group.x, group.y, group.fog?.r * 1.05 || 90, 0, Math.PI * 2)
-          ctx.fill()
+          ctx.strokeStyle = "rgba(255,255,255,1)"
+          ctx.lineWidth = 1.1
+          ctx.arc(scopeCur.x, scopeCur.y, scopeCur.r * 1.05, 0, Math.PI * 2)
+          ctx.stroke()
+          ctx.restore()
         }
 
         for (const s of group.stars) {
-          const wave = Math.sin(t * s.tw + s.ph)
-          const alpha = s.a * (0.25 + 0.75 * ((wave + 1) / 2))
-          const colorIndex = ((Math.floor(((wave + 1) / 2) * s.palette.length) % s.palette.length) + s.palette.length) % s.palette.length
-          const base = s.palette[colorIndex]
-          const drawColor = base.c
-          const r = s.r * (0.7 + 0.3 * ((wave + 1) / 2))
+          const rawWave = Math.sin(t * s.tw + s.ph)
+          const rawAlpha = s.a * (0.35 + 0.65 * ((rawWave + 1) / 2))
+          const rawColorIndex = ((Math.floor(((rawWave + 1) / 2) * s.palette.length) % s.palette.length) + s.palette.length) % s.palette.length
+          const rawBase = s.palette[rawColorIndex]
+          const rawR = s.r * (0.8 + 0.2 * ((rawWave + 1) / 2))
+
+          let drawX = s.x
+          let drawY = s.y
+          let drawR = rawR
+          let drawAlpha = rawAlpha * dimFactor
+
+          if (isHovered) {
+            const dx = s.x - scopeCur.x
+            const dy = s.y - scopeCur.y
+            const dist = Math.hypot(dx, dy) || 1
+            const falloff = Math.max(0, 1 - dist / (scopeCur.r * 1.05))
+            const fisheyeK = 1 + 0.30 * falloff
+            drawX = scopeCur.x + dx * fisheyeK
+            drawY = scopeCur.y + dy * fisheyeK
+            drawR = rawR * (1 + 0.45 * falloff)
+            drawAlpha = rawAlpha
+          }
+
           ctx.beginPath()
-          ctx.fillStyle = `rgba(${drawColor},${alpha.toFixed(3)})`
-          ctx.arc(s.x, s.y, r, 0, Math.PI * 2)
+          ctx.fillStyle = `rgba(${rawBase.c},${drawAlpha.toFixed(3)})`
+          ctx.arc(drawX, drawY, drawR, 0, Math.PI * 2)
           ctx.fill()
         }
         if (group.name && group.stars.length) {
