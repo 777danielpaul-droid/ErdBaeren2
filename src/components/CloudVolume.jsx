@@ -250,6 +250,7 @@ export default function CloudVolume() {
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const gl = canvas.getContext("webgl", {
       alpha: true,
       premultipliedAlpha: false,
@@ -301,14 +302,21 @@ export default function CloudVolume() {
 
     let raf;
     let last = 0;
-    const FRAME = 1000 / 30;   // 30 fps: langsame Wolken -> unmerklich, halbiert die GPU-Last
+    let visible = false;
+    let renderIdleGuard = 0;
+    const FRAME = 1000 / 30;
     const start = performance.now();
     const render = (now) => {
       raf = requestAnimationFrame(render);
-      if (now - last < FRAME) return;   // Frame überspringen -> Drosselung
+      if (!visible) {
+        // keep rAF alive briefly so resizes can still catch state change,
+        // but skip GPU work completely while offscreen.
+        return;
+      }
+      if (now - last < FRAME) return;
       last = now;
       resize();
-      gl.uniform1f(uTime, (now - start) / 1000 * 0.87);  // 15% langsamer
+      gl.uniform1f(uTime, (now - start) / 1000 * 0.87);
       gl.uniform2f(uRes, canvas.width, canvas.height);
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
@@ -316,9 +324,24 @@ export default function CloudVolume() {
     };
     raf = requestAnimationFrame(render);
 
+    const io = new IntersectionObserver(
+      (entries) => {
+        const next = entries.some((e) => e.isIntersecting);
+        if (next && !visible) {
+          visible = true;
+          last = 0;
+        } else if (!next) {
+          visible = false;
+        }
+      },
+      { rootMargin: "80px" }
+    );
+    io.observe(canvas);
+
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
+      io.disconnect();
       gl.deleteProgram(prog);
       gl.deleteShader(vs);
       gl.deleteShader(fs);

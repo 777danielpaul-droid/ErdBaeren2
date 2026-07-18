@@ -6,13 +6,17 @@ export default function MilkyWay() {
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const ctx = canvas.getContext("2d");
-    let raf;
+    if (!ctx) return;
+
     let stars = [];
     let meteors = [];
     let ship = null;
     let planets = [];
     let W, H, DPR;
+    let raf = 0;
+    let visible = false;
 
     function rand(a, b) { return a + Math.random() * (b - a); }
 
@@ -29,33 +33,51 @@ export default function MilkyWay() {
       stars = [];
       for (let i = 0; i < 900; i++) {
         stars.push({
-          x: Math.random() * W, y: Math.random() * H,
-          r: rand(0.4, 1.0), a: rand(0.5, 1.0),
-          tw: rand(0.8, 2.8), ph: Math.random() * Math.PI * 2,
+          x: Math.random() * W,
+          y: Math.random() * H,
+          r: rand(0.4, 1.0),
+          a: rand(0.5, 1.0),
+          tw: rand(0.8, 2.8),
+          ph: Math.random() * Math.PI * 2,
           c: "245,238,255",
         });
       }
       for (let i = 0; i < 260; i++) {
         const tint = Math.random();
-        const c = tint < 0.33 ? "210,235,255" : tint < 0.66 ? "232,215,255" : "255,230,200";
+        const c =
+          tint < 0.33
+            ? "210,235,255"
+            : tint < 0.66
+            ? "232,215,255"
+            : "255,230,200";
         stars.push({
-          x: Math.random() * W, y: Math.random() * H,
-          r: rand(1.1, 2.1), a: rand(0.65, 1.0),
-          tw: rand(0.9, 2.4), ph: Math.random() * Math.PI * 2, c,
+          x: Math.random() * W,
+          y: Math.random() * H,
+          r: rand(1.1, 2.1),
+          a: rand(0.65, 1.0),
+          tw: rand(0.9, 2.4),
+          ph: Math.random() * Math.PI * 2,
+          c,
         });
       }
       for (let i = 0; i < 35; i++) {
         stars.push({
-          x: Math.random() * W, y: Math.random() * H,
-          r: rand(2.2, 3.2), a: rand(0.8, 1.0),
-          tw: rand(0.9, 2.0), ph: Math.random() * Math.PI * 2,
+          x: Math.random() * W,
+          y: Math.random() * H,
+          r: rand(2.2, 3.2),
+          a: rand(0.8, 1.0),
+          tw: rand(0.9, 2.0),
+          ph: Math.random() * Math.PI * 2,
           c: "255,250,245",
         });
       }
       const clusters = [
-        [W * 0.14, H * 0.26], [W * 0.62, H * 0.62],
-        [W * 0.84, H * 0.70], [W * 0.40, H * 0.18],
-        [W * 0.30, H * 0.80], [W * 0.75, H * 0.35],
+        [W * 0.14, H * 0.26],
+        [W * 0.62, H * 0.62],
+        [W * 0.84, H * 0.70],
+        [W * 0.40, H * 0.18],
+        [W * 0.30, H * 0.80],
+        [W * 0.75, H * 0.35],
       ];
       clusters.forEach(([cx, cy]) => {
         const n = 90;
@@ -65,10 +87,20 @@ export default function MilkyWay() {
           const x = cx + Math.cos(ang) * rad;
           const y = cy + Math.sin(ang) * rad;
           const tint = Math.random();
-          const c = tint < 0.25 ? "255,235,205" : tint < 0.5 ? "210,240,255" : "255,255,255";
+          const c =
+            tint < 0.25
+              ? "255,235,205"
+              : tint < 0.5
+              ? "210,240,255"
+              : "255,255,255";
           stars.push({
-            x, y, r: rand(0.6, 1.4), a: rand(0.75, 1.0),
-            tw: rand(1.0, 2.6), ph: Math.random() * Math.PI * 2, c,
+            x,
+            y,
+            r: rand(0.6, 1.4),
+            a: rand(0.75, 1.0),
+            tw: rand(1.0, 2.6),
+            ph: Math.random() * Math.PI * 2,
+            c,
           });
         }
       });
@@ -110,7 +142,12 @@ export default function MilkyWay() {
           y: rand(H * 0.08, H * 0.55),
           r: rand(7, 16),
           a: rand(0.25, 0.6),
-          c: i % 2 === 0 ? "255,255,255" : i % 3 === 0 ? "210,220,255" : "245,230,210",
+          c:
+            i % 2 === 0
+              ? "255,255,255"
+              : i % 3 === 0
+              ? "210,220,255"
+              : "245,230,210",
           tw: rand(0.25, 0.55),
           ph: Math.random() * Math.PI * 2,
           hasRings,
@@ -132,7 +169,14 @@ export default function MilkyWay() {
       const moonRX = moonR * 1.15;
       const moonRY = moonR * 0.92;
 
-      const bodyGrad = ctx.createRadialGradient(moonX - moonRX * 0.25, moonY - moonRY * 0.25, moonRX * 0.05, moonX, moonY, moonRX);
+      const bodyGrad = ctx.createRadialGradient(
+        moonX - moonRX * 0.25,
+        moonY - moonRY * 0.25,
+        moonRX * 0.05,
+        moonX,
+        moonY,
+        moonRX
+      );
       bodyGrad.addColorStop(0, "rgba(255,252,242,0.98)");
       bodyGrad.addColorStop(0.45, "rgba(250,246,230,0.94)");
       bodyGrad.addColorStop(0.78, "rgba(225,212,185,0.72)");
@@ -154,7 +198,14 @@ export default function MilkyWay() {
         const cy = moonY + moonRY * cr.dy;
         const cRx = moonRX * cr.rx;
         const cRy = moonRY * cr.ry;
-        const shade = ctx.createRadialGradient(cx + cRx * 0.3, cy + cRy * 0.25, cRx * 0.05, cx, cy, cRx);
+        const shade = ctx.createRadialGradient(
+          cx + cRx * 0.3,
+          cy + cRy * 0.25,
+          cRx * 0.05,
+          cx,
+          cy,
+          cRx
+        );
         shade.addColorStop(0, "rgba(0,0,0,0)");
         shade.addColorStop(0.65, `rgba(0,0,0,${(cr.d * 0.18).toFixed(3)})`);
         shade.addColorStop(1, `rgba(0,0,0,${(cr.d * 0.4).toFixed(3)})`);
@@ -193,7 +244,14 @@ export default function MilkyWay() {
       }
       ctx.restore();
 
-      const rim = ctx.createRadialGradient(moonX - moonRX * 0.35, moonY - moonRY * 0.35, moonRX * 0.05, moonX, moonY, moonRX);
+      const rim = ctx.createRadialGradient(
+        moonX - moonRX * 0.35,
+        moonY - moonRY * 0.35,
+        moonRX * 0.05,
+        moonX,
+        moonY,
+        moonRX
+      );
       rim.addColorStop(0, "rgba(255,255,255,0.18)");
       rim.addColorStop(1, "rgba(255,255,255,0)");
       ctx.beginPath();
@@ -201,7 +259,14 @@ export default function MilkyWay() {
       ctx.ellipse(moonX, moonY, moonRX, moonRY, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      const sideShadow = ctx.createRadialGradient(moonX + moonRX * 0.4, moonY + moonRY * 0.1, moonRX * 0.05, moonX, moonY, moonRX * 1.05);
+      const sideShadow = ctx.createRadialGradient(
+        moonX + moonRX * 0.4,
+        moonY + moonRY * 0.1,
+        moonRX * 0.05,
+        moonX,
+        moonY,
+        moonRX * 1.05
+      );
       sideShadow.addColorStop(0, "rgba(0,0,0,0)");
       sideShadow.addColorStop(0.65, "rgba(0,0,0,0.08)");
       sideShadow.addColorStop(1, "rgba(0,0,0,0.35)");
@@ -226,7 +291,14 @@ export default function MilkyWay() {
         const pa = p.a * (0.75 + 0.25 * ((wave + 1) / 2));
         ctx.save();
         ctx.globalAlpha = pa;
-        const body = ctx.createRadialGradient(p.x - p.r * 0.3, p.y - p.r * 0.3, p.r * 0.1, p.x, p.y, p.r);
+        const body = ctx.createRadialGradient(
+          p.x - p.r * 0.3,
+          p.y - p.r * 0.3,
+          p.r * 0.1,
+          p.x,
+          p.y,
+          p.r
+        );
         body.addColorStop(0, `rgba(255,255,255,0.95)`);
         body.addColorStop(0.55, `rgba(${p.c},0.82)`);
         body.addColorStop(0.78, `rgba(${p.c},0.65)`);
@@ -266,7 +338,7 @@ export default function MilkyWay() {
         const tailX = m.x - (m.vx / Math.hypot(m.vx, m.vy)) * m.len;
         const tailY = m.y - (m.vy / Math.hypot(m.vx, m.vy)) * m.len;
         const grad = ctx.createLinearGradient(tailX, tailY, m.x, m.y);
-        grad.addColorStop(0, `rgba(255,255,255,0)`);
+        grad.addColorStop(0, "rgba(255,255,255,0)");
         grad.addColorStop(1, `rgba(255,255,255,${a.toFixed(3)})`);
         ctx.beginPath();
         ctx.strokeStyle = grad;
@@ -279,6 +351,7 @@ export default function MilkyWay() {
         ctx.arc(m.x, m.y, 1.3, 0, Math.PI * 2);
         ctx.fill();
       }
+
       if (ship) {
         ship.x += ship.vx;
         if (ship.x > W + 90) ship.x = -90;
@@ -293,12 +366,12 @@ export default function MilkyWay() {
         ctx.globalAlpha = a * pulse;
 
         const flameGrad = ctx.createLinearGradient(-s * 2.6, 0, -s * 9.2, 0);
-        flameGrad.addColorStop(0, `rgba(255,255,255,0)`);
-        flameGrad.addColorStop(0.35, `rgba(255,255,255,0)`);
+        flameGrad.addColorStop(0, "rgba(255,255,255,0)");
+        flameGrad.addColorStop(0.35, "rgba(255,255,255,0)");
         flameGrad.addColorStop(0.45, `rgba(124,58,237,${(a * 0.55).toFixed(3)})`);
         flameGrad.addColorStop(0.72, `rgba(124,58,237,${(a * 0.95).toFixed(3)})`);
         flameGrad.addColorStop(0.88, `rgba(217,70,239,${(a * 1.0).toFixed(3)})`);
-        flameGrad.addColorStop(1, `rgba(217,70,239,0)`);
+        flameGrad.addColorStop(1, "rgba(217,70,239,0)");
         ctx.beginPath();
         ctx.moveTo(-s * 1.55, -s * 0.35);
         ctx.bezierCurveTo(-s * 4.0, -s * 1.0, -s * 7.4, -s * 0.6, -s * 9.2, 0);
@@ -318,20 +391,51 @@ export default function MilkyWay() {
         ctx.fill();
 
         ctx.beginPath();
-        ctx.fillStyle = `rgba(255,255,255,0.18)`;
+        ctx.fillStyle = "rgba(255,255,255,0.18)";
         ctx.arc(-s * 0.35, 0, s * 0.8, 0, Math.PI * 2);
         ctx.fill();
-
         ctx.restore();
       }
+
       raf = requestAnimationFrame(draw);
     }
 
+    const loop = () => {
+      if (visible) draw();
+      else raf = requestAnimationFrame(loop);
+    };
+    const loopResume = () => {
+      if (visible && !raf) raf = requestAnimationFrame(loop);
+    };
+
     build();
-    draw();
-    const onResize = () => { cancelAnimationFrame(raf); build(); draw(); };
+    visible = true;
+    raf = requestAnimationFrame(loop);
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        const next = entries.some((e) => e.isIntersecting);
+        visible = next;
+        loopResume();
+      },
+      { rootMargin: "80px" }
+    );
+    io.observe(canvas);
+
+    const onResize = () => {
+      cancelAnimationFrame(raf);
+      raf = 0;
+      build();
+      loopResume();
+    };
     window.addEventListener("resize", onResize);
-    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", onResize); };
+
+    return () => {
+      cancelAnimationFrame(raf);
+      raf = 0;
+      io.disconnect();
+      window.removeEventListener("resize", onResize);
+    };
   }, []);
 
   return (
