@@ -1,10 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTimeline } from "./TimelineProvider";
 
 // Milchstraße als Canvas: nur Sterne + Sternhaufen, kein Galaxie-Band mehr.
 export default function MilkyWay() {
   const canvasRef = useRef(null);
   const { phase } = useTimeline();
+  const [activeSector, setActiveSector] = useState(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -22,7 +23,38 @@ export default function MilkyWay() {
     let visible = false;
     const mouse = { x: -9999, y: -9999 };
     let hoveredSector = null;
-    let hoverDir = { x: 0, y: 0 };
+    let sectorRects = [];
+
+    const hitSector = (x, y) => {
+      for (let i = sectorRects.length - 1; i >= 0; i--) {
+        const s = sectorRects[i];
+        const dx = x - s.x;
+        const dy = y - s.y;
+        if (dx * dx + dy * dy <= s.r * s.r) return s;
+      }
+      return null;
+    };
+
+    const onMove = (e) => {
+      const r = canvas.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+      hoveredSector = hitSector(x, y);
+      canvas.style.cursor = hoveredSector ? "pointer" : "none";
+    };
+
+    const onLeave = () => {
+      hoveredSector = null;
+      canvas.style.cursor = "none";
+    };
+
+    const onClick = (e) => {
+      const r = canvas.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+      const s = hitSector(x, y);
+      setActiveSector((cur) => (cur === s ? null : s));
+    };
 
     function rand(a, b) { return a + Math.random() * (b - a); }
 
@@ -182,6 +214,14 @@ export default function MilkyWay() {
 
       const picked = picks
 
+      sectorRects = picked.map((pt) => ({
+        x: pt.x,
+        y: pt.y,
+        name: pt.name,
+        r: pt.fog ? pt.fog.r : cellSize,
+        fog: pt.fog || null,
+      }))
+
       picked.forEach((pt) => {
         const pts = []
         const n = 18
@@ -224,6 +264,11 @@ export default function MilkyWay() {
         scopeTarget.y = hoveredSector.y;
         scopeTarget.r = hoveredSector.fog?.r || 90;
         scopeTarget.a = 1;
+      } else if (activeSector) {
+        scopeTarget.x = activeSector.x;
+        scopeTarget.y = activeSector.y;
+        scopeTarget.r = activeSector.fog?.r || 90;
+        scopeTarget.a = 1;
       } else {
         scopeTarget.x = -9999;
         scopeTarget.y = -9999;
@@ -258,9 +303,11 @@ export default function MilkyWay() {
         }
 
         const isHovered = group === hoveredSector
-        const dimFactor = (hoveredSector && !isHovered) ? 0.28 : 1
+        const isActive = group === activeSector
+        const highlighted = isHovered || isActive
+        const dimFactor = (hoveredSector || activeSector) && !highlighted ? 0.28 : 1
 
-        if (isHovered) {
+        if (highlighted) {
           ctx.save()
           ctx.globalAlpha = 0.18 * scopeCur.a
           ctx.beginPath()
@@ -283,7 +330,7 @@ export default function MilkyWay() {
           let drawR = rawR
           let drawAlpha = rawAlpha * dimFactor
 
-          if (isHovered) {
+          if (highlighted) {
             const dx = s.x - scopeCur.x
             const dy = s.y - scopeCur.y
             const dist = Math.hypot(dx, dy) || 1
@@ -300,7 +347,7 @@ export default function MilkyWay() {
           ctx.arc(drawX, drawY, drawR, 0, Math.PI * 2)
           ctx.fill()
         }
-        if (isHovered && group.name && group.stars.length) {
+        if (highlighted && group.name && group.stars.length) {
           const tx = group.stars.reduce((min, s) => Math.min(min, s.x), group.stars[0].x) - 16
           const ty = group.stars.reduce((max, s) => Math.max(max, s.y), group.stars[0].y) + 24
           ctx.save()
@@ -551,7 +598,14 @@ export default function MilkyWay() {
     }
     window.addEventListener("resize", onResize)
 
+    canvas.addEventListener("mousemove", onMove)
+    canvas.addEventListener("mouseleave", onLeave)
+    canvas.addEventListener("click", onClick)
+
     return () => {
+      canvas.removeEventListener("mousemove", onMove)
+      canvas.removeEventListener("mouseleave", onLeave)
+      canvas.removeEventListener("click", onClick)
       stop()
       window.removeEventListener("resize", onResize)
       cancelAnimationFrame(raf)
@@ -561,7 +615,7 @@ export default function MilkyWay() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none"
+      className="fixed inset-0"
       aria-hidden="true"
     />
   )
