@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useTimeline } from "./TimelineProvider";
 
 // Milchstraße als Canvas: nur Sterne + Sternhaufen, kein Galaxie-Band mehr.
 export default function MilkyWay() {
   const canvasRef = useRef(null);
   const { phase } = useTimeline();
-  const [activeSector, setActiveSector] = useState(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -36,29 +35,16 @@ export default function MilkyWay() {
 
     const onMove = (e) => {
       const r = canvas.getBoundingClientRect();
-      const x = e.clientX - r.left;
-      const y = e.clientY - r.top;
-      mouse.x = x;
-      mouse.y = y;
-      const s = hitSector(x, y);
-      hoveredSector = null;
-      canvas.style.cursor = s ? "pointer" : "none";
+      mouse.x = e.clientX - r.left;
+      mouse.y = e.clientY - r.top;
     };
 
     const onLeave = () => {
       mouse.x = -9999;
       mouse.y = -9999;
-      hoveredSector = null;
-      canvas.style.cursor = "none";
     };
 
-    const onClick = (e) => {
-      const r = canvas.getBoundingClientRect();
-      const x = e.clientX - r.left;
-      const y = e.clientY - r.top;
-      const s = hitSector(x, y);
-      setActiveSector((cur) => (cur === s ? null : s));
-    };
+    const onClick = () => {};
 
     function rand(a, b) { return a + Math.random() * (b - a); }
 
@@ -257,30 +243,12 @@ export default function MilkyWay() {
 
     let t = 0;
     let dx = 0;
-    function draw() {
-      t += 0.016;
+    function draw() {      t += 0.016;
       dx = (dx + 0.18) % W;
 
       ctx.clearRect(0, 0, W, H);
 
       for (const group of starBGs) {
-        if (group.fog && phase >= 6) {
-          const fg = ctx.createRadialGradient(
-            group.x,
-            group.y,
-            group.fog.r * 0.15,
-            group.x,
-            group.y,
-            group.fog.r
-          )
-          fg.addColorStop(0, `rgba(${group.fog.c},${group.fog.a})`)
-          fg.addColorStop(1, "rgba(0,0,0,0)")
-          ctx.beginPath()
-          ctx.fillStyle = fg
-          ctx.arc(group.x, group.y, group.fog.r, 0, Math.PI * 2)
-          ctx.fill()
-        }
-
         for (const s of group.stars) {
           const wave = Math.sin(t * s.tw + s.ph);
           const a = s.a * (0.35 + 0.65 * ((wave + 1) / 2));
