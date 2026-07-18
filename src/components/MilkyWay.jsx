@@ -14,6 +14,7 @@ export default function MilkyWay() {
     let meteors = [];
     let ship = null;
     let planets = [];
+    let starBGs = [];
     let W, H, DPR;
     let raf = 0;
     let visible = false;
@@ -154,6 +155,53 @@ export default function MilkyWay() {
           ringTilt: rand(0.35, 0.65),
         });
       }
+
+      starBGs = []; // headline-area constellations, aligned to a virtual grid
+      const cellSize = 72; // ~matches HeroGrid cell rhythm
+      const gridW = Math.floor(W / cellSize)
+      const gridH = Math.floor(H / cellSize)
+
+      // Build candidate grid anchors, biased to the headline/hero area
+      const candidates = []
+      for (let row = 3; row < gridH - 2; row++) {
+        for (let col = 1; col < gridW - 1; col++) {
+          const x = col * cellSize + cellSize * 0.5
+          const y = row * cellSize + cellSize * 0.5
+          // prefer upper headline band
+          const weight = y < H * 0.45 ? 2 : 1
+          candidates.push({ x, y, weight })
+        }
+      }
+      candidates.sort(() => Math.random() - 0.5)
+
+      const picks = []
+      for (const c of candidates) {
+        if (picks.length >= 3) break
+        const ok = !picks.some(p => Math.hypot(p.x - c.x, p.y - c.y) < cellSize * 1.8)
+        if (ok) picks.push({ x: c.x, y: c.y, name: `SEKTOR0${picks.length + 1}` })
+      }
+
+      const picked = picks.concat().map(p => ({ x: p.x, y: p.y, name: p.name }))
+
+      picked.forEach((pt) => {
+        const pts = []
+        const n = 18
+        for (let i = 0; i < n; i++) {
+          const ang = rand(0, Math.PI * 2)
+          const radX = Math.abs(rand(0, 1)) * cellSize * 0.75
+          const radY = Math.abs(rand(0, 1)) * cellSize * 0.42
+          pts.push({
+            x: pt.x + Math.cos(ang) * radX,
+            y: pt.y + Math.sin(ang) * radY,
+            r: rand(1.8, 3.6),
+            a: rand(0.8, 1.0),
+            tw: rand(0.9, 2.6),
+            ph: Math.random() * Math.PI * 2,
+            c: "255,252,250",
+          })
+        }
+        starBGs.push({ name: pt.name, stars: pts })
+      })
     }
 
     let t = 0;
@@ -162,6 +210,27 @@ export default function MilkyWay() {
       t += 0.016;
       dx = (dx + 0.18) % W;
       ctx.clearRect(0, 0, W, H);
+
+      for (const group of starBGs) {
+        for (const s of group.stars) {
+          const wave = Math.sin(t * s.tw + s.ph);
+          const a = s.a * (0.55 + 0.45 * ((wave + 1) / 2));
+          const r = s.r * (0.7 + 0.3 * ((wave + 1) / 2));
+          ctx.beginPath();
+          ctx.fillStyle = `rgba(${s.c},${a.toFixed(3)})`;
+          ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        if (group.name && group.stars.length) {
+          const tx = group.stars.reduce((min, s) => Math.min(min, s.x), group.stars[0].x) - 6
+          const ty = group.stars.reduce((max, s) => Math.max(max, s.y), group.stars[0].y) + 4
+          ctx.save();
+          ctx.font = '11px ui-monospace, SFMono-Regular, Menlo, monospace';
+          ctx.fillStyle = 'rgba(245,238,255,0.45)';
+          ctx.fillText(group.name, tx, ty);
+          ctx.restore();
+        }
+      }
 
       const moonX = W * 0.10;
       const moonY = H * 0.13;
