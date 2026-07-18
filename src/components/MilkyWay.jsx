@@ -22,10 +22,7 @@ export default function MilkyWay() {
     let raf = 0;
     let visible = false;
     const mouse = { x: -9999, y: -9999 };
-    let hoveredSector = null;
     let sectorRects = [];
-    const HOVER_THRESHOLD = 0.35;
-    const hoverState = { over: null, enteringAt: 0, active: false };
 
     const hitSector = (x, y) => {
       for (let i = sectorRects.length - 1; i >= 0; i--) {
@@ -44,23 +41,13 @@ export default function MilkyWay() {
       mouse.x = x;
       mouse.y = y;
       const s = hitSector(x, y);
-
-      if (hoverState.over !== s) {
-        hoverState.over = s;
-        hoverState.enteringAt = performance.now();
-        hoverState.active = false;
-      }
-
-      if (s && !hoverState.active) {
-        const dt = (performance.now() - hoverState.enteringAt) / 1000;
-        if (dt >= HOVER_THRESHOLD) hoverState.active = true;
-      }
-
-      hoveredSector = hoverState.active ? s : null;
+      hoveredSector = null;
       canvas.style.cursor = s ? "pointer" : "none";
     };
 
     const onLeave = () => {
+      mouse.x = -9999;
+      mouse.y = -9999;
       hoveredSector = null;
       canvas.style.cursor = "none";
     };
@@ -270,34 +257,9 @@ export default function MilkyWay() {
 
     let t = 0;
     let dx = 0;
-    const scopeTarget = { x: 0, y: 0, r: 1, a: 1 };
-    const scopeCur = { x: 0, y: 0, r: 1, a: 1 };
     function draw() {
       t += 0.016;
       dx = (dx + 0.18) % W;
-
-      if (hoveredSector) {
-        scopeTarget.x = hoveredSector.x;
-        scopeTarget.y = hoveredSector.y;
-        scopeTarget.r = hoveredSector.fog?.r || 90;
-        scopeTarget.a = 1;
-      } else if (activeSector) {
-        scopeTarget.x = activeSector.x;
-        scopeTarget.y = activeSector.y;
-        scopeTarget.r = activeSector.fog?.r || 90;
-        scopeTarget.a = 1;
-      } else {
-        scopeTarget.x = -9999;
-        scopeTarget.y = -9999;
-        scopeTarget.r = 1;
-        scopeTarget.a = 0;
-      }
-
-      const k = 1 - Math.exp(-10 * 0.016);
-      scopeCur.x += (scopeTarget.x - scopeCur.x) * k;
-      scopeCur.y += (scopeTarget.y - scopeCur.y) * k;
-      scopeCur.r += (scopeTarget.r - scopeCur.r) * k;
-      scopeCur.a += (scopeTarget.a - scopeCur.a) * k;
 
       ctx.clearRect(0, 0, W, H);
 
@@ -319,56 +281,14 @@ export default function MilkyWay() {
           ctx.fill()
         }
 
-        const isHovered = group === hoveredSector
-        const isActive = group === activeSector
-        const highlighted = isHovered || isActive
-        const dimFactor = (hoveredSector || activeSector) && !highlighted ? 0.28 : 1
-        const scale = highlighted ? 1.35 : 1
-
-        if (highlighted) {
-          ctx.save()
-          ctx.globalAlpha = 0.18 * scopeCur.a
-          ctx.beginPath()
-          ctx.strokeStyle = "rgba(255,255,255,1)"
-          ctx.lineWidth = 1.1
-          ctx.arc(group.x, group.y, (group.fog?.r || scopeCur.r) * scale * 1.05, 0, Math.PI * 2)
-          ctx.stroke()
-          ctx.restore()
-        }
-
         for (const s of group.stars) {
-          const rawWave = Math.sin(t * s.tw + s.ph)
-          const rawAlpha = s.a * (0.35 + 0.65 * ((rawWave + 1) / 2))
-          const rawColorIndex = ((Math.floor(((rawWave + 1) / 2) * s.palette.length) % s.palette.length) + s.palette.length) % s.palette.length
-          const rawBase = s.palette[rawColorIndex]
-          const rawR = s.r * (0.8 + 0.2 * ((rawWave + 1) / 2))
-
-          const dx = s.x - group.x
-          const dy = s.y - group.y
-          const drawX = group.x + dx * scale
-          const drawY = group.y + dy * scale
-          const drawR = rawR * scale
-          const drawAlpha = rawAlpha * dimFactor
-
-          ctx.beginPath()
-          ctx.fillStyle = `rgba(${rawBase.c},${drawAlpha.toFixed(3)})`
-          ctx.arc(drawX, drawY, drawR, 0, Math.PI * 2)
-          ctx.fill()
-        }
-        if (highlighted && group.name && group.stars.length) {
-          const tx = group.stars.reduce((min, s) => Math.min(min, s.x), group.stars[0].x) * scale - 16
-          const ty = group.stars.reduce((max, s) => Math.max(max, s.y), group.stars[0].y) * scale + 24
-          ctx.save()
-          ctx.strokeStyle = 'rgba(255,20,90,0.5)'
-          ctx.lineWidth = 1
-          ctx.beginPath()
-          ctx.moveTo(tx, ty)
-          ctx.lineTo(tx + 16, ty - 24)
-          ctx.stroke()
-          ctx.font = '13px ui-monospace, SFMono-Regular, Menlo, monospace'
-          ctx.fillStyle = 'rgba(255,20,90,0.8)'
-          ctx.fillText(group.name, tx, ty)
-          ctx.restore()
+          const wave = Math.sin(t * s.tw + s.ph);
+          const a = s.a * (0.35 + 0.65 * ((wave + 1) / 2));
+          const r = s.r * (0.8 + 0.2 * ((wave + 1) / 2));
+          ctx.beginPath();
+          ctx.fillStyle = `rgba(${s.c},${a.toFixed(3)})`;
+          ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
+          ctx.fill();
         }
       }
 
