@@ -5,6 +5,7 @@ import { site } from "../../data/content"
 import { useVotes } from "../../lib/votes"
 import { T } from "../RunenText"
 import HoloEarthLazy from "../HoloEarthLazy"
+import { useTimeline } from "../TimelineProvider"
 
 const NEON = ["#c026d3", "#7c3aed", "#22d3ee", "#c9a227"]
 
@@ -114,6 +115,8 @@ export default function Hero() {
   const blobY = useTransform(scrollY, [0, 800], [0, 220])
   const blobOpacity = useTransform(scrollY, [0, 600], [1, 0.3])
 
+  const { phase } = useTimeline()
+
   return (
     <section id="top" className="hero-holo relative min-h-screen flex items-center bg-theatre grain overflow-hidden">
       <HeroGrid />
@@ -130,7 +133,7 @@ export default function Hero() {
             <motion.p
               custom={0}
               initial="hidden"
-              animate="show"
+              animate={phase >= 1 ? "show" : "hidden"}
               variants={titleLine}
               className="mono-label text-neon mb-6"
             >
@@ -141,13 +144,13 @@ export default function Hero() {
               className="font-display font-bold leading-[1.05] tracking-tight text-3xl sm:text-7xl lg:text-8xl max-w-4xl break-words"
               style={{ filter: "drop-shadow(0 0 18px rgba(80, 200, 255, 0.35)) drop-shadow(3px 3px rgba(40, 120, 200, 0.35)) drop-shadow(7px 7px rgba(20, 70, 140, 0.3)) drop-shadow(14px 14px 14px rgba(10, 40, 90, 0.35))" }}
             >
-              <motion.span custom={1} initial="hidden" animate="show" variants={titleLine} className="block title-rainbow">
+              <motion.span custom={1} initial="hidden" animate={phase >= 2 ? "show" : "hidden"} variants={titleLine} className="block title-rainbow">
                 <T en={t1en}>{t1}</T>
               </motion.span>
               <motion.span
                 custom={2}
                 initial="hidden"
-                animate="show"
+                animate={phase >= 2 ? "show" : "hidden"}
                 variants={titleLine}
                 className="block title-rainbow"
               >
@@ -158,7 +161,7 @@ export default function Hero() {
             <motion.p
               custom={3}
               initial="hidden"
-              animate="show"
+              animate={phase >= 3 ? "show" : "hidden"}
               variants={titleLine}
               className="mt-8 text-lg sm:text-xl text-bone/70 max-w-2xl leading-relaxed"
             >
@@ -168,7 +171,7 @@ export default function Hero() {
             <motion.div
               custom={4}
               initial="hidden"
-              animate="show"
+              animate={phase >= 4 ? "show" : "hidden"}
               variants={titleLine}
               className="mt-10 flex flex-wrap gap-4 pointer-events-auto"
             >
@@ -189,7 +192,7 @@ export default function Hero() {
             <motion.div
               custom={5}
               initial="hidden"
-              animate="show"
+              animate={phase >= 4 ? "show" : "hidden"}
               variants={titleLine}
               className="mt-16 grid grid-cols-1 sm:grid-cols-4 gap-px bg-white/5 border border-white/10 rounded-xl overflow-hidden max-w-4xl"
             >

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { site } from "../../data/content"
 import { getInitialTheme, toggleTheme } from "../../lib/theme"
 import { useLang } from "../RunenContext"
+import { useTimeline } from "../TimelineProvider"
 import TerminalModal from "../TerminalModal"
 
 // Neon-Palette wie im Hero-Grid, ABER ohne cyan — cyan ist der Default,
@@ -18,10 +19,16 @@ export default function Navbar() {
   // Pro Link eine zufällige Neon-Farbe, die beim Hover gesetzt wird.
   const [hover, setHover] = useState({})
 
+  const { phase } = useTimeline()
+
   const randomNeon = (key) => setHover((h) => ({ ...h, [key]: NEON[(Math.random() * NEON.length) | 0] }))
   // Verlassen -> Default (türkis) wiederherstellen.
   const resetNeon = (key) => setHover((h) => ({ ...h, [key]: "#22d3ee" }))
   const onToggle = () => setTheme(toggleTheme())
+
+  if (phase < 5) return null
+
+  const onOpen = () => setOpen((v) => !v)
   return (
     <motion.header
       initial={{ y: -80, opacity: 0 }}

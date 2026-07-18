@@ -9,11 +9,15 @@ import Footer from "./components/layout/Footer"
 import MilkyWay from "./components/MilkyWay"
 import CloudVolume from "./components/CloudVolume"
 import { ScrollProgress } from "./components/motion/ScrollFX"
+import { TimelineProvider, useTimeline } from "./components/TimelineProvider"
 import { LangProvider } from "./components/RunenContext"
+import Intro from "./components/Intro"
 
-export default function App() {
+function AppInner() {
+  const { start } = useTimeline()
   return (
     <LangProvider>
+      <Intro onDone={start} />
       <MilkyWay />
       <CloudVolume />
       <ScrollProgress />
@@ -28,5 +32,13 @@ export default function App() {
       </main>
       <Footer />
     </LangProvider>
+  )
+}
+
+export default function App() {
+  return (
+    <TimelineProvider>
+      <AppInner />
+    </TimelineProvider>
   )
 }

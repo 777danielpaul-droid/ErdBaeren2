@@ -1,8 +1,10 @@
 import { useEffect, useRef } from "react";
+import { useTimeline } from "./TimelineProvider";
 
 // Milchstraße als Canvas: nur Sterne + Sternhaufen, kein Galaxie-Band mehr.
 export default function MilkyWay() {
   const canvasRef = useRef(null);
+  const { phase } = useTimeline();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -158,12 +160,11 @@ export default function MilkyWay() {
         });
       });
 
-      starBGs = []; // headline-area constellations, aligned to a virtual grid
-      const cellSize = 72; // ~matches HeroGrid cell rhythm
+      starBGs = [];
+      const cellSize = 72;
       const gridW = Math.floor(W / cellSize)
       const gridH = Math.floor(H / cellSize)
 
-      // Build candidate grid anchors, biased to the headline/hero area
       const candidates = []
       for (let row = 3; row < gridH - 2; row++) {
         for (let col = 1; col < gridW - 1; col++) {
@@ -239,7 +240,7 @@ export default function MilkyWay() {
       ctx.clearRect(0, 0, W, H);
 
       for (const group of starBGs) {
-        if (group.fog) {
+        if (group.fog && phase >= 6) {
           const fg = ctx.createRadialGradient(
             group.x,
             group.y,
@@ -516,36 +517,13 @@ export default function MilkyWay() {
         ctx.save();
         ctx.translate(ship.x, sy);
         ctx.scale(1, 0.85 + 0.15 * pulse);
-        ctx.globalAlpha = a * pulse;
-
-        const flameGrad = ctx.createLinearGradient(-s * 2.6, 0, -s * 9.2, 0);
-        flameGrad.addColorStop(0, "rgba(255,255,255,0)");
-        flameGrad.addColorStop(0.35, "rgba(255,255,255,0)");
-        flameGrad.addColorStop(0.45, `rgba(124,58,237,${(a * 0.55).toFixed(3)})`);
-        flameGrad.addColorStop(0.72, `rgba(124,58,237,${(a * 0.95).toFixed(3)})`);
-        flameGrad.addColorStop(0.88, `rgba(217,70,239,${(a * 1.0).toFixed(3)})`);
-        flameGrad.addColorStop(1, "rgba(217,70,239,0)");
         ctx.beginPath();
-        ctx.moveTo(-s * 1.55, -s * 0.35);
-        ctx.bezierCurveTo(-s * 4.0, -s * 1.0, -s * 7.4, -s * 0.6, -s * 9.2, 0);
-        ctx.bezierCurveTo(-s * 7.4, s * 0.6, -s * 4.0, s * 1.0, -s * 1.55, s * 0.35);
+        ctx.moveTo(-s * 1.4, 0);
+        ctx.lineTo(s * 0.2, -s * 0.55);
+        ctx.lineTo(s * 0.05, 0);
+        ctx.lineTo(s * 0.2, s * 0.55);
         ctx.closePath();
-        ctx.fillStyle = flameGrad;
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.fillStyle = `rgba(255,255,255,${(a * 0.95).toFixed(3)})`;
-        ctx.moveTo(-s * 1.55, -s * 0.38);
-        ctx.lineTo(s * 2.0, -s * 0.52);
-        ctx.lineTo(s * 2.4, 0);
-        ctx.lineTo(s * 2.0, s * 0.52);
-        ctx.lineTo(-s * 1.55, s * 0.38);
-        ctx.closePath();
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.fillStyle = "rgba(255,255,255,0.18)";
-        ctx.arc(-s * 0.35, 0, s * 0.8, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${a.toFixed(3)})`;
         ctx.fill();
         ctx.restore();
       }
@@ -553,79 +531,38 @@ export default function MilkyWay() {
       raf = requestAnimationFrame(draw);
     }
 
-    const loop = () => {
-      if (visible) draw();
-      else raf = requestAnimationFrame(loop);
-    };
-    const loopResume = () => {
-      if (visible && !raf) raf = requestAnimationFrame(loop);
-    };
+    const start = () => {
+      if (visible) return
+      visible = true
+      build()
+      raf = requestAnimationFrame(draw)
+    }
 
-    build();
-    visible = true;
-    raf = requestAnimationFrame(loop);
+    const stop = () => {
+      visible = false
+      cancelAnimationFrame(raf)
+    }
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        const next = entries.some((e) => e.isIntersecting);
-        visible = next;
-        loopResume();
-      },
-      { rootMargin: "80px" }
-    );
-    io.observe(canvas);
+    start()
 
     const onResize = () => {
-      cancelAnimationFrame(raf);
-      raf = 0;
-      build();
-      loopResume();
-    };
-    window.addEventListener("resize", onResize);
+      stop()
+      start()
+    }
+    window.addEventListener("resize", onResize)
 
-      const onMove = (ev) => {
-        const cx = ev.touches ? ev.touches[0].clientX : ev.clientX
-        const cy = ev.touches ? ev.touches[0].clientY : ev.clientY
-        mouse.x = cx
-        mouse.y = cy
-        const next = starBGs.find((s) => Math.hypot(s.x - cx, s.y - cy) < 110) || null
-        if (next !== hoveredSector) {
-          hoveredSector = next
-          if (next) {
-            const dx = next.x - cx
-            const dy = next.y - cy
-            const dist = Math.hypot(dx, dy) || 1
-            hoverDir.x = dx / dist
-            hoverDir.y = dy / dist
-          }
-        }
-      }
-      const onLeave = () => {
-        mouse.x = -9999
-        mouse.y = -9999
-        hoveredSector = null
-        hoverDir = { x: 0, y: 0 }
-      }
-      window.addEventListener("mousemove", onMove)
-      window.addEventListener("touchmove", onMove, { passive: true })
-      window.addEventListener("mouseleave", onLeave)
-
-      return () => {
-        cancelAnimationFrame(raf)
-        raf = 0
-        io.disconnect()
-        window.removeEventListener("resize", onResize)
-        window.removeEventListener("mousemove", onMove)
-        window.removeEventListener("touchmove", onMove)
-        window.removeEventListener("mouseleave", onLeave)
-      };
-  }, []);
+    return () => {
+      stop()
+      window.removeEventListener("resize", onResize)
+      cancelAnimationFrame(raf)
+    }
+  }, [phase])
 
   return (
     <canvas
       ref={canvasRef}
-      className="milkyway"
+      className="fixed inset-0 pointer-events-none"
       aria-hidden="true"
     />
-  );
+  )
 }
