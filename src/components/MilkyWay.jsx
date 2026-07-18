@@ -171,9 +171,9 @@ export default function MilkyWay() {
       }
 
       const picks = [
-        { x: W * 0.20, y: H * 0.42, name: 'SEKTOR01' },
-        { x: W * 0.55, y: H * 0.48, name: 'SEKTOR02' },
-        { x: W * 0.70, y: H * 0.36, name: 'SEKTOR03' },
+        { x: W * 0.75, y: H * 0.18, name: 'SEKTOR01' },
+        { x: W * 0.06, y: H * 0.86, name: 'SEKTOR02' },
+        { x: W * 0.16, y: H * 0.30, name: 'SEKTOR03' },
       ].filter(Boolean)
 
       const picked = picks.concat().map(p => ({ x: p.x, y: p.y, name: p.name }))
