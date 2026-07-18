@@ -1,4 +1,4 @@
-import { Suspense, useRef } from "react"
+import { Suspense, useRef, useState, useEffect } from "react"
 import { Canvas } from "@react-three/fiber"
 import { useGLTF, useAnimations, OrbitControls, Float } from "@react-three/drei"
 import * as THREE from "three"
@@ -25,8 +25,24 @@ function EarthModel() {
 // Echtes 3D-Canvas mit der Hologramm-Erde. Nur auf Desktop eingebunden
 // (lg+); auf schwachen Geräten render wir stattdessen einen CSS-Fallback.
 export default function HoloEarth() {
+  const [booted, setBooted] = useState(false)
+
+  useEffect(() => {
+    if (booted) return
+    const t1 = setTimeout(() => setBooted(true), 1200)
+    return () => clearTimeout(t1)
+  }, [booted])
+
   return (
-    <div className="relative w-full h-full min-h-[360px] pointer-events-none">
+    <div
+      className="relative w-full h-full min-h-[360px] pointer-events-none"
+      style={{
+        opacity: booted ? 1 : 0.35,
+        transform: booted ? "none" : "scale(1.06)",
+        filter: booted ? "none" : "blur(1px)",
+        transition: "opacity 0.25s ease, transform 0.25s ease, filter 0.25s ease",
+      }}
+    >
       <Canvas
         camera={{ position: [0, 0, 4.0], fov: 45 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
