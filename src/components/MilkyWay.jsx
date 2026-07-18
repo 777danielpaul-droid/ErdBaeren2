@@ -24,6 +24,8 @@ export default function MilkyWay() {
     const mouse = { x: -9999, y: -9999 };
     let hoveredSector = null;
     let sectorRects = [];
+    const HOVER_THRESHOLD = 0.35;
+    const hoverState = { over: null, enteringAt: 0, active: false };
 
     const hitSector = (x, y) => {
       for (let i = sectorRects.length - 1; i >= 0; i--) {
@@ -39,8 +41,23 @@ export default function MilkyWay() {
       const r = canvas.getBoundingClientRect();
       const x = e.clientX - r.left;
       const y = e.clientY - r.top;
-      hoveredSector = hitSector(x, y);
-      canvas.style.cursor = hoveredSector ? "pointer" : "none";
+      mouse.x = x;
+      mouse.y = y;
+      const s = hitSector(x, y);
+
+      if (hoverState.over !== s) {
+        hoverState.over = s;
+        hoverState.enteringAt = performance.now();
+        hoverState.active = false;
+      }
+
+      if (s && !hoverState.active) {
+        const dt = (performance.now() - hoverState.enteringAt) / 1000;
+        if (dt >= HOVER_THRESHOLD) hoverState.active = true;
+      }
+
+      hoveredSector = hoverState.active ? s : null;
+      canvas.style.cursor = s ? "pointer" : "none";
     };
 
     const onLeave = () => {
