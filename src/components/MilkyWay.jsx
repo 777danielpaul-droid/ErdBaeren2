@@ -230,7 +230,7 @@ export default function MilkyWay() {
         scopeTarget.a = 0;
       }
 
-      const k = 1 - Math.exp(-6 * 0.016);
+      const k = 1 - Math.exp(-10 * 0.016);
       scopeCur.x += (scopeTarget.x - scopeCur.x) * k;
       scopeCur.y += (scopeTarget.y - scopeCur.y) * k;
       scopeCur.r += (scopeTarget.r - scopeCur.r) * k;
@@ -299,12 +299,18 @@ export default function MilkyWay() {
           ctx.arc(drawX, drawY, drawR, 0, Math.PI * 2)
           ctx.fill()
         }
-        if (group.name && group.stars.length) {
-          const tx = group.stars.reduce((min, s) => Math.min(min, s.x), group.stars[0].x) - 6
-          const ty = group.stars.reduce((max, s) => Math.max(max, s.y), group.stars[0].y) + 4
+        if (isHovered && group.name && group.stars.length) {
+          const tx = group.stars.reduce((min, s) => Math.min(min, s.x), group.stars[0].x) - 16
+          const ty = group.stars.reduce((max, s) => Math.max(max, s.y), group.stars[0].y) + 24
           ctx.save()
-          ctx.font = '11px ui-monospace, SFMono-Regular, Menlo, monospace'
-          ctx.fillStyle = 'rgba(245,238,255,0.45)'
+          ctx.strokeStyle = 'rgba(255,20,90,0.5)'
+          ctx.lineWidth = 1
+          ctx.beginPath()
+          ctx.moveTo(tx, ty)
+          ctx.lineTo(tx + 16, ty - 24)
+          ctx.stroke()
+          ctx.font = '13px ui-monospace, SFMono-Regular, Menlo, monospace'
+          ctx.fillStyle = 'rgba(255,20,90,0.8)'
           ctx.fillText(group.name, tx, ty)
           ctx.restore()
         }
