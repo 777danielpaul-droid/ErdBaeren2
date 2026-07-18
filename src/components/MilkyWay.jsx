@@ -306,6 +306,7 @@ export default function MilkyWay() {
         const isActive = group === activeSector
         const highlighted = isHovered || isActive
         const dimFactor = (hoveredSector || activeSector) && !highlighted ? 0.28 : 1
+        const scale = highlighted ? 1.35 : 1
 
         if (highlighted) {
           ctx.save()
@@ -313,7 +314,7 @@ export default function MilkyWay() {
           ctx.beginPath()
           ctx.strokeStyle = "rgba(255,255,255,1)"
           ctx.lineWidth = 1.1
-          ctx.arc(scopeCur.x, scopeCur.y, scopeCur.r * 1.05, 0, Math.PI * 2)
+          ctx.arc(group.x, group.y, (group.fog?.r || scopeCur.r) * scale * 1.05, 0, Math.PI * 2)
           ctx.stroke()
           ctx.restore()
         }
@@ -325,22 +326,12 @@ export default function MilkyWay() {
           const rawBase = s.palette[rawColorIndex]
           const rawR = s.r * (0.8 + 0.2 * ((rawWave + 1) / 2))
 
-          let drawX = s.x
-          let drawY = s.y
-          let drawR = rawR
-          let drawAlpha = rawAlpha * dimFactor
-
-          if (highlighted) {
-            const dx = s.x - scopeCur.x
-            const dy = s.y - scopeCur.y
-            const dist = Math.hypot(dx, dy) || 1
-            const falloff = Math.max(0, 1 - dist / (scopeCur.r * 1.05))
-            const fisheyeK = 1 + 0.30 * falloff
-            drawX = scopeCur.x + dx * fisheyeK
-            drawY = scopeCur.y + dy * fisheyeK
-            drawR = rawR * (1 + 0.45 * falloff)
-            drawAlpha = rawAlpha
-          }
+          const dx = s.x - group.x
+          const dy = s.y - group.y
+          const drawX = group.x + dx * scale
+          const drawY = group.y + dy * scale
+          const drawR = rawR * scale
+          const drawAlpha = rawAlpha * dimFactor
 
           ctx.beginPath()
           ctx.fillStyle = `rgba(${rawBase.c},${drawAlpha.toFixed(3)})`
@@ -348,8 +339,8 @@ export default function MilkyWay() {
           ctx.fill()
         }
         if (highlighted && group.name && group.stars.length) {
-          const tx = group.stars.reduce((min, s) => Math.min(min, s.x), group.stars[0].x) - 16
-          const ty = group.stars.reduce((max, s) => Math.max(max, s.y), group.stars[0].y) + 24
+          const tx = group.stars.reduce((min, s) => Math.min(min, s.x), group.stars[0].x) * scale - 16
+          const ty = group.stars.reduce((max, s) => Math.max(max, s.y), group.stars[0].y) * scale + 24
           ctx.save()
           ctx.strokeStyle = 'rgba(255,20,90,0.5)'
           ctx.lineWidth = 1
