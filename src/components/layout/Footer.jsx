@@ -27,9 +27,9 @@ export default function Footer() {
         </div>
 
         <nav className="flex items-center gap-6 sm:gap-10" aria-label="Footer">
-          {f.links.map((l) => (
+          {f.links.map((l, index) => (
             <a
-              key={l.label}
+              key={index}
               href={l.href}
               className="text-bone/70 hover:text-neon transition-colors text-sm font-medium tracking-wide"
             >

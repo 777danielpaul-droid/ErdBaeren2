@@ -38,7 +38,7 @@ export default function FactionsDoctrine() {
           viewport={{ once: true, amount: 0.15 }}
           className="grid grid-cols-1 lg:grid-cols-2 gap-6"
         >
-          {site.factions.map((f) => {
+          {site.factions.map((f, index) => {
             const a = ACCENT[f.accent]
             return (
               <motion.article

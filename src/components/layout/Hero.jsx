@@ -200,8 +200,8 @@ export default function Hero() {
               variants={titleLine}
               className="mt-16 grid grid-cols-1 sm:grid-cols-4 gap-px bg-white/5 border border-white/10 rounded-xl overflow-hidden max-w-4xl"
             >
-              {h.stats.map((s) => (
-                <div key={s.label} className="bg-white/5 px-6 py-6 backdrop-blur-sm">
+              {h.stats.map((s, index) => (
+                <div key={index} className="bg-white/5 px-6 py-6 backdrop-blur-sm">
                   <div className="font-display font-bold text-3xl text-gold text-glow-gold">
                     {liveValue(s.label.de) ?? s.value.de}
                   </div>

@@ -17,7 +17,7 @@ export default function Conflict() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {c.aspects.map((side, i) => (
-            <Reveal key={side.side} delay={i * 0.1} variant={i % 2 === 0 ? "left" : "right"}>
+            <Reveal key={i} delay={i * 0.1} variant={i % 2 === 0 ? "left" : "right"}>
               <div
                 className={`rounded-2xl neon-border glass p-8 h-full ${
                   side.side === "MILCHMÄUSE"
@@ -33,9 +33,9 @@ export default function Conflict() {
                   <T en={side.side.en}>{side.side.de}</T>
                 </div>
                 <ul className="space-y-4">
-                  {side.items.map((it) => (
+                  {side.items.map((it, index) => (
                     <li
-                      key={it}
+                      key={index}
                       className="flex gap-3 text-bone/75 leading-relaxed text-sm sm:text-base"
                     >
                       <span
