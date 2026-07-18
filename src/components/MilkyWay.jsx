@@ -18,6 +18,9 @@ export default function MilkyWay() {
     let W, H, DPR;
     let raf = 0;
     let visible = false;
+    const mouse = { x: -9999, y: -9999 };
+    let hoveredSector = null;
+    let hoverDir = { x: 0, y: 0 };
 
     function rand(a, b) { return a + Math.random() * (b - a); }
 
@@ -171,31 +174,39 @@ export default function MilkyWay() {
       }
 
       const picks = [
-        { x: W * 0.75, y: H * 0.18, name: 'SEKTOR01' },
-        { x: W * 0.06, y: H * 0.86, name: 'SEKTOR02' },
-        { x: W * 0.16, y: H * 0.30, name: 'SEKTOR03' },
+        { x: W * 0.75, y: H * 0.18, name: 'SEKTOR01', fog: { c: '180,210,255', a: 0.16, r: cellSize * 1.55 } },
+        { x: W * 0.06, y: H * 0.86, name: 'SEKTOR02', fog: { c: '210,180,255', a: 0.14, r: cellSize * 1.35 } },
+        { x: W * 0.16, y: H * 0.30, name: 'SEKTOR03', fog: { c: '160,220,240', a: 0.14, r: cellSize * 1.4 } },
       ].filter(Boolean)
 
-      const picked = picks.concat().map(p => ({ x: p.x, y: p.y, name: p.name }))
+      const picked = picks
 
       picked.forEach((pt) => {
         const pts = []
         const n = 18
+        const palette = [
+          { c: "0,220,220", a: 1.0 },
+          { c: "255,255,255", a: 0.95 },
+          { c: "80,160,255", a: 0.95 },
+          { c: "120,80,255", a: 0.95 },
+        ]
         for (let i = 0; i < n; i++) {
           const ang = rand(0, Math.PI * 2)
           const radX = Math.abs(rand(0, 1)) * cellSize * 0.75
           const radY = Math.abs(rand(0, 1)) * cellSize * 0.42
+          const base = palette[i % palette.length]
           pts.push({
             x: pt.x + Math.cos(ang) * radX,
             y: pt.y + Math.sin(ang) * radY,
-            r: rand(1.8, 3.6),
-            a: rand(0.8, 1.0),
-            tw: rand(0.9, 2.6),
+            r: rand(2.2, 4.0),
+            a: base.a,
+            tw: rand(1.0, 2.2),
             ph: Math.random() * Math.PI * 2,
-            c: "255,252,250",
+            c: base.c,
+            palette,
           })
         }
-        starBGs.push({ name: pt.name, stars: pts })
+        starBGs.push({ x: pt.x, y: pt.y, name: pt.name, stars: pts, fog: pt.fog || null })
       })
     }
 
@@ -207,23 +218,61 @@ export default function MilkyWay() {
       ctx.clearRect(0, 0, W, H);
 
       for (const group of starBGs) {
+        if (group.fog) {
+          const fg = ctx.createRadialGradient(
+            group.x,
+            group.y,
+            group.fog.r * 0.15,
+            group.x,
+            group.y,
+            group.fog.r
+          )
+          fg.addColorStop(0, `rgba(${group.fog.c},${group.fog.a})`)
+          fg.addColorStop(1, "rgba(0,0,0,0)")
+          ctx.beginPath()
+          ctx.fillStyle = fg
+          ctx.arc(group.x, group.y, group.fog.r, 0, Math.PI * 2)
+          ctx.fill()
+        }
+
+        if (group === hoveredSector) {
+          const hGrad = ctx.createRadialGradient(
+            group.x + hoverDir.x * group.fog?.r * 0.4 || 0,
+            group.y + hoverDir.y * group.fog?.r * 0.4 || 0,
+            group.fog?.r * 0.08 || 6,
+            group.x,
+            group.y,
+            group.fog?.r * 1.05 || 90
+          )
+          hGrad.addColorStop(0, "rgba(255,255,255,0.12)")
+          hGrad.addColorStop(0.45, "rgba(255,255,255,0.06)")
+          hGrad.addColorStop(1, "rgba(255,255,255,0)")
+          ctx.beginPath()
+          ctx.fillStyle = hGrad
+          ctx.arc(group.x, group.y, group.fog?.r * 1.05 || 90, 0, Math.PI * 2)
+          ctx.fill()
+        }
+
         for (const s of group.stars) {
-          const wave = Math.sin(t * s.tw + s.ph);
-          const a = s.a * (0.55 + 0.45 * ((wave + 1) / 2));
-          const r = s.r * (0.7 + 0.3 * ((wave + 1) / 2));
-          ctx.beginPath();
-          ctx.fillStyle = `rgba(${s.c},${a.toFixed(3)})`;
-          ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
-          ctx.fill();
+          const wave = Math.sin(t * s.tw + s.ph)
+          const alpha = s.a * (0.25 + 0.75 * ((wave + 1) / 2))
+          const colorIndex = ((Math.floor(((wave + 1) / 2) * s.palette.length) % s.palette.length) + s.palette.length) % s.palette.length
+          const base = s.palette[colorIndex]
+          const drawColor = base.c
+          const r = s.r * (0.7 + 0.3 * ((wave + 1) / 2))
+          ctx.beginPath()
+          ctx.fillStyle = `rgba(${drawColor},${alpha.toFixed(3)})`
+          ctx.arc(s.x, s.y, r, 0, Math.PI * 2)
+          ctx.fill()
         }
         if (group.name && group.stars.length) {
           const tx = group.stars.reduce((min, s) => Math.min(min, s.x), group.stars[0].x) - 6
           const ty = group.stars.reduce((max, s) => Math.max(max, s.y), group.stars[0].y) + 4
-          ctx.save();
-          ctx.font = '11px ui-monospace, SFMono-Regular, Menlo, monospace';
-          ctx.fillStyle = 'rgba(245,238,255,0.45)';
-          ctx.fillText(group.name, tx, ty);
-          ctx.restore();
+          ctx.save()
+          ctx.font = '11px ui-monospace, SFMono-Regular, Menlo, monospace'
+          ctx.fillStyle = 'rgba(245,238,255,0.45)'
+          ctx.fillText(group.name, tx, ty)
+          ctx.restore()
         }
       }
 
@@ -494,12 +543,42 @@ export default function MilkyWay() {
     };
     window.addEventListener("resize", onResize);
 
-    return () => {
-      cancelAnimationFrame(raf);
-      raf = 0;
-      io.disconnect();
-      window.removeEventListener("resize", onResize);
-    };
+      const onMove = (ev) => {
+        const cx = ev.touches ? ev.touches[0].clientX : ev.clientX
+        const cy = ev.touches ? ev.touches[0].clientY : ev.clientY
+        mouse.x = cx
+        mouse.y = cy
+        const next = starBGs.find((s) => Math.hypot(s.x - cx, s.y - cy) < 110) || null
+        if (next !== hoveredSector) {
+          hoveredSector = next
+          if (next) {
+            const dx = next.x - cx
+            const dy = next.y - cy
+            const dist = Math.hypot(dx, dy) || 1
+            hoverDir.x = dx / dist
+            hoverDir.y = dy / dist
+          }
+        }
+      }
+      const onLeave = () => {
+        mouse.x = -9999
+        mouse.y = -9999
+        hoveredSector = null
+        hoverDir = { x: 0, y: 0 }
+      }
+      window.addEventListener("mousemove", onMove)
+      window.addEventListener("touchmove", onMove, { passive: true })
+      window.addEventListener("mouseleave", onLeave)
+
+      return () => {
+        cancelAnimationFrame(raf)
+        raf = 0
+        io.disconnect()
+        window.removeEventListener("resize", onResize)
+        window.removeEventListener("mousemove", onMove)
+        window.removeEventListener("touchmove", onMove)
+        window.removeEventListener("mouseleave", onLeave)
+      };
   }, []);
 
   return (
