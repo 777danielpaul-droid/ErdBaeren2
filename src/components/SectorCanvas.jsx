@@ -233,9 +233,9 @@ export default function SectorCanvas() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-auto"
+      className="absolute inset-0 pointer-events-auto"
       style={{ zIndex: 3, cursor: "crosshair" }}
       aria-hidden="true"
     />
-  );
+  )
 }

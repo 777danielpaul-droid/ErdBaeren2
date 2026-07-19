@@ -5,6 +5,7 @@ import { site } from "../../data/content"
 import { useVotes } from "../../lib/votes"
 import { T } from "../RunenText"
 import HoloEarthLazy from "../HoloEarthLazy"
+import SectorCanvas from "../SectorCanvas"
 import { useTimeline } from "../TimelineProvider"
 
 const NEON = ["#c026d3", "#7c3aed", "#22d3ee", "#c9a227"]
@@ -219,6 +220,11 @@ export default function Hero() {
         aria-hidden="true"
       >
         <HoloEarthLazy />
+      </div>
+
+      {/* Sektoren als Hero-gebundenes Overlay */}
+      <div className="absolute inset-0 hidden lg:block z-20 pointer-events-none">
+        <SectorCanvas />
       </div>
 
       <motion.div
