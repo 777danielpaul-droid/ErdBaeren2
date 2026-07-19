@@ -20,40 +20,31 @@ const ACCENT = {
 
 function MilchmausVideo({ baseUrl }) {
   const videoRef = useRef(null)
-  const [playing, setPlaying] = useState(false)
-  const rafRef = useRef(null)
-  const MAX_DURATION = 2.17
-
-  const tick = useCallback(() => {
-    const v = videoRef.current
-    if (!v || v.ended) return setPlaying(false)
-    if (v.currentTime >= MAX_DURATION) {
-      v.pause()
-      v.currentTime = 0
-      return setPlaying(false)
-    }
-    rafRef.current = requestAnimationFrame(tick)
-  }, [MAX_DURATION])
+  const MAX_DURATION = 2.5
 
   const start = useCallback(() => {
     const v = videoRef.current
     if (!v) return
+    v.setAttribute("src", `${baseUrl}milchmausmad.mp4`)
+    v.load()
     v.currentTime = 0
-    setPlaying(true)
-    v.play().catch(() => setPlaying(false))
-    rafRef.current = requestAnimationFrame(tick)
-  }, [tick])
+    v.play().catch(() => {})
+  }, [baseUrl])
 
   const stop = useCallback(() => {
     const v = videoRef.current
     if (!v) return
     v.pause()
     v.currentTime = 0
-    setPlaying(false)
-    cancelAnimationFrame(rafRef.current)
   }, [])
 
-  useEffect(() => () => cancelAnimationFrame(rafRef.current), [])
+  const onTimeUpdate = useCallback(() => {
+    const v = videoRef.current
+    if (!v) return
+    if (v.currentTime >= MAX_DURATION) {
+      stop()
+    }
+  }, [stop, MAX_DURATION])
 
   return (
     <div
@@ -65,6 +56,7 @@ function MilchmausVideo({ baseUrl }) {
     >
       <video
         ref={videoRef}
+        onTimeUpdate={onTimeUpdate}
         poster={asset("/erdbaer-mouse.jpg")}
         className="relative z-[8] w-full h-full object-cover opacity-90"
         muted

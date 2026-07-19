@@ -83,47 +83,7 @@ export default function MoonLayer() {
       ctx.save();
       ctx.beginPath();
       ctx.ellipse(moonX, moonY, moonRX, moonRY, 0, 0, Math.PI * 2);
-      ctx.clip();
-
-      ctx.beginPath();
-      ctx.moveTo(moonX + moonRX * 0.7, moonY - moonRY * 0.15);
-      ctx.quadraticCurveTo(moonX + moonRX * 1.25, moonY - moonRY * 0.9, moonX + moonRX * 1.45, moonY - moonRY * 0.15);
-      ctx.quadraticCurveTo(moonX + moonRX * 1.55, moonY + moonRY * 0.55, moonX + moonRX * 0.9, moonY + moonRY * 0.75);
-      ctx.quadraticCurveTo(moonX + moonRX * 0.5, moonRY * 0.45, moonX + moonRX * 0.7, moonY - moonRY * 0.15);
-      ctx.closePath();
-      ctx.fillStyle = "rgba(10,10,20,0.65)";
-      ctx.fill();
-
-      const holes = [
-        { dx: -0.28, dy: -0.25, r: 0.09 },
-        { dx: 0.08, dy: -0.35, r: 0.07 },
-        { dx: -0.18, dy: 0.32, r: 0.08 },
-        { dx: 0.3, dy: 0.05, r: 0.06 },
-        { dx: -0.06, dy: -0.1, r: 0.12 },
-      ];
-      for (const h of holes) {
-        ctx.beginPath();
-        ctx.arc(moonX + moonRX * h.dx, moonY + moonRY * h.dy, moonRX * h.r, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(0,0,0,0.38)";
-        ctx.fill();
-      }
       ctx.restore();
-
-      const notch = ctx.createRadialGradient(
-        moonX + moonRX * 1.55,
-        moonY + moonRY * 0.2,
-        moonRX * 0.05,
-        moonX + moonRX * 1.35,
-        moonY + moonRY * 0.15,
-        moonRX * 1.35
-      );
-      notch.addColorStop(0, "rgba(8,8,18,0.95)");
-      notch.addColorStop(0.45, "rgba(8,8,18,0.85)");
-      notch.addColorStop(1, "rgba(8,8,18,0)");
-      ctx.beginPath();
-      ctx.fillStyle = notch;
-      ctx.ellipse(moonX + moonRX * 1.05, moonY + moonRY * 0.1, moonRX * 0.55, moonRY * 0.75, 0.15, 0, Math.PI * 2);
-      ctx.fill();
 
       const rim = ctx.createRadialGradient(
         moonX - moonRX * 0.35,
