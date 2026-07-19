@@ -1,11 +1,10 @@
-import { useRef } from "react"
+import { useRef, useState, useCallback, useEffect } from "react"
 import { motion } from "framer-motion"
 import { site } from "../../data/content"
 import { asset } from "../../lib/asset"
 import { stagger, EASE } from "../motion/variants"
 import { T } from "../RunenText"
 
-// Statische Klassen-Map (Tailwind v4 JIT erkennt keine dynamischen Template-Strings)
 const ACCENT = {
   neon: {
     tag: "text-neon border-neon/40",
@@ -19,12 +18,69 @@ const ACCENT = {
   },
 }
 
-// Normale Section, KEIN Sticky — verhindert Scroll-Blockade für darunterliegende Reveal-Sektionen.
-export default function FactionsDoctrine() {
-  const ref = useRef(null)
+function MilchmausVideo({ baseUrl }) {
+  const videoRef = useRef(null)
+  const [playing, setPlaying] = useState(false)
+  const rafRef = useRef(null)
+  const MAX_DURATION = 2.17
+
+  const tick = useCallback(() => {
+    const v = videoRef.current
+    if (!v || v.ended) return setPlaying(false)
+    if (v.currentTime >= MAX_DURATION) {
+      v.pause()
+      v.currentTime = 0
+      return setPlaying(false)
+    }
+    rafRef.current = requestAnimationFrame(tick)
+  }, [MAX_DURATION])
+
+  const start = useCallback(() => {
+    const v = videoRef.current
+    if (!v) return
+    v.currentTime = 0
+    setPlaying(true)
+    v.play().catch(() => setPlaying(false))
+    rafRef.current = requestAnimationFrame(tick)
+  }, [tick])
+
+  const stop = useCallback(() => {
+    const v = videoRef.current
+    if (!v) return
+    v.pause()
+    v.currentTime = 0
+    setPlaying(false)
+    cancelAnimationFrame(rafRef.current)
+  }, [])
+
+  useEffect(() => () => cancelAnimationFrame(rafRef.current), [])
 
   return (
-    <section ref={ref} id="fraktionen" className="relative">
+    <div
+      onPointerEnter={start}
+      onPointerLeave={stop}
+      onClick={start}
+      className="absolute inset-0 cursor-pointer"
+      title="Hover oder klicken zum Abspielen"
+    >
+      <video
+        ref={videoRef}
+        src={`${baseUrl}milchmausmad.mp4`}
+        poster={asset("/erdbaer-mouse.jpg")}
+        className="w-full h-full object-cover opacity-90"
+        muted
+        playsInline
+        preload="metadata"
+        disablePictureInPicture
+        disableRemotePlayback
+      />
+    </div>
+  )
+}
+
+export default function FactionsDoctrine() {
+  return (
+    <section id="fraktionen" className="relative">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 py-12 sm:py-20">
         <p className="mono-label text-gold mb-4">// FRAKTIONEN</p>
         <h2 className="font-display font-bold text-4xl sm:text-5xl tracking-tight mb-12">
@@ -38,34 +94,46 @@ export default function FactionsDoctrine() {
           viewport={{ once: true, amount: 0.15 }}
           className="grid grid-cols-1 lg:grid-cols-2 gap-6"
         >
-          {site.factions.map((f, index) => {
+          {site.factions.map((f) => {
             const a = ACCENT[f.accent]
             return (
               <motion.article
                 key={f.id}
                 variants={{
                   hidden: { opacity: 0, y: 48 },
-                  show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: EASE } },
+                  show: {
+                    opacity: 1,
+                    y: 0,
+                    transition: { duration: 0.9, ease: EASE },
+                  },
                 }}
                 whileHover={{ y: -6, transition: { duration: 0.4, ease: EASE } }}
                 className={`group relative rounded-2xl neon-border glass sheen overflow-hidden hover:${a.border} transition-colors`}
               >
                 <div className="relative h-60 sm:h-72 overflow-hidden">
-                  <img
-                    src={asset(f.image)}
-                    alt={f.name.de}
-                    loading="lazy"
-                    className="w-full h-full object-cover opacity-90 group-hover:scale-[1.04] transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-panel via-panel/30 to-transparent" />
+                  {f.id === "milchmaeuse" ? (
+                    <MilchmausVideo baseUrl={import.meta.env.BASE_URL} />
+                  ) : (
+                    <img
+                      src={asset(f.image)}
+                      alt={f.name.de}
+                      loading="lazy"
+                      className="w-full h-full object-cover opacity-90 group-hover:scale-[1.04] transition-transform duration-700"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-panel via-panel/30 to-transparent pointer-events-none z-[5]" />
                   <div className={`absolute top-4 left-4 mono-label ${a.tag} px-3 py-1 rounded-sm bg-ink/60`}>
                     {f.id.toUpperCase()}
                   </div>
                 </div>
 
                 <div className="p-7">
-                  <h3 className="font-display font-bold text-2xl tracking-tight"><T en={f.name.en}>{f.name.de}</T></h3>
-                  <p className={`mono-label ${a.tag} mt-1`}><T en={f.role.en}>{f.role.de}</T></p>
+                  <h3 className="font-display font-bold text-2xl tracking-tight">
+                    <T en={f.name.en}>{f.name.de}</T>
+                  </h3>
+                  <p className={`mono-label ${a.tag} mt-1`}>
+                    <T en={f.role.en}>{f.role.de}</T>
+                  </p>
                   <p className={`mt-4 text-bone/70 italic border-l-2 ${a.border} pl-4`}>
                     „<T en={f.quote.en}>{f.quote.de}</T>“
                   </p>

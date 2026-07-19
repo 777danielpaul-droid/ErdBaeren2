@@ -15,13 +15,10 @@ function randomNeon() {
 }
 
 function HeroGrid() {
-  // Auf schwachen/schmalen Geraeten (Mobile) das Grid komplett weglassen:
-  // 600 DOM-Nodes + Hover-Transitions wuergen alte Handys (z.B. Galaxy A20) ab.
   if (typeof window !== "undefined" && window.matchMedia("(max-width: 640px)").matches) {
     return null
   }
 
-  // Event-Delegation statt 1200 individuellen Handlern pro Render.
   const onGridOver = (e) => {
     const cell = e.target.closest("div[data-grid-cell]")
     if (!cell) return
@@ -38,8 +35,6 @@ function HeroGrid() {
     cell.style.boxShadow = "none"
   }
 
-  // Feste Zellzahl; Overflow wird vom Hero (overflow-hidden) gekappt.
-  // Beide Achsen mit 1fr -> das Grid fuellt den gesamten sichtbaren Hero.
   const cells = Array.from({ length: 600 })
   return (
     <div
@@ -48,6 +43,7 @@ function HeroGrid() {
       style={{
         gridTemplateColumns: "repeat(auto-fill, minmax(56px, 1fr))",
         gridTemplateRows: "repeat(auto-fill, minmax(56px, 1fr))",
+        zIndex: 0,
       }}
       onMouseOver={onGridOver}
       onMouseOut={onGridOut}
@@ -56,7 +52,7 @@ function HeroGrid() {
         <div
           key={i}
           data-grid-cell
-          className="border transition-[background,border-color,box-shadow] duration-200"
+          className="border transition-[background,border-color,box-shadow] duration-200 pointer-events-auto"
           style={{ borderColor: "rgba(232,121,249,0.07)" }}
         />
       ))}
@@ -223,9 +219,7 @@ export default function Hero() {
       </div>
 
       {/* Sektoren als Hero-gebundenes Overlay */}
-      <div className="absolute inset-0 hidden lg:block z-20 pointer-events-none">
-        <SectorCanvas />
-      </div>
+      <SectorCanvas />
 
       <motion.div
         style={{ y: useTransform(scrollY, [0, 800], [0, 60]) }}

@@ -233,8 +233,8 @@ export default function SectorCanvas() {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 pointer-events-auto"
-      style={{ zIndex: 3, cursor: "crosshair" }}
+      className="absolute inset-0"
+      style={{ zIndex: 0, cursor: "crosshair" }}
       aria-hidden="true"
     />
   )
