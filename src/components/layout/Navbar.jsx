@@ -47,7 +47,7 @@ export default function Navbar() {
             </span>
           </a>
 
-          <ul className="hidden md:flex items-center gap-8">
+          <ul className="flex items-center gap-4 md:gap-8">
             {site.nav.map((n) => (
               <li key={n.href}>
                 <a
@@ -98,11 +98,11 @@ export default function Navbar() {
           >
             <span className="text-lg leading-none">{theme === "dark" ? "☀" : "☾"}</span>
           </button>
-
           <button
+            type="button"
             aria-label="Menü"
             onClick={() => setOpen((v) => !v)}
-            className="md:hidden grid place-items-center w-10 h-10 rounded-md border border-white/10 text-bone"
+            className="md:hidden grid place-items-center w-10 h-10 rounded-md border border-white/20 text-bone hover:border-neon/50"
           >
             <span className="text-xl leading-none">{open ? "✕" : "≡"}</span>
           </button>
@@ -127,7 +127,7 @@ export default function Navbar() {
                       style={{ color: hover[n.href] || "#22d3ee" }}
                       className="mono-label text-cyan"
                     >
-                      {n.label}
+                      {n.label.de}
                     </a>
                   </li>
                 ))}
