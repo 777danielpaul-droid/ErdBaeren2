@@ -52,28 +52,10 @@ export default function SectorCanvas() {
     const drawHoverLabel = (text, x, y) => {
       ctx.save();
       ctx.font = 'bold 13px ui-sans-serif, system-ui, sans-serif';
-      const metrics = ctx.measureText(text);
-      const tw = metrics.width;
-      const th = 18;
-      const padX = 10;
-      const padY = 6;
-      const bx = x - tw / 2 - padX;
-      const by = y - 22 - th;
-      const bw = tw + padX * 2;
-      const bh = th + padY * 2;
-
-      ctx.fillStyle = 'rgba(255,20,60,0.92)';
-      ctx.strokeStyle = 'rgba(255,255,255,0.25)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.roundRect(bx, by, bw, bh, 6);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = 'rgba(255,255,255,0.95)';
+      ctx.fillStyle = '#ff2255';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(text, x, by + bh / 2);
+      ctx.fillText(text, x, y - 22);
       ctx.restore();
     };
 
@@ -169,7 +151,7 @@ export default function SectorCanvas() {
           let r = s.r * (0.8 + 0.2 * ((wave + 1) / 2));
           if (isHovered) {
             a = Math.min(1, a * 1.8);
-            r *= 1.25;
+            r *= 2;
           } else if (isDimmed) {
             a *= 0.45;
           }
