@@ -149,15 +149,19 @@ export default function SectorCanvas() {
           const wave = Math.sin(t * s.tw + s.ph);
           let a = s.a * (0.35 + 0.65 * ((wave + 1) / 2));
           let r = s.r * (0.8 + 0.2 * ((wave + 1) / 2));
+          let sx = s.x;
+          let sy = s.y;
           if (isHovered) {
             a = Math.min(1, a * 1.8);
             r *= 2;
+            sx = group.x + (s.x - group.x) * 2;
+            sy = group.y + (s.y - group.y) * 2;
           } else if (isDimmed) {
             a *= 0.45;
           }
           ctx.beginPath();
           ctx.fillStyle = `rgba(${s.c},${a.toFixed(3)})`;
-          ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
+          ctx.arc(sx, sy, r, 0, Math.PI * 2);
           ctx.fill();
         }
 
