@@ -23,23 +23,18 @@ function EarthModel({ glitch }) {
     const action = actionRef.current
 
     const seq = [
-      { after: 0, pause: 25 },
-      { after: 70, pause: 20 },
-      { after: 150, pause: 18 },
+      { after: 0, pause: 45 },
+      { after: 95, pause: 40 },
+      { after: 190, pause: 35 },
+      { after: 280, pause: 55 },
     ]
 
     const timeouts = seq.map(({ after, pause }) => [
-      setTimeout(() => {
-        action.paused = true
-      }, after),
-      setTimeout(() => {
-        action.paused = false
-      }, after + pause),
+      setTimeout(() => { action.paused = true }, after),
+      setTimeout(() => { action.paused = false }, after + pause),
     ]).flat()
 
-    const end = setTimeout(() => {
-      action.paused = false
-    }, 250)
+    const end = setTimeout(() => { action.paused = false }, 370)
 
     return () => {
       timeouts.forEach(id => clearTimeout(id))
@@ -66,7 +61,6 @@ export default function HoloEarth() {
     if (booted) return
     const t1 = setTimeout(() => {
       setBooted(true)
-      // Starte sofort eine kräftige Start-Störsequenz direkt beim Erscheinen
       setBootGlitch(true)
     }, 1200)
     return () => clearTimeout(t1)
@@ -85,10 +79,8 @@ export default function HoloEarth() {
       { after: 240, visible: false },
       { after: 320, visible: true },
       { after: 360, visible: false },
-      // längere "Entladung"-Pause
       { after: 520, visible: true },
       { after: 570, visible: false },
-      // letzter Stabilisierungs-Anlauf
       { after: 700, visible: true },
       { after: 730, visible: false },
       { after: 780, visible: true },
@@ -108,6 +100,35 @@ export default function HoloEarth() {
       clearTimeout(end)
     }
   }, [bootGlitch])
+
+  useEffect(() => {
+    if (!glitch) return
+
+    const seq = [
+      { after: 0, visible: false },
+      { after: 30, visible: true },
+      { after: 60, visible: false },
+      { after: 90, visible: true },
+      { after: 120, visible: false },
+      { after: 150, visible: true },
+      { after: 180, visible: false },
+      { after: 210, visible: true },
+    ]
+
+    const timeouts = seq.map(({ after, visible }) =>
+      setTimeout(() => setContainerVisible(visible), after)
+    )
+
+    const end = setTimeout(() => {
+      setContainerVisible(true)
+      setGlitch(false)
+    }, 250)
+
+    return () => {
+      timeouts.forEach(id => clearTimeout(id))
+      clearTimeout(end)
+    }
+  }, [glitch])
 
   useEffect(() => {
     if (bootGlitch) return

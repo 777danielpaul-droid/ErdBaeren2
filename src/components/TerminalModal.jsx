@@ -6,7 +6,7 @@ import RunenText from "./RunenText"
 // Wird vom Terminal beim "go to war?"-Prompt via Y geöffnet.
 const GAME_URL = "https://coldasic3.itch.io/erdbren-verteidigung"
 
-// Valide Befehle – alles andere zählt als „falscher Befehl".
+// Valide Befehle – alles andere zählt als „falscher Befehl“.
 const KNOWN_COMMANDS = ["jesus"]
 
 export default function TerminalModal({ open, onClose }) {
