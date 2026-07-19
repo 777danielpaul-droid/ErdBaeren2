@@ -122,6 +122,19 @@ export default function SectorCanvas() {
         const isHovered = hoveredSector && hoveredSector.name === pt.name;
         const isDimmed = hoveredSector && !isHovered;
 
+        if (pt.fog) {
+          const fog = ctx.createRadialGradient(pt.x, pt.y, pt.fog.r * 0.05, pt.x, pt.y, pt.fog.r);
+          fog.addColorStop(0, `rgba(${pt.fog.c},${pt.fog.a.toFixed(3)})`);
+          fog.addColorStop(1, `rgba(${pt.fog.c},0)`);
+          ctx.save();
+          ctx.globalCompositeOperation = "screen";
+          ctx.beginPath();
+          ctx.fillStyle = fog;
+          ctx.arc(pt.x, pt.y, pt.fog.r, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
         if (isHovered && pt.fog) {
           const fog = ctx.createRadialGradient(pt.x, pt.y, pt.fog.r * 0.05, pt.x, pt.y, pt.fog.r);
           fog.addColorStop(0, `rgba(${pt.fog.c},${(pt.fog.a * 1.8).toFixed(3)})`);
