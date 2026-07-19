@@ -77,17 +77,21 @@ export default function HoloEarth() {
 
     const seq = [
       { after: 0, visible: false },
-      { after: 80, visible: true },
+      { after: 45, visible: true },
+      { after: 90, visible: false },
+      { after: 120, visible: true },
       { after: 160, visible: false },
-      { after: 230, visible: true },
-      { after: 340, visible: false },
-      { after: 420, visible: true },
-      { after: 520, visible: false },
-      { after: 590, visible: true },
-      { after: 700, visible: false },
-      { after: 810, visible: true },
-      { after: 920, visible: false },
-      { after: 1050, visible: true },
+      { after: 200, visible: true },
+      { after: 240, visible: false },
+      { after: 320, visible: true },
+      { after: 360, visible: false },
+      // längere "Entladung"-Pause
+      { after: 520, visible: true },
+      { after: 570, visible: false },
+      // letzter Stabilisierungs-Anlauf
+      { after: 700, visible: true },
+      { after: 730, visible: false },
+      { after: 780, visible: true },
     ]
 
     const timeouts = seq.map(({ after, visible }) =>
@@ -97,7 +101,7 @@ export default function HoloEarth() {
     const end = setTimeout(() => {
       setContainerVisible(true)
       setBootGlitch(false)
-    }, 1150)
+    }, 850)
 
     return () => {
       timeouts.forEach(id => clearTimeout(id))
