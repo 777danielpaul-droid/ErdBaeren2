@@ -23,10 +23,9 @@ function EarthModel({ glitch }) {
     const action = actionRef.current
 
     const seq = [
-      { after: 0, pause: 40 },
-      { after: 80, pause: 35 },
-      { after: 170, pause: 30 },
-      { after: 250, pause: 45 },
+      { after: 0, pause: 25 },
+      { after: 70, pause: 20 },
+      { after: 150, pause: 18 },
     ]
 
     const timeouts = seq.map(({ after, pause }) => [
@@ -40,7 +39,7 @@ function EarthModel({ glitch }) {
 
     const end = setTimeout(() => {
       action.paused = false
-    }, 340)
+    }, 250)
 
     return () => {
       timeouts.forEach(id => clearTimeout(id))
@@ -61,25 +60,34 @@ export default function HoloEarth() {
   const [booted, setBooted] = useState(false)
   const [glitch, setGlitch] = useState(false)
   const [containerVisible, setContainerVisible] = useState(true)
+  const [bootGlitch, setBootGlitch] = useState(false)
 
   useEffect(() => {
     if (booted) return
-    const t1 = setTimeout(() => setBooted(true), 1200)
+    const t1 = setTimeout(() => {
+      setBooted(true)
+      // Starte sofort eine kräftige Start-Störsequenz direkt beim Erscheinen
+      setBootGlitch(true)
+    }, 1200)
     return () => clearTimeout(t1)
   }, [booted])
 
   useEffect(() => {
-    if (!glitch) return
+    if (!bootGlitch) return
 
     const seq = [
       { after: 0, visible: false },
-      { after: 40, visible: true },
-      { after: 80, visible: false },
-      { after: 115, visible: true },
-      { after: 170, visible: false },
-      { after: 200, visible: true },
-      { after: 250, visible: false },
-      { after: 295, visible: true },
+      { after: 80, visible: true },
+      { after: 160, visible: false },
+      { after: 230, visible: true },
+      { after: 340, visible: false },
+      { after: 420, visible: true },
+      { after: 520, visible: false },
+      { after: 590, visible: true },
+      { after: 700, visible: false },
+      { after: 810, visible: true },
+      { after: 920, visible: false },
+      { after: 1050, visible: true },
     ]
 
     const timeouts = seq.map(({ after, visible }) =>
@@ -88,21 +96,23 @@ export default function HoloEarth() {
 
     const end = setTimeout(() => {
       setContainerVisible(true)
-      setGlitch(false)
-    }, 340)
+      setBootGlitch(false)
+    }, 1150)
 
     return () => {
       timeouts.forEach(id => clearTimeout(id))
       clearTimeout(end)
     }
-  }, [glitch])
+  }, [bootGlitch])
 
   useEffect(() => {
+    if (bootGlitch) return
     const id = setInterval(() => {
       setGlitch(true)
+      setTimeout(() => setGlitch(false), 250)
     }, 12000)
     return () => clearInterval(id)
-  }, [])
+  }, [bootGlitch])
 
   return (
     <div
