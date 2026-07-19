@@ -100,9 +100,9 @@ export default function MilkyWayBackground() {
           pts.push({
             x,
             y,
-            r: rand(0.6, 1.4),
-            a: rand(0.75, 1.0),
-            tw: rand(1.0, 2.6),
+            r: rand(0.5, 1.4),
+            a: rand(0.4, 0.95),
+            tw: rand(1.4, 4.0),
             ph: Math.random() * Math.PI * 2,
             c,
           });
