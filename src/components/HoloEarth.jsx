@@ -5,16 +5,48 @@ import * as THREE from "three"
 
 // Lädt die animierte Erde (GLTF + Loop-Animation) aus /public/models.
 // Die Animation (Erde dreht sich, Strahlen rotateiren seltenen Störsequenzen aus.
-function EarthModel() {
+function EarthModel({ glitch }) {
   const group = useRef(null)
   const { scene, animations } = useGLTF("/ErdBaeren2/models/scene.gltf")
   const { actions } = useAnimations(animations, group)
+  const actionRef = useRef(null)
 
   useEffect(() => {
     if (actions && actions.Scene) {
-      actions.Scene.reset().play()
+      const action = actions.Scene.reset().play()
+      actionRef.current = action
     }
   }, [actions])
+
+  useEffect(() => {
+    if (!glitch || !actionRef.current) return
+    const action = actionRef.current
+
+    const seq = [
+      { after: 0, pause: 40 },
+      { after: 80, pause: 35 },
+      { after: 170, pause: 30 },
+      { after: 250, pause: 45 },
+    ]
+
+    const timeouts = seq.map(({ after, pause }) => [
+      setTimeout(() => {
+        action.paused = true
+      }, after),
+      setTimeout(() => {
+        action.paused = false
+      }, after + pause),
+    ]).flat()
+
+    const end = setTimeout(() => {
+      action.paused = false
+    }, 340)
+
+    return () => {
+      timeouts.forEach(id => clearTimeout(id))
+      clearTimeout(end)
+    }
+  }, [glitch])
 
   return (
     <group ref={group} dispose={null}>
@@ -27,7 +59,8 @@ function EarthModel() {
 // (lg+); auf schwachen Geräten render wir stattdessen einen CSS-Fallback.
 export default function HoloEarth() {
   const [booted, setBooted] = useState(false)
-  const [visible, setVisible] = useState(true)
+  const [glitch, setGlitch] = useState(false)
+  const [containerVisible, setContainerVisible] = useState(true)
 
   useEffect(() => {
     if (booted) return
@@ -36,24 +69,38 @@ export default function HoloEarth() {
   }, [booted])
 
   useEffect(() => {
-    const id = setInterval(() => {
-      // Sequenz: erst kurz weg, dann 2-3x an/aus
-      const t1 = setTimeout(() => setVisible(false), 0)
-      const t2 = setTimeout(() => setVisible(true), 120)
-      const t3 = setTimeout(() => setVisible(false), 220)
-      const t4 = setTimeout(() => setVisible(true), 300)
-      const t5 = setTimeout(() => setVisible(false), 380)
-      const t6 = setTimeout(() => setVisible(true), 460)
+    if (!glitch) return
 
-      return () => {
-        clearTimeout(t1)
-        clearTimeout(t2)
-        clearTimeout(t3)
-        clearTimeout(t4)
-        clearTimeout(t5)
-        clearTimeout(t6)
-      }
-    }, 8000)
+    const seq = [
+      { after: 0, visible: false },
+      { after: 40, visible: true },
+      { after: 80, visible: false },
+      { after: 115, visible: true },
+      { after: 170, visible: false },
+      { after: 200, visible: true },
+      { after: 250, visible: false },
+      { after: 295, visible: true },
+    ]
+
+    const timeouts = seq.map(({ after, visible }) =>
+      setTimeout(() => setContainerVisible(visible), after)
+    )
+
+    const end = setTimeout(() => {
+      setContainerVisible(true)
+      setGlitch(false)
+    }, 340)
+
+    return () => {
+      timeouts.forEach(id => clearTimeout(id))
+      clearTimeout(end)
+    }
+  }, [glitch])
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setGlitch(true)
+    }, 12000)
     return () => clearInterval(id)
   }, [])
 
@@ -61,7 +108,7 @@ export default function HoloEarth() {
     <div
       className="relative w-full h-full min-h-[360px] pointer-events-none"
       style={{
-        opacity: booted && visible ? 1 : 0,
+        opacity: booted && containerVisible ? 1 : 0,
         transform: booted ? "none" : "scale(1.06)",
         filter: booted ? "none" : "blur(1px)",
         transition:
@@ -79,7 +126,7 @@ export default function HoloEarth() {
         <directionalLight position={[-4, -2, -3]} intensity={0.5} color="#22d3ee" />
         <Suspense fallback={null}>
           <Float speed={1.1} rotationIntensity={0.4} floatIntensity={0.6}>
-            <EarthModel />
+            <EarthModel glitch={glitch} />
           </Float>
         </Suspense>
         <OrbitControls
