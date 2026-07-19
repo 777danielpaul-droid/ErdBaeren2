@@ -89,7 +89,8 @@ function BattleVideo({ baseUrl }) {
     const v = videoRef.current
     if (!v) return
     v.pause()
-    v.currentTime = 0
+    v.removeAttribute("src")
+    v.load()
     dirRef.current = 1
     prevRef.current = null
     cancelAnimationFrame(rafRef.current)
@@ -118,12 +119,13 @@ function BattleVideo({ baseUrl }) {
     const v = videoRef.current
     if (!v) return
     stop()
+    v.setAttribute("src", `${baseUrl}erdbaeren-battle.mp4`)
+    v.load()
     v.currentTime = 0
     dirRef.current = 1
-    v.play().catch(() => {})
     prevRef.current = performance.now()
     rafRef.current = requestAnimationFrame(tick)
-  }, [tick, stop])
+  }, [tick, stop, baseUrl])
 
   useEffect(() => () => stop(), [stop])
 
@@ -137,7 +139,6 @@ function BattleVideo({ baseUrl }) {
     >
       <video
         ref={videoRef}
-        src={`${baseUrl}erdbaeren-battle.mp4`}
         poster={asset("/erdbaer-bear.jpg")}
         className="w-full h-full object-cover opacity-90"
         muted
