@@ -60,14 +60,13 @@ function MilchmausVideo({ baseUrl }) {
       onPointerEnter={start}
       onPointerLeave={stop}
       onClick={start}
-      className="absolute inset-0 cursor-pointer"
+      className="absolute inset-0 z-[8] cursor-pointer"
       title="Hover oder klicken zum Abspielen"
     >
       <video
         ref={videoRef}
-        src={`${baseUrl}milchmausmad.mp4`}
         poster={asset("/erdbaer-mouse.jpg")}
-        className="w-full h-full object-cover opacity-90"
+        className="relative z-[8] w-full h-full object-cover opacity-90"
         muted
         playsInline
         preload="metadata"
@@ -134,13 +133,13 @@ function BattleVideo({ baseUrl }) {
       onPointerEnter={start}
       onPointerLeave={stop}
       onClick={start}
-      className="absolute inset-0 cursor-pointer"
+      className="absolute inset-0 z-[8] cursor-pointer"
       title="Hover oder klicken zum Abspielen"
     >
       <video
         ref={videoRef}
         poster={asset("/erdbaer-bear.jpg")}
-        className="w-full h-full object-cover opacity-90"
+        className="relative z-[8] w-full h-full object-cover opacity-90"
         muted
         playsInline
         preload="metadata"
@@ -153,8 +152,8 @@ function BattleVideo({ baseUrl }) {
 
 export default function FactionsDoctrine() {
   return (
-    <section id="fraktionen" className="relative">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 py-12 sm:py-20">
+    <section id="fraktionen" className="relative z-20">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 py-12 sm:py-20 relative z-20">
         <p className="mono-label text-gold mb-4">// FRAKTIONEN</p>
         <h2 className="font-display font-bold text-4xl sm:text-5xl tracking-tight mb-12">
           <T en="Two powers. One Earth.">Zwei Mächte. Eine Erde.</T>
@@ -165,7 +164,7 @@ export default function FactionsDoctrine() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.15 }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+          className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-6"
         >
           {site.factions.map((f) => {
             const a = ACCENT[f.accent]
@@ -183,7 +182,7 @@ export default function FactionsDoctrine() {
                 whileHover={{ y: -6, transition: { duration: 0.4, ease: EASE } }}
                 className={`group relative rounded-2xl neon-border glass sheen overflow-hidden hover:${a.border} transition-colors`}
               >
-                <div className="relative h-60 sm:h-72 overflow-hidden">
+                <div className="relative isolate h-60 sm:h-72 overflow-hidden">
                   {f.id === "milchmaeuse" ? (
                     <MilchmausVideo baseUrl={import.meta.env.BASE_URL} />
                   ) : f.id === "erdbaeren" ? (
@@ -193,10 +192,10 @@ export default function FactionsDoctrine() {
                       src={asset(f.image)}
                       alt={f.name.de}
                       loading="lazy"
-                      className="w-full h-full object-cover opacity-90 group-hover:scale-[1.04] transition-transform duration-700"
+                      className="relative z-10 w-full h-full object-cover opacity-90 group-hover:scale-[1.04] transition-transform duration-700"
                     />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-panel via-panel/30 to-transparent pointer-events-none z-[5]" />
+                  <div className="absolute inset-0 z-[5] bg-panel/25" />
                   <div className={`absolute top-4 left-4 mono-label ${a.tag} px-3 py-1 rounded-sm bg-ink/60`}>
                     {f.id.toUpperCase()}
                   </div>
