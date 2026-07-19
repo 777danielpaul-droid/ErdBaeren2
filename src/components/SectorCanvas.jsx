@@ -55,7 +55,14 @@ export default function SectorCanvas() {
       ctx.fillStyle = '#ff2255';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(text, x, y - 22);
+      const labelY = y - 62;
+      ctx.fillText(text, x, labelY);
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(255,34,85,0.45)';
+      ctx.lineWidth = 1;
+      ctx.moveTo(x, labelY + 14);
+      ctx.lineTo(x, y + 6);
+      ctx.stroke();
       ctx.restore();
     };
 
