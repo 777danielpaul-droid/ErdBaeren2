@@ -41,6 +41,22 @@ export default function Navbar() {
             </span>
           </a>
 
+          <ul className="hidden md:flex items-center gap-8">
+            {site.nav.map((n) => (
+              <li key={n.href}>
+                <a
+                  href={n.href}
+                  onMouseEnter={() => randomNeon(n.href)}
+                  onMouseLeave={() => resetNeon(n.href)}
+                  style={{ color: hover[n.href] || "#22d3ee" }}
+                  className="mono-label text-cyan hover:text-cyan transition-colors"
+                >
+                  {n.label.de}
+                </a>
+              </li>
+            ))}
+          </ul>
+
           <div className="flex items-center justify-end gap-2">
             <button
               type="button"
