@@ -6,6 +6,7 @@ import { useVotes } from "../../lib/votes"
 import { T } from "../RunenText"
 import HoloEarthLazy from "../HoloEarthLazy"
 import { useTimeline } from "../TimelineProvider"
+import SectorCanvas from "../SectorCanvas"
 
 const NEON = ["#c026d3", "#7c3aed", "#22d3ee", "#c9a227"]
 
@@ -116,6 +117,7 @@ export default function Hero() {
   return (
     <section id="top" style={{ opacity: phase >= 1 ? 1 : 0 }} className="hero-holo relative min-h-screen flex items-center bg-theatre grain overflow-hidden">
       <HeroGrid />
+      <SectorCanvas />
       <motion.div
         style={{ y: blobY, opacity: blobOpacity }}
         className="absolute top-24 right-[-6rem] w-[18rem] h-[18rem] sm:w-[28rem] sm:h-[28rem] rounded-full bg-neon/25 blur-[60px] sm:blur-[120px]"
