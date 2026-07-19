@@ -19,6 +19,10 @@ const SECTORS = [
       "radial-gradient(circle at 65% 60%, rgba(124,58,237,0.20) 0%, transparent 55%)",
       "radial-gradient(circle at 50% 50%, rgba(192,38,211,0.12) 0%, transparent 75%)",
     ],
+    planets: [
+      { x: 100, y: 90, r: 7, c: "#c084fc" },
+      { x: 130, y: 150, r: 5, c: "#e879f9" },
+    ],
   },
   {
     id: "SEKTOR02",
@@ -37,6 +41,11 @@ const SECTORS = [
       "radial-gradient(circle at 35% 40%, rgba(34,211,238,0.22) 0%, transparent 58%)",
       "radial-gradient(circle at 65% 60%, rgba(6,182,212,0.18) 0%, transparent 55%)",
       "radial-gradient(circle at 50% 50%, rgba(34,211,238,0.10) 0%, transparent 75%)",
+    ],
+    planets: [
+      { x: 120, y: 100, r: 6, c: "#67e8f9" },
+      { x: 150, y: 170, r: 9, c: "#a5f3fc" },
+      { x: 170, y: 140, r: 4, c: "#cffafe" },
     ],
   },
   {
@@ -57,11 +66,15 @@ const SECTORS = [
       "radial-gradient(circle at 65% 60%, rgba(20,184,166,0.18) 0%, transparent 55%)",
       "radial-gradient(circle at 50% 50%, rgba(45,212,191,0.10) 0%, transparent 75%)",
     ],
+    planets: [
+      { x: 110, y: 100, r: 6, c: "#5eead4" },
+      { x: 140, y: 170, r: 8, c: "#99f6e4" },
+    ],
   },
 ];
 
 const STAR_COUNT = 110;
-const STAR_SPREAD = 60;
+const STAR_SPREAD = 40;
 const BASE = 0.45;
 const RADIUS = 140;
 
@@ -120,6 +133,7 @@ export default function SectorCanvas() {
 
   return (
     <div aria-hidden="true" className="absolute inset-0 overflow-hidden pointer-events-none">
+      <style>{``}</style>
       {sectors.map(({ sec, stars }) => {
         const isHovered = hovered === sec.id;
         const scale = isHovered ? 1.45 : 1;
@@ -155,7 +169,7 @@ export default function SectorCanvas() {
                 const { a, r } = twinkle(s, t);
                 return (
                   <span
-                    key={i}
+                    key={`${sec.id}-s-${i}`}
                     className="absolute rounded-full"
                     style={{
                       left: s.x,
@@ -169,6 +183,24 @@ export default function SectorCanvas() {
                   />
                 );
               })}
+            </div>
+
+            <div className="absolute inset-0">
+              {(sec.planets || []).map((p, i) => (
+                <span
+                  key={`${sec.id}-p-${i}`}
+                  className="absolute rounded-full pointer-events-none"
+                  style={{
+                    left: p.x,
+                    top: p.y,
+                    width: p.r * 2,
+                    height: p.r * 2,
+                    margin: `-${p.r}px 0 0 -${p.r}px`,
+                    background: `radial-gradient(circle at 35% 30%, ${p.c} 0%, rgba(0,0,0,0.35) 100%)`,
+                    boxShadow: `inset -${p.r * 0.4}px -${p.r * 0.3}px ${p.r * 0.6}px rgba(0,0,0,0.45), 0 0 ${p.r * 1.2}px ${p.c}44`,
+                  }}
+                />
+              ))}
             </div>
 
             <div
