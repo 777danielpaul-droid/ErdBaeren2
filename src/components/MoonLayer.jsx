@@ -44,11 +44,21 @@ export default function MoonLayer() {
       ctx.fill();
 
       const craters = [
-        { dx: -0.28, dy: -0.32, rx: 0.22, ry: 0.18, d: 0.7 },
-        { dx: 0.14, dy: -0.1, rx: 0.18, ry: 0.14, d: 0.55 },
-        { dx: -0.12, dy: 0.28, rx: 0.2, ry: 0.17, d: 0.65 },
-        { dx: 0.25, dy: 0.2, rx: 0.14, ry: 0.11, d: 0.5 },
-        { dx: -0.05, dy: -0.05, rx: 0.12, ry: 0.1, d: 0.4 },
+        { dx: -0.30, dy: -0.34, rx: 0.24, ry: 0.20, d: 0.80 },
+        { dx: 0.18, dy: -0.12, rx: 0.20, ry: 0.16, d: 0.65 },
+        { dx: -0.14, dy: 0.30, rx: 0.22, ry: 0.19, d: 0.75 },
+        { dx: 0.28, dy: 0.22, rx: 0.16, ry: 0.13, d: 0.60 },
+        { dx: -0.06, dy: -0.06, rx: 0.14, ry: 0.12, d: 0.50 },
+        { dx: -0.45, dy: 0.10, rx: 0.10, ry: 0.09, d: 0.45 },
+        { dx: 0.38, dy: -0.28, rx: 0.12, ry: 0.11, d: 0.52 },
+        { dx: -0.22, dy: 0.52, rx: 0.09, ry: 0.08, d: 0.40 },
+        { dx: 0.08, dy: 0.42, rx: 0.11, ry: 0.10, d: 0.45 },
+        { dx: -0.38, dy: -0.18, rx: 0.08, ry: 0.07, d: 0.38 },
+        { dx: 0.50, dy: 0.08, rx: 0.14, ry: 0.12, d: 0.55 },
+        { dx: -0.52, dy: -0.08, rx: 0.11, ry: 0.10, d: 0.42 },
+        { dx: 0.02, dy: -0.50, rx: 0.09, ry: 0.08, d: 0.35 },
+        { dx: -0.08, dy: 0.18, rx: 0.06, ry: 0.05, d: 0.30 },
+        { dx: 0.30, dy: -0.42, rx: 0.07, ry: 0.06, d: 0.32 },
       ];
       for (const cr of craters) {
         const cx = moonX + moonRX * cr.dx;
@@ -98,6 +108,22 @@ export default function MoonLayer() {
         ctx.fill();
       }
       ctx.restore();
+
+      const notch = ctx.createRadialGradient(
+        moonX + moonRX * 1.55,
+        moonY + moonRY * 0.2,
+        moonRX * 0.05,
+        moonX + moonRX * 1.35,
+        moonY + moonRY * 0.15,
+        moonRX * 1.35
+      );
+      notch.addColorStop(0, "rgba(8,8,18,0.95)");
+      notch.addColorStop(0.45, "rgba(8,8,18,0.85)");
+      notch.addColorStop(1, "rgba(8,8,18,0)");
+      ctx.beginPath();
+      ctx.fillStyle = notch;
+      ctx.ellipse(moonX + moonRX * 1.05, moonY + moonRY * 0.1, moonRX * 0.55, moonRY * 0.75, 0.15, 0, Math.PI * 2);
+      ctx.fill();
 
       const rim = ctx.createRadialGradient(
         moonX - moonRX * 0.35,
