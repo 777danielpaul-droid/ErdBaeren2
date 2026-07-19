@@ -4,16 +4,17 @@ import { useGLTF, useAnimations, OrbitControls, Float } from "@react-three/drei"
 import * as THREE from "three"
 
 // Lädt die animierte Erde (GLTF + Loop-Animation) aus /public/models.
-// Die Animation (Erde dreht sich, Strahlen rotieren) läuft automatisch via useAnimations.
+// Die Animation (Erde dreht sich, Strahlen rotateiren seltenen Störsequenzen aus.
 function EarthModel() {
-  const group = useRef()
+  const group = useRef(null)
   const { scene, animations } = useGLTF("/ErdBaeren2/models/scene.gltf")
   const { actions } = useAnimations(animations, group)
 
-  // Animation sofort abspielen (Loop ist im Clip definiert).
-  if (actions && actions.Scene) {
-    actions.Scene.reset().play()
-  }
+  useEffect(() => {
+    if (actions && actions.Scene) {
+      actions.Scene.reset().play()
+    }
+  }, [actions])
 
   return (
     <group ref={group} dispose={null}>
@@ -26,6 +27,7 @@ function EarthModel() {
 // (lg+); auf schwachen Geräten render wir stattdessen einen CSS-Fallback.
 export default function HoloEarth() {
   const [booted, setBooted] = useState(false)
+  const [visible, setVisible] = useState(true)
 
   useEffect(() => {
     if (booted) return
@@ -33,14 +35,37 @@ export default function HoloEarth() {
     return () => clearTimeout(t1)
   }, [booted])
 
+  useEffect(() => {
+    const id = setInterval(() => {
+      // Sequenz: erst kurz weg, dann 2-3x an/aus
+      const t1 = setTimeout(() => setVisible(false), 0)
+      const t2 = setTimeout(() => setVisible(true), 120)
+      const t3 = setTimeout(() => setVisible(false), 220)
+      const t4 = setTimeout(() => setVisible(true), 300)
+      const t5 = setTimeout(() => setVisible(false), 380)
+      const t6 = setTimeout(() => setVisible(true), 460)
+
+      return () => {
+        clearTimeout(t1)
+        clearTimeout(t2)
+        clearTimeout(t3)
+        clearTimeout(t4)
+        clearTimeout(t5)
+        clearTimeout(t6)
+      }
+    }, 8000)
+    return () => clearInterval(id)
+  }, [])
+
   return (
     <div
       className="relative w-full h-full min-h-[360px] pointer-events-none"
       style={{
-        opacity: booted ? 1 : 0.35,
+        opacity: booted && visible ? 1 : 0,
         transform: booted ? "none" : "scale(1.06)",
         filter: booted ? "none" : "blur(1px)",
-        transition: "opacity 0.25s ease, transform 0.25s ease, filter 0.25s ease",
+        transition:
+          "opacity 0.04s linear, transform 0.25s ease, filter 0.25s ease",
       }}
     >
       <Canvas
@@ -68,7 +93,7 @@ export default function HoloEarth() {
       {/* dezenter Glow-Halo hinter der Erde */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 rounded-full bg-neon/10 blur-[120px]"
+        className="absolute inset-0 -z-10 rounded-full blur-[120px]"
       />
     </div>
   )
