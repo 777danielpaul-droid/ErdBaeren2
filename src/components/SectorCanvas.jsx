@@ -49,6 +49,34 @@ export default function SectorCanvas() {
 
     const onClick = () => {};
 
+    const drawHoverLabel = (text, x, y) => {
+      ctx.save();
+      ctx.font = 'bold 13px ui-sans-serif, system-ui, sans-serif';
+      const metrics = ctx.measureText(text);
+      const tw = metrics.width;
+      const th = 18;
+      const padX = 10;
+      const padY = 6;
+      const bx = x - tw / 2 - padX;
+      const by = y - 22 - th;
+      const bw = tw + padX * 2;
+      const bh = th + padY * 2;
+
+      ctx.fillStyle = 'rgba(255,20,60,0.92)';
+      ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(bx, by, bw, bh, 6);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = 'rgba(255,255,255,0.95)';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, x, by + bh / 2);
+      ctx.restore();
+    };
+
     function build() {
       DPR = Math.min(window.devicePixelRatio || 1, 2);
       W = window.innerWidth;
@@ -106,15 +134,8 @@ export default function SectorCanvas() {
       ctx.clearRect(0, 0, W, H);
       t += 0.016;
 
-      const picks = sectorRects.map((pt) => ({
-        x: pt.x,
-        y: pt.y,
-        name: pt.name,
-        fog: pt.fog,
-      }));
-
-      for (let i = 0; i < picks.length; i++) {
-        const pt = picks[i];
+      for (let i = 0; i < sectorRects.length; i++) {
+        const pt = sectorRects[i];
         const group = starBGs[i];
         const isHovered = hoveredSector && hoveredSector.name === pt.name;
         const isDimmed = hoveredSector && !isHovered;
@@ -127,6 +148,18 @@ export default function SectorCanvas() {
           ctx.fillStyle = fog;
           ctx.arc(pt.x, pt.y, pt.fog.r, 0, Math.PI * 2);
           ctx.fill();
+
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(${pt.fog.c},${(pt.fog.a * 1.6).toFixed(3)})`;
+          ctx.lineWidth = 1.8;
+          ctx.arc(pt.x, pt.y, pt.fog.r * 1.1, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(${pt.fog.c},${(pt.fog.a * 0.6).toFixed(3)})`;
+          ctx.lineWidth = 1;
+          ctx.arc(pt.x, pt.y, pt.fog.r * 1.35 + 8 * Math.sin(t * 3), 0, Math.PI * 2);
+          ctx.stroke();
         }
 
         if (!group) continue;
@@ -144,6 +177,10 @@ export default function SectorCanvas() {
           ctx.fillStyle = `rgba(${s.c},${a.toFixed(3)})`;
           ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
           ctx.fill();
+        }
+
+        if (isHovered) {
+          drawHoverLabel(group.name, group.x, group.y);
         }
       }
 
@@ -172,6 +209,10 @@ export default function SectorCanvas() {
     canvas.addEventListener("mousemove", onMove);
     canvas.addEventListener("mouseleave", onLeave);
     canvas.addEventListener("click", onClick);
+
+    canvas.addEventListener("mousemove", () => {
+      canvas.style.cursor = hoveredSector ? "pointer" : "crosshair";
+    });
 
     return () => {
       stop();
