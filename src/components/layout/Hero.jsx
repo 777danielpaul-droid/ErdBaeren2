@@ -43,7 +43,7 @@ function HeroGrid() {
       style={{
         gridTemplateColumns: "repeat(auto-fill, minmax(56px, 1fr))",
         gridTemplateRows: "repeat(auto-fill, minmax(56px, 1fr))",
-        zIndex: 0,
+        zIndex: 2,
       }}
       onMouseOver={onGridOver}
       onMouseOut={onGridOut}
