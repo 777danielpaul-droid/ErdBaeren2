@@ -78,6 +78,78 @@ function MilchmausVideo({ baseUrl }) {
   )
 }
 
+function BattleVideo({ baseUrl }) {
+  const videoRef = useRef(null)
+  const rafRef = useRef(null)
+  const dirRef = useRef(1)
+  const prevRef = useRef(null)
+  const MAX_DURATION = 1.0
+
+  const stop = useCallback(() => {
+    const v = videoRef.current
+    if (!v) return
+    v.pause()
+    v.currentTime = 0
+    dirRef.current = 1
+    prevRef.current = null
+    cancelAnimationFrame(rafRef.current)
+  }, [])
+
+  const tick = useCallback(() => {
+    const v = videoRef.current
+    if (!v) return
+    const now = performance.now()
+    const prev = prevRef.current
+    const dt = prev ? Math.min((now - prev) / 1000, 0.1) : 0
+    prevRef.current = now
+    let t = v.currentTime + dirRef.current * dt
+    t = Math.max(0, Math.min(MAX_DURATION, t))
+    v.currentTime = t
+    if (dirRef.current === 1 && t >= MAX_DURATION) {
+      dirRef.current = -1
+    } else if (dirRef.current === -1 && t <= 0) {
+      stop()
+      return
+    }
+    rafRef.current = requestAnimationFrame(tick)
+  }, [MAX_DURATION, stop])
+
+  const start = useCallback(() => {
+    const v = videoRef.current
+    if (!v) return
+    stop()
+    v.currentTime = 0
+    dirRef.current = 1
+    v.play().catch(() => {})
+    prevRef.current = performance.now()
+    rafRef.current = requestAnimationFrame(tick)
+  }, [tick, stop])
+
+  useEffect(() => () => stop(), [stop])
+
+  return (
+    <div
+      onPointerEnter={start}
+      onPointerLeave={stop}
+      onClick={start}
+      className="absolute inset-0 cursor-pointer"
+      title="Hover oder klicken zum Abspielen"
+    >
+      <video
+        ref={videoRef}
+        src={`${baseUrl}erdbaeren-battle.mp4`}
+        poster={asset("/erdbaer-bear.jpg")}
+        className="w-full h-full object-cover opacity-90"
+        muted
+        playsInline
+        preload="metadata"
+        disablePictureInPicture
+        disableRemotePlayback
+      />
+    </div>
+  )
+}
+
 export default function FactionsDoctrine() {
   return (
     <section id="fraktionen" className="relative">
@@ -113,6 +185,8 @@ export default function FactionsDoctrine() {
                 <div className="relative h-60 sm:h-72 overflow-hidden">
                   {f.id === "milchmaeuse" ? (
                     <MilchmausVideo baseUrl={import.meta.env.BASE_URL} />
+                  ) : f.id === "erdbaeren" ? (
+                    <BattleVideo baseUrl={import.meta.env.BASE_URL} />
                   ) : (
                     <img
                       src={asset(f.image)}

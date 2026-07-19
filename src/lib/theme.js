@@ -5,9 +5,10 @@
 const KEY = "erdbaeren-theme";
 
 export function getInitialTheme() {
-  if (typeof window === "undefined") return "light";
-  const saved = localStorage.getItem(KEY);
-  return saved === "dark" ? "dark" : "light";
+  if (typeof window === "undefined") return "light"
+  const saved = localStorage.getItem(KEY)
+  if (saved === "dark" || saved === "light") return saved
+  return "light"
 }
 
 export function applyTheme(theme) {
