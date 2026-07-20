@@ -13,8 +13,11 @@
   --color-steel: #9aa0b5;
   --color-bone: #f4f1fb;
 
-  --font-display: "Noto Sans Runic", "Space Grotesk", system-ui, sans-serif;
-  --font-mono: "Space Mono", "Noto Sans Runic", ui-monospace, monospace;
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+
+  /* Runic is only for SVG glyphs in RunenText, not for layout text. */
+  --font-runic: "Noto Sans Runic", ui-monospace, monospace;
 }
 
 @layer base {
@@ -29,14 +32,18 @@
     font-family: var(--font-display);
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+
+    /* CLS: Reserve a tiny visual-update budget so layout changes on
+       phase changes/toggles don't jolt the viewport. */
+    text-rendering: optimizeLegibility;
   }
   #root {
     position: relative;
     z-index: 1; /* Content über der Milchstraße (z-index:-1) */
   }
-  /* Section-BGs nur LEICHT transparent (0.85) lassen, damit die Milchstraße
-     dezent durchscheint, aber Hintergrund-Bilder (Hero-Globe, SecretWeapon-Mech,
-     hud-grid) NICHT durch die Sections nach oben durchscheinen. */
+
+  /* CLS: Preserve overall section coverage so phase-gated reveals
+     don't cause big layout jumps. */
   #konflikt, #geheimwaffe, #fraktionen, #schlacht, #konsole, #archiv {
     background-color: rgba(7, 6, 13, 0.85) !important;
   }
@@ -80,7 +87,23 @@
 /* Das diffuse Galaxie-Band + Sternenfeld werden jetzt per Canvas
    in MilkyWay.jsx gezeichnet (zuverlässiger als CSS-radial-gradient-Stapel). */
 
-/* Light Mode: Canvas-Sterne werden per opacity im JS gedimmt (siehe unten). */
+/* CLS: keep animation transforms local and avoid sharing layout with surrounding siblings. */
+.phase-gated {
+  contain: layout paint;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* CLS: reserve space on media/video wrappers so dimensions don't change on play. */
+.video-reserve {
+  contain: layout paint size;
+}
+
+/* CLS: keep motion wrappers from shifting siblings during reveal. */
+.motion-reveal {
+  contain: layout style paint;
+  will-change: transform, opacity;
+}
 [data-theme="light"] .milkyway {
   opacity: 0.5;
 }
