@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import RunenText from "./RunenText"
 
-// URL des extern gehosteten Spiels (WebGL-Build auf itch.io)
+// URL des extern gehosteten Spiels (WebGL-Build auf GitHub Pages)
 // Wird vom Terminal beim "go to war?"-Prompt via Y geöffnet.
-const GAME_URL = "https://coldasic3.itch.io/erdbren-verteidigung"
+const GAME_URL = `${import.meta.env.BASE_URL}erdbaerdefense/`
 
 // Valide Befehle – alles andere zählt als „falscher Befehl“.
 const KNOWN_COMMANDS = ["jesus"]
