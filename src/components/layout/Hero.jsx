@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform } from "framer-motion"
 import { useEffect, useRef, useState } from "react"
-import { EASE, titleLine } from "../motion/variants"
+import { EASE, titleLine, stagger, fadeUp } from "../motion/variants"
 import { site } from "../../data/content"
 import { useVotes } from "../../lib/votes"
 import { T } from "../RunenText"
@@ -115,7 +115,7 @@ export default function Hero() {
   const { phase } = useTimeline()
 
   return (
-    <section id="top" style={{ opacity: phase >= 1 ? 1 : 0 }} className="hero-holo relative min-h-screen flex items-center bg-theatre grain overflow-hidden">
+    <section id="top" className="hero-holo relative bg-theatre grain overflow-hidden motion-reveal">
       <HeroGrid />
       <SectorCanvas />
       <motion.div
@@ -127,91 +127,101 @@ export default function Hero() {
       <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 pt-28 pb-20 w-full pointer-events-none">
         <div className="relative">
           {/* LINKS: HeadtitleLine + Copy + CTAs + Stats */}
-          <div className="relative">
-            {phase >= 1 && (
-            <motion.p
-              custom={0}
-              initial="hidden"
-              animate="show"
-              variants={titleLine}
-              className="mono-label text-neon mb-6"
-            >
-              <T en={h.eyebrow.en}>{h.eyebrow.de}</T>
-            </motion.p>
-            )}
 
-            {phase >= 2 && (
-            <h1
-              className="font-display font-bold leading-[1.05] tracking-tight text-3xl sm:text-7xl lg:text-8xl max-w-4xl break-words"
-              style={{ filter: "drop-shadow(0 0 18px rgba(80, 200, 255, 0.35)) drop-shadow(3px 3px rgba(40, 120, 200, 0.35)) drop-shadow(7px 7px rgba(20, 70, 140, 0.3)) drop-shadow(14px 14px 14px rgba(10, 40, 90, 0.35))" }}
-            >
-              <motion.span custom={1} initial="hidden" animate="show" variants={titleLine} className="block title-rainbow">
-                <T en={t1en}>{t1}</T>
-              </motion.span>
-              <motion.span
-                custom={2}
-                initial="hidden"
-                animate="show"
-                variants={titleLine}
-                className="block title-rainbow"
-              >
-                <T en={t2en}>{t2}</T>
-              </motion.span>
-            </h1>
-            )}
+          <motion.p
+            custom={0}
+            initial="hidden"
+            animate={phase >= 1 ? "show" : "hidden"}
+            variants={titleLine}
+            className="mono-label text-neon mb-6"
+          >
+            <T en={h.eyebrow.en}>{h.eyebrow.de}</T>
+          </motion.p>
 
-            <motion.p
-              custom={3}
+          <h1
+            className="font-display font-bold leading-[1.05] tracking-tight text-3xl sm:text-7xl lg:text-8xl max-w-4xl break-words"
+            style={{ filter: "drop-shadow(0 0 18px rgba(80, 200, 255, 0.35)) drop-shadow(3px 3px rgba(40, 120, 200, 0.35)) drop-shadow(7px 7px rgba(20, 70, 140, 0.3)) drop-shadow(14px 14px 14px rgba(10, 40, 90, 0.35))" }}
+          >
+            <motion.span custom={1} initial="hidden" animate={phase >= 2 ? "show" : "hidden"} variants={titleLine} className="block title-rainbow">
+              <T en={t1en}>{t1}</T>
+            </motion.span>
+            <motion.span
+              custom={2}
               initial="hidden"
-              animate={phase >= 3 ? "show" : "hidden"}
+              animate={phase >= 2 ? "show" : "hidden"}
               variants={titleLine}
-              className="mt-8 text-lg sm:text-xl text-bone/70 max-w-2xl leading-relaxed"
+              className="block title-rainbow"
             >
-              <T en={h.lead.en}>{h.lead.de}</T>
-            </motion.p>
+              <T en={t2en}>{t2}</T>
+            </motion.span>
+          </h1>
 
-            <motion.div
-              custom={4}
-              initial="hidden"
-              animate={phase >= 4 ? "show" : "hidden"}
-              variants={titleLine}
-              className="mt-10 flex flex-wrap gap-4 pointer-events-auto"
-            >
-              <a
-                href={h.primaryCta.href}
-                className="mono-label bg-neon hover:bg-neon-2 transition-colors text-white px-6 py-3 rounded-sm shadow-[0_0_40px_rgba(192,38,211,0.45)]"
-              >
-                <T en={h.primaryCta.label.en}>{h.primaryCta.label.de}</T>
-              </a>
-              <a
-                href={h.secondaryCta.href}
-                className="mono-label border border-white/15 hover:border-gold/60 text-bone px-6 py-3 rounded-sm transition-colors"
-              >
-                <T en={h.secondaryCta.label.en}>{h.secondaryCta.label.de}</T>
-              </a>
-            </motion.div>
+          <motion.p
+            custom={3}
+            initial="hidden"
+            animate={phase >= 3 ? "show" : "hidden"}
+            variants={titleLine}
+            className="mt-8 text-lg sm:text-xl text-bone/70 max-w-2xl leading-relaxed"
+          >
+            <T en={h.lead.en}>{h.lead.de}</T>
+          </motion.p>
 
-            <motion.div
-              custom={5}
-              initial="hidden"
-              animate={phase >= 4 ? "show" : "hidden"}
-              variants={titleLine}
-              className="mt-16 grid grid-cols-1 sm:grid-cols-4 gap-px bg-white/5 border border-white/10 rounded-xl overflow-hidden max-w-4xl"
+          <motion.div
+            custom={4}
+            initial="hidden"
+            animate={phase >= 4 ? "show" : "hidden"}
+            variants={titleLine}
+            className="mt-10 flex flex-wrap gap-4 pointer-events-auto"
+          >
+            <a
+              href={h.primaryCta.href}
+              className="mono-label bg-neon hover:bg-neon-2 transition-colors text-white px-6 py-3 rounded-sm shadow-[0_0_40px_rgba(192,38,211,0.45)]"
             >
-              {h.stats.map((s, index) => (
-                <div key={index} className="bg-white/5 px-6 py-6 backdrop-blur-sm">
-                  <div className="font-display font-bold text-3xl text-gold text-glow-gold">
-                    {liveValue(s.label.de) ?? s.value.de}
-                  </div>
-                  <div className="mono-label text-bone/50 mt-2"><T en={s.label.en}>{s.label.de}</T></div>
+              <T en={h.primaryCta.label.en}>{h.primaryCta.label.de}</T>
+            </a>
+            <a
+              href={h.secondaryCta.href}
+              className="mono-label border border-white/15 hover:border-gold/60 text-bone px-6 py-3 rounded-sm transition-colors"
+            >
+              <T en={h.secondaryCta.label.en}>{h.secondaryCta.label.de}</T>
+            </a>
+          </motion.div>
+
+          <motion.div
+            custom={5}
+            initial="hidden"
+            animate={phase >= 4 ? "show" : "hidden"}
+            variants={titleLine}
+            className="mt-16 grid grid-cols-1 sm:grid-cols-4 gap-px bg-white/5 border border-white/10 rounded-xl overflow-hidden max-w-4xl"
+          >
+            {h.stats.map((s, index) => (
+              <div key={index} className="bg-white/5 px-6 py-6 backdrop-blur-sm">
+                <div className="font-display font-bold text-3xl text-gold text-glow-gold">
+                  {liveValue(s.label.de) ?? s.value.de}
                 </div>
-              ))}
-            </motion.div>
+                <div className="mono-label text-bone/50 mt-2"><T en={s.label.en}>{s.label.de}</T></div>
+              </div>
+            ))}
+          </motion.div>
+          {/* end */}
+
+          {/* Hidden layout spacers used before their phase activates, prevent DOM height jumps */}
+          <div aria-hidden="true" className={phase >= 1 ? 'hidden' : 'h-0 overflow-visible'}>
+            <div className="mono-label text-neon h-6">.</div>
+          </div>
+          <div aria-hidden="true" className={phase >= 2 ? 'hidden' : 'h-0 overflow-visible'}>
+            <div className="h-[0.9em]"></div>
+          </div>
+          <div aria-hidden="true" className={phase >= 3 ? 'hidden' : 'h-0 overflow-visible'}>
+            <div className="mt-8 h-12"></div>
+          </div>
+          <div aria-hidden="true" className={phase >= 4 ? 'hidden' : 'h-0 overflow-visible'}>
+            <div className="mt-16 h-24"></div>
           </div>
         </div>
       </div>
 
-      {/* 3D-Hologramm-Erde: absolut rechts, füllt die ganze Hero-Höhe inkl. unterem Teil (nur lg+) */}
+      {/* 3D-Hologramm-Erde */}
       <div
         className="absolute inset-y-0 right-0 hidden lg:block w-[38%] xl:w-[34%] pointer-events-none -z-0"
         aria-hidden="true"
