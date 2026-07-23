@@ -6,7 +6,7 @@
 
 ## 🌐 Live Demo
 
-**[View Live Demo →](https://erdbaeren.vercel.app)**
+**[View Live Demo →](https://777danielpaul-droid.github.io/ErdBaeren2/)
 
 ---
 
