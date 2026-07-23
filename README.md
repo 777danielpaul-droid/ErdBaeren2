@@ -55,7 +55,7 @@ The app follows a **component-driven development pattern** with strict separatio
 
 - **Core Web Vitals**: Optimized for LCP and CLS
 - **Bundle Size**: ~500KB gzipped
-- **Deployment**: Vercel Edge Network
+- **Deployment**: GitHub Pages
 - **Framework**: Vite + React 18 (Server Components Ready)
 
 ---
