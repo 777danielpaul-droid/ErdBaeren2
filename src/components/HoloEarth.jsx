@@ -49,37 +49,38 @@ function EarthModel({ glitch }) {
 }
 
 // Hilfsfunktion: führt eine Sichtbarkeits-Sequenz aus (blinken ein/aus)
-function runVisibilitySequence(seq, setVisible, cleanup) {
+function runVisibilitySequence(seq, setVisible, onEnd) {
   const timeouts = seq.map(({ after, visible }) =>
     setTimeout(() => setVisible(visible), after)
   )
+  const end = setTimeout(() => {
+    setVisible(true)
+    onEnd()
+  }, seq[seq.length - 1].after + 50)
+
   return () => {
     timeouts.forEach(id => clearTimeout(id))
-    cleanup && cleanup()
+    clearTimeout(end)
   }
 }
 
 // Echtes 3D-Canvas mit der Hologramm-Erde. Nur auf Desktop eingebunden
 // (lg+); auf schwachen Geräten render wir stattdessen einen CSS-Fallback.
 export default function HoloEarth() {
-  const [booted, setBooted] = useState(false)
-  const [glitch, setGlitch] = useState(false)
+  // State-Maschine: 'booting' → 'ready' → 'glitching' (periodisch)
+  const [status, setStatus] = useState("booting")
   const [containerVisible, setContainerVisible] = useState(true)
-  const [bootGlitch, setBootGlitch] = useState(false)
 
-  // Boot-Sequenz: 1.2s Verzögerung, dann Glitch-Effekt starten
+  // Boot-Sequenz: 1.2s Verzögerung, dann in 'ready' wechseln
   useEffect(() => {
-    if (booted) return
-    const t1 = setTimeout(() => {
-      setBooted(true)
-      setBootGlitch(true)
-    }, 1200)
-    return () => clearTimeout(t1)
-  }, [booted])
+    if (status !== "booting") return
+    const t = setTimeout(() => setStatus("ready"), 1200)
+    return () => clearTimeout(t)
+  }, [status])
 
-  // Boot-Glitch: initiales Blinken beim Start
+  // Boot-Glitch: initiales Blinken beim Übergang booting → ready
   useEffect(() => {
-    if (!bootGlitch) return
+    if (status !== "ready") return
 
     const seq = [
       { after: 0, visible: false },
@@ -99,41 +100,37 @@ export default function HoloEarth() {
     ]
 
     return runVisibilitySequence(seq, setContainerVisible, () => {
-      setContainerVisible(true)
-      setBootGlitch(false)
+      setStatus("idle")
     })
-  }, [bootGlitch])
+  }, [status])
 
-  // Periodischer Glitch: alle 12s ein kurzer Störimpuls
+  // Periodischer Glitch: alle 12s ein kurzer Störimpuls (nur im 'idle' Status)
   useEffect(() => {
-    if (!glitch) return
+    if (status !== "idle") return
 
-    const seq = [
-      { after: 0, visible: false },
-      { after: 30, visible: true },
-      { after: 60, visible: false },
-      { after: 90, visible: true },
-      { after: 120, visible: false },
-      { after: 150, visible: true },
-      { after: 180, visible: false },
-      { after: 210, visible: true },
-    ]
-
-    return runVisibilitySequence(seq, setContainerVisible, () => {
-      setContainerVisible(true)
-      setGlitch(false)
-    })
-  }, [glitch])
-
-  // Intervall für periodische Glitches (nach Boot abgeschlossen)
-  useEffect(() => {
-    if (bootGlitch) return
     const id = setInterval(() => {
-      setGlitch(true)
-      setTimeout(() => setGlitch(false), 250)
+      setStatus("glitching")
+      const seq = [
+        { after: 0, visible: false },
+        { after: 30, visible: true },
+        { after: 60, visible: false },
+        { after: 90, visible: true },
+        { after: 120, visible: false },
+        { after: 150, visible: true },
+        { after: 180, visible: false },
+        { after: 210, visible: true },
+      ]
+
+      runVisibilitySequence(seq, setContainerVisible, () => {
+        setStatus("idle")
+      })
     }, 12000)
+
     return () => clearInterval(id)
-  }, [bootGlitch])
+  }, [status])
+
+  const booted = status !== "booting"
+  const glitch = status === "glitching"
 
   return (
     <div
