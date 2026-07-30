@@ -48,6 +48,35 @@ function EarthModel({ glitch }) {
   )
 }
 
+// Sichtbarkeits-Sequenzen für Boot- und Glitch-Effekte
+const BOOT_SEQUENCE = [
+  { after: 0, visible: false },
+  { after: 45, visible: true },
+  { after: 90, visible: false },
+  { after: 120, visible: true },
+  { after: 160, visible: false },
+  { after: 200, visible: true },
+  { after: 240, visible: false },
+  { after: 320, visible: true },
+  { after: 360, visible: false },
+  { after: 520, visible: true },
+  { after: 570, visible: false },
+  { after: 700, visible: true },
+  { after: 730, visible: false },
+  { after: 780, visible: true },
+]
+
+const GLITCH_SEQUENCE = [
+  { after: 0, visible: false },
+  { after: 30, visible: true },
+  { after: 60, visible: false },
+  { after: 90, visible: true },
+  { after: 120, visible: false },
+  { after: 150, visible: true },
+  { after: 180, visible: false },
+  { after: 210, visible: true },
+]
+
 // Hilfsfunktion: führt eine Sichtbarkeits-Sequenz aus (blinken ein/aus)
 function runVisibilitySequence(seq, setVisible, onEnd) {
   const timeouts = seq.map(({ after, visible }) =>
@@ -67,7 +96,7 @@ function runVisibilitySequence(seq, setVisible, onEnd) {
 // Echtes 3D-Canvas mit der Hologramm-Erde. Nur auf Desktop eingebunden
 // (lg+); auf schwachen Geräten render wir stattdessen einen CSS-Fallback.
 export default function HoloEarth() {
-  // State-Maschine: 'booting' → 'ready' → 'glitching' (periodisch)
+  // State-Maschine: 'booting' → 'ready' → 'idle' → 'glitching' (periodisch)
   const [status, setStatus] = useState("booting")
   const [containerVisible, setContainerVisible] = useState(true)
 
@@ -81,25 +110,7 @@ export default function HoloEarth() {
   // Boot-Glitch: initiales Blinken beim Übergang booting → ready
   useEffect(() => {
     if (status !== "ready") return
-
-    const seq = [
-      { after: 0, visible: false },
-      { after: 45, visible: true },
-      { after: 90, visible: false },
-      { after: 120, visible: true },
-      { after: 160, visible: false },
-      { after: 200, visible: true },
-      { after: 240, visible: false },
-      { after: 320, visible: true },
-      { after: 360, visible: false },
-      { after: 520, visible: true },
-      { after: 570, visible: false },
-      { after: 700, visible: true },
-      { after: 730, visible: false },
-      { after: 780, visible: true },
-    ]
-
-    return runVisibilitySequence(seq, setContainerVisible, () => {
+    return runVisibilitySequence(BOOT_SEQUENCE, setContainerVisible, () => {
       setStatus("idle")
     })
   }, [status])
@@ -110,18 +121,7 @@ export default function HoloEarth() {
 
     const id = setInterval(() => {
       setStatus("glitching")
-      const seq = [
-        { after: 0, visible: false },
-        { after: 30, visible: true },
-        { after: 60, visible: false },
-        { after: 90, visible: true },
-        { after: 120, visible: false },
-        { after: 150, visible: true },
-        { after: 180, visible: false },
-        { after: 210, visible: true },
-      ]
-
-      runVisibilitySequence(seq, setContainerVisible, () => {
+      runVisibilitySequence(GLITCH_SEQUENCE, setContainerVisible, () => {
         setStatus("idle")
       })
     }, 12000)
