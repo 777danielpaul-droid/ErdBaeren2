@@ -3,13 +3,15 @@ import { motion, AnimatePresence } from "framer-motion"
 import RunenText from "./RunenText"
 import { useTerminalCommands } from "./motion/useTerminalCommands"
 
+// Wiederverwendete Runen-Text-Klasse für Terminal-Ausgabe
+const RUNEN_TEXT_CLASS = "text-xl sm:text-2xl"
+
 export default function TerminalModal({ open, onClose }) {
   const {
     lines,
     current,
     setCurrent,
     warPrompt,
-    pushLines,
     reset,
     submit,
   } = useTerminalCommands()
@@ -86,13 +88,13 @@ export default function TerminalModal({ open, onClose }) {
                   {l.startsWith("go to war?") ? (
                     <span className="text-cyan text-lg font-bold tracking-wider animate-pulse">{l}</span>
                   ) : (
-                    <RunenText text={l} className="text-xl sm:text-2xl" />
+                    <RunenText text={l} className={RUNEN_TEXT_CLASS} />
                   )}
                 </div>
               ))}
               {/* Aktuelle Eingabe (live als Runen) + Cursor */}
               <div className="flex gap-3 items-center flex-wrap">
-                <RunenText text={current} className="text-xl sm:text-2xl" />
+                <RunenText text={current} className={RUNEN_TEXT_CLASS} />
                 <span className="inline-block w-2.5 h-5 bg-cyan/80 animate-pulse ml-0.5" />
               </div>
             </div>
