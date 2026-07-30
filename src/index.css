@@ -20,6 +20,7 @@
   --font-runic: "Noto Sans Runic", ui-monospace, monospace;
 }
 
+/* ===== BASE ===== */
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -47,20 +48,13 @@
   #konflikt, #geheimwaffe, #fraktionen, #schlacht, #konsole, #archiv {
     background-color: rgba(7, 6, 13, 0.85) !important;
   }
-  [data-theme="light"] #konflikt,
-  [data-theme="light"] #geheimwaffe,
-  [data-theme="light"] #fraktionen,
-  [data-theme="light"] #schlacht,
-  [data-theme="light"] #konsole,
-  [data-theme="light"] #archiv {
-    background-color: rgba(243, 240, 251, 0.85) !important;
-  }
   ::selection {
     background: var(--color-neon);
     color: #fff;
   }
 }
 
+/* ===== BACKGROUND LAYERS ===== */
 /* MILCHSTRASSE-HOLOGRAMM: fixer, vollflächiger, dezenter Hintergrund.
    z-index:0 -> liegt über dem body-BG, aber unter dem Content (z-index:1).
    pointer-events:none -> fängt keine Klicks ab. */
@@ -83,6 +77,7 @@
   pointer-events: none;
   mix-blend-mode: screen;
 }
+
 /* Das diffuse Galaxie-Band + Sternenfeld werden per Canvas
    in MilkyWayBackground.jsx gezeichnet (zuverlässiger als CSS-radial-gradient-Stapel). */
 
@@ -103,15 +98,15 @@
   contain: layout style paint;
   will-change: transform, opacity;
 }
-[data-theme="light"] .milkyway {
-  opacity: 0.5;
-}
 
-/* Reduced Motion: Twinkeln im JS pausiert (prefers-reduced-motion). */
+/* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   .milkyway { opacity: 0.85; }
+  .glitch::before, .glitch::after, .sheen::after, .bg-theatre::before { display: none; }
 }
 
+/* ===== AURORA BACKDROP ===== */
 .bg-theatre {
   background:
     radial-gradient(1000px 700px at 80% -10%, rgba(192, 38, 211, 0.28), transparent 55%),
@@ -137,6 +132,8 @@
   0% { transform: translate3d(-4%, -2%, 0) scale(1); }
   100% { transform: translate3d(5%, 3%, 0) scale(1.1); }
 }
+
+/* ===== OVERLAYS ===== */
 .hud-grid {
   background-image:
     linear-gradient(rgba(232, 121, 249, 0.05) 1px, transparent 1px),
@@ -153,8 +150,31 @@
   opacity: 0.04;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
+.scanlines::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 55;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.03) 0px,
+    rgba(255, 255, 255, 0.03) 1px,
+    transparent 2px,
+    transparent 4px
+  );
+  mix-blend-mode: overlay;
+}
+.crt-vignette::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 56;
+  background: radial-gradient(ellipse 100% 80% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.5) 100%);
+}
 
-/* HOCHGLANZ */
+/* ===== GLASS + SHEEN ===== */
 .glass {
   background: linear-gradient(160deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
   backdrop-filter: blur(18px) saturate(140%);
@@ -182,7 +202,7 @@
   50% { left: 120%; }
 }
 
-/* NEON-TEXT + GRADIENT */
+/* ===== NEON TEXT ===== */
 .neon-text {
   background: linear-gradient(92deg, var(--color-neon-soft), var(--color-cyan) 55%, var(--color-gold-soft));
   -webkit-background-clip: text;
@@ -200,7 +220,7 @@
   font-size: 0.7rem;
 }
 
-/* ANIMATED NEON BORDER */
+/* ===== NEON BORDER ===== */
 .neon-border {
   position: relative;
 }
@@ -218,30 +238,7 @@
   pointer-events: none;
 }
 
-/* CRAZY OVERLAYS */
-.scanlines::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 55;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.03) 0px,
-    rgba(255, 255, 255, 0.03) 1px,
-    transparent 2px,
-    transparent 4px
-  );
-  mix-blend-mode: overlay;
-}
-.crt-vignette::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 56;
-  background: radial-gradient(ellipse 100% 80% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.5) 100%);
-}
+/* ===== GLITCH ===== */
 .glitch {
   position: relative;
   display: inline-block;
@@ -284,10 +281,121 @@
 }
 .bar-pulse { animation: pulse-bar 1.6s ease-in-out infinite; }
 
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .glitch::before, .glitch::after, .sheen::after, .bg-theatre::before { display: none; }
+/* ===== HERO ===== */
+.hero-holo { position: relative; }
+.hero-holo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(130, 225, 255, 0.05) 0px,
+    rgba(130, 225, 255, 0.05) 1px,
+    transparent 2px,
+    transparent 4px
+  );
+  mix-blend-mode: screen;
+  z-index: 50;
 }
+.hero-holo::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  top: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(175, 240, 255, 0.9), transparent);
+  box-shadow: 0 0 12px rgba(150, 230, 255, 0.85);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 51;
+  animation: holo-scan 5.5s linear infinite;
+}
+@keyframes holo-flicker {
+  0%, 88%, 100% { opacity: 1; }
+  90% { opacity: 0.78; }
+  91% { opacity: 1; }
+  94% { opacity: 0.88; }
+  95% { opacity: 1; }
+  97% { opacity: 0.72; }
+  98% { opacity: 1; }
+}
+.title-rainbow {
+  display: inline-block;
+  color: #c6f4ff;
+  text-shadow:
+    0 0 5px rgba(150, 235, 255, 0.9),
+    0 0 12px rgba(90, 195, 255, 0.6),
+    0 0 26px rgba(70, 165, 255, 0.45),
+    0 1px 0 rgba(80, 180, 255, 0.45),
+    1px 2px 0 rgba(60, 150, 255, 0.35),
+    2px 4px 6px rgba(20, 60, 120, 0.5),
+    0.05em 0 0 rgba(255, 70, 120, 0.35),
+   -0.05em 0 0 rgba(70, 200, 255, 0.35);
+  animation: holo-flicker 5s infinite steps(40);
+}
+.text-glow-rose-pulse {
+  color: #d946ef;
+  text-shadow:
+    0 0 12px rgba(217,70,239,0.75),
+    0 0 30px rgba(217,70,239,0.45),
+    0 0 60px rgba(217,70,239,0.35),
+    0 0 100px rgba(217,70,239,0.22);
+  animation: rose-pulse 2.2s ease-in-out infinite;
+}
+@keyframes rose-pulse {
+  0%, 100% {
+    text-shadow:
+      0 0 12px rgba(217,70,239,0.75),
+      0 0 30px rgba(217,70,239,0.45),
+      0 0 60px rgba(217,70,239,0.35),
+      0 0 100px rgba(217,70,239,0.22);
+  }
+  50% {
+    text-shadow:
+      0 0 18px rgba(217,70,239,1),
+      0 0 40px rgba(217,70,239,0.65),
+      0 0 75px rgba(217,70,239,0.5),
+      0 0 130px rgba(217,70,239,0.32);
+  }
+}
+@keyframes holo-scan {
+  0%   { top: 0%;   opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .title-rainbow, .hero-holo::before { animation: none; opacity: 1; }
+  .hero-holo::before { display: none; }
+}
+
+/* ===== RUNEN-SCHRIFT ===== */
+.runen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+  row-gap: 0.35em;
+  line-height: 1;
+  color: var(--color-cyan);
+}
+.runen-glyph {
+  width: 0.85em;
+  height: 0.85em;
+  flex: 0 0 auto;
+  overflow: visible;
+  filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.35));
+}
+.runen-space {
+  width: 0.42em;
+  flex: 0 0 auto;
+}
+
+/* Archiv-Sektor: vertikale Scrollbar unsichtbar machen (Scrollen bleibt erhalten).
+   Verhindert den grauen Balken rechts im sticky Archiv-Panel. */
+.archiv-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+.archiv-scroll::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
 /* ===== LIGHT MODE ===== */
 [data-theme="light"] {
@@ -306,6 +414,7 @@
   --color-gold-soft: #a06a00;
 }
 
+/* Light mode overrides — nur Eigenschaften, die sich ändern */
 [data-theme="light"] html,
 [data-theme="light"] body {
   background: var(--color-ink);
@@ -326,7 +435,6 @@
     radial-gradient(900px 800px at 5% 10%, rgba(124, 58, 237, 0.14), transparent 55%),
     radial-gradient(800px 700px at 50% 120%, rgba(34, 211, 238, 0.12), transparent 55%),
     radial-gradient(600px 500px at 70% 60%, rgba(245, 197, 66, 0.12), transparent 60%);
-  /* keine opake Basisfläche -> gedämpfte Galaxie scheint durch */
 }
 [data-theme="light"] .bg-theatre::before {
   background:
@@ -371,129 +479,12 @@
   color: var(--color-neon) !important;
 }
 
-/* Hero-Überschrift: bunter Fade (Lavendel->Violett->Indigo->Cyan),
-   wie das "Das goldene Herz"-Bild. Gilt in BEIDEN Modes. */
-/* Hologramm-Überschrift: eisblau leuchtend + Tiefe + Chromatic + Flicker */
-.title-rainbow {
-  display: inline-block;
-  color: #c6f4ff;
-  text-shadow:
-    0 0 5px rgba(150, 235, 255, 0.9),
-    0 0 12px rgba(90, 195, 255, 0.6),
-    0 0 26px rgba(70, 165, 255, 0.45),
-    0 1px 0 rgba(80, 180, 255, 0.45),
-    1px 2px 0 rgba(60, 150, 255, 0.35),
-    2px 4px 6px rgba(20, 60, 120, 0.5),
-    0.05em 0 0 rgba(255, 70, 120, 0.35),
-   -0.05em 0 0 rgba(70, 200, 255, 0.35);
-  animation: holo-flicker 5s infinite steps(40);
+/* Light mode section backgrounds */
+[data-theme="light"] #konflikt,
+[data-theme="light"] #geheimwaffe,
+[data-theme="light"] #fraktionen,
+[data-theme="light"] #schlacht,
+[data-theme="light"] #konsole,
+[data-theme="light"] #archiv {
+  background-color: rgba(243, 240, 251, 0.85) !important;
 }
-
-/* Scanlines + wandernder Refresh-Strahl über dem GESAMTEN Hero */
-.hero-holo { position: relative; }
-.hero-holo::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(130, 225, 255, 0.05) 0px,
-    rgba(130, 225, 255, 0.05) 1px,
-    transparent 2px,
-    transparent 4px
-  );
-  mix-blend-mode: screen;
-  z-index: 50;
-}
-.hero-holo::before {
-  content: "";
-  position: absolute;
-  left: 0; right: 0;
-  top: 0;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, rgba(175, 240, 255, 0.9), transparent);
-  box-shadow: 0 0 12px rgba(150, 230, 255, 0.85);
-  opacity: 0;
-  pointer-events: none;
-  z-index: 51;
-  animation: holo-scan 5.5s linear infinite;
-}
-
-@keyframes holo-flicker {
-  0%, 88%, 100% { opacity: 1; }
-  90% { opacity: 0.78; }
-  91% { opacity: 1; }
-  94% { opacity: 0.88; }
-  95% { opacity: 1; }
-  97% { opacity: 0.72; }
-  98% { opacity: 1; }
-}
-.text-glow-rose-pulse {
-  color: #d946ef;
-  text-shadow:
-    0 0 12px rgba(217,70,239,0.75),
-    0 0 30px rgba(217,70,239,0.45),
-    0 0 60px rgba(217,70,239,0.35),
-    0 0 100px rgba(217,70,239,0.22);
-  animation: rose-pulse 2.2s ease-in-out infinite;
-}
-@keyframes rose-pulse {
-  0%, 100% {
-    text-shadow:
-      0 0 12px rgba(217,70,239,0.75),
-      0 0 30px rgba(217,70,239,0.45),
-      0 0 60px rgba(217,70,239,0.35),
-      0 0 100px rgba(217,70,239,0.22);
-  }
-  50% {
-    text-shadow:
-      0 0 18px rgba(217,70,239,1),
-      0 0 40px rgba(217,70,239,0.65),
-      0 0 75px rgba(217,70,239,0.5),
-      0 0 130px rgba(217,70,239,0.32);
-  }
-}
-
-@keyframes holo-scan {
-  0%   { top: 0%;   opacity: 0; }
-  8%   { opacity: 1; }
-  92%  { opacity: 1; }
-  100% { top: 100%; opacity: 0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .title-rainbow, .hero-holo::before { animation: none; opacity: 1; }
-  .hero-holo::before { display: none; }
-}
-
-/* ===== RUNEN-SCHRIFT (abgefangene Milchmaus-Funksprueche) ===== */
-.runen {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0;
-  row-gap: 0.35em;
-  line-height: 1;
-  color: var(--color-cyan);
-}
-.runen-glyph {
-  width: 0.85em;
-  height: 0.85em;
-  flex: 0 0 auto;
-  overflow: visible;
-  filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.35));
-}
-.runen-space {
-  width: 0.42em;
-  flex: 0 0 auto;
-}
-[data-theme="light"] .runen { color: var(--color-cyan); }
-[data-theme="light"] .runen-glyph {
-  filter: drop-shadow(0 0 4px rgba(14, 116, 144, 0.3));
-}
-
-/* Archiv-Sektor: vertikale Scrollbar unsichtbar machen (Scrollen bleibt erhalten).
-   Verhindert den grauen Balken rechts im sticky Archiv-Panel. */
-.archiv-scroll { scrollbar-width: none; -ms-overflow-style: none; }
-.archiv-scroll::-webkit-scrollbar { display: none; width: 0; height: 0; }
