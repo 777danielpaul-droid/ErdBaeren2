@@ -1,91 +1,42 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import RunenText from "./RunenText"
-
-// URL des extern gehosteten Spiels (WebGL-Build auf GitHub Pages)
-// Wird vom Terminal beim "go to war?"-Prompt via Y geöffnet.
-const GAME_URL = `${import.meta.env.BASE_URL}erdbaerdefense/`
-
-// Valide Befehle – alles andere zählt als „falscher Befehl“.
-const KNOWN_COMMANDS = ["jesus"]
+import { useTerminalCommands } from "./motion/useTerminalCommands"
 
 export default function TerminalModal({ open, onClose }) {
-  const [lines, setLines] = useState([])
-  const [current, setCurrent] = useState("")
-  const [wrongCount, setWrongCount] = useState(0)
-  const [warPrompt, setWarPrompt] = useState(false)
+  const {
+    lines,
+    current,
+    setCurrent,
+    warPrompt,
+    pushLines,
+    reset,
+    submit,
+  } = useTerminalCommands()
+
   const inputRef = useRef(null)
   const logRef = useRef(null)
 
   // Autofokus beim Öffnen + Escape schließt + Reset beim Schließen.
   useEffect(() => {
     if (!open) {
-      setLines([])
-      setCurrent("")
-      setWrongCount(0)
-      setWarPrompt(false)
+      reset()
       return
     }
     const t = setTimeout(() => inputRef.current?.focus(), 60)
     const onKey = (e) => { if (e.key === "Escape") onClose() }
     window.addEventListener("keydown", onKey)
     return () => { clearTimeout(t); window.removeEventListener("keydown", onKey) }
-  }, [open, onClose])
+  }, [open, onClose, reset])
 
   // Autoscroll ans Ende (bei neuer Zeile + live beim Tippen).
   useEffect(() => {
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight
   }, [lines, current, open, warPrompt])
 
-  const pushLines = (arr) => setLines((l) => [...l, ...arr])
-
-  const submit = () => {
-    const v = current.trim().toLowerCase()
-    if (!v) return
-
-    // --- "go to war?" beantworten ---
-    if (warPrompt) {
-      if (v === "y") {
-        window.open(GAME_URL, "_blank", "noopener")
-        pushLines(["go to war? [y/n]", `> ${v}`, "// SPIEL WIRD GESTARTET... //"])
-        setWarPrompt(false)
-        setCurrent("")
-        return
-      }
-      if (v === "n") {
-        onClose()
-        return
-      }
-      // nur y/n gelten im War-Prompt
-      setCurrent("")
-      return
-    }
-
-    // --- bekannte Befehle ---
-    if (v === "jesus") {
-      window.open(`${import.meta.env.BASE_URL}shepherd.html`, "_blank", "noopener")
-      pushLines([v, "// geheimnis offenbart //"])
-      setCurrent("")
-      return
-    }
-
-    // --- unbekannter Befehl -> Zähler hoch ---
-    if (!KNOWN_COMMANDS.includes(v)) {
-      const next = wrongCount + 1
-      setWrongCount(next)
-      if (next >= 3) {
-        pushLines([v, "// ZUGRIFF VERWEIGERT //", "go to war? [y/n]"])
-        setWarPrompt(true)
-      } else {
-        pushLines([v, `// unbekannter befehl (${next}/3) //`])
-      }
-      setCurrent("")
-      return
-    }
-
-    // valide (erweiterbar)
-    pushLines([v])
-    setCurrent("")
+  const handleSubmit = () => {
+    const result = submit()
+    if (result === "close") onClose()
   }
 
   return (
@@ -151,7 +102,7 @@ export default function TerminalModal({ open, onClose }) {
               ref={inputRef}
               value={current}
               onChange={(e) => setCurrent(e.target.value)}
-              onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); submit() } }}
+              onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleSubmit() } }}
               className="absolute opacity-0 -z-10 pointer-events-none"
               aria-label="Runen-Eingabe"
               autoComplete="off"

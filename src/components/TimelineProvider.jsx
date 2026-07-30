@@ -1,5 +1,8 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react"
 
+// Phasen-Verzögerungen (ms) — bestimmen die Stagger-Reihenfolge der Section-Enthüllung.
+const PHASE_DELAYS = [0, 350, 700, 1050, 1450, 1850]
+
 const TimelineContext = createContext({ phase: -1, start: () => {} })
 
 export function TimelineProvider({ children }) {
@@ -8,8 +11,7 @@ export function TimelineProvider({ children }) {
 
   const start = useCallback(() => {
     setStarted(true)
-    const delays = [0, 350, 700, 1050, 1450, 1850]
-    const ids = delays.map((d) => setTimeout(() => setPhase((p) => p + 1), d))
+    const ids = PHASE_DELAYS.map((d) => setTimeout(() => setPhase((p) => p + 1), d))
     return () => ids.forEach(clearTimeout)
   }, [])
 

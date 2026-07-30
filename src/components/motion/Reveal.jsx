@@ -4,12 +4,8 @@ import {
   fadeDown,
   fadeLeft,
   fadeRight,
-  fadeScale,
-  fadeBlur,
-  fadeClip,
   stagger,
   staggerFast,
-  useParallax,
 } from "./variants"
 
 const VARIANTS = {
@@ -17,13 +13,10 @@ const VARIANTS = {
   down: fadeDown,
   left: fadeLeft,
   right: fadeRight,
-  scale: fadeScale,
-  blur: fadeBlur,
-  clip: fadeClip,
 }
 
 // Reveal-on-scroll. Failsafe: sichtbar per Default (whileInView + once).
-// variant: up | down | left | right | scale | blur | clip
+// variant: up | down | left | right
 // stagger: wenn true -> Container, der Kinder (mit eigener motion-variant) gestaffelt einblendet
 export default function Reveal({
   children,
@@ -49,15 +42,5 @@ export default function Reveal({
     >
       {children}
     </Tag>
-  )
-}
-
-// Scroll-gekoppeltes Parallax-Element (Verschiebung entlang Achse).
-export function Parallax({ children, className = "", offset = 80, axis = "y" }) {
-  const { ref, value } = useParallax(offset, axis)
-  return (
-    <motion.div ref={ref} style={{ [axis]: value }} className={className}>
-      {children}
-    </motion.div>
   )
 }

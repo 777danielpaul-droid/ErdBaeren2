@@ -1,10 +1,8 @@
 import { Suspense, useRef, useState, useEffect } from "react"
 import { Canvas } from "@react-three/fiber"
 import { useGLTF, useAnimations, OrbitControls, Float } from "@react-three/drei"
-import * as THREE from "three"
 
 // Lädt die animierte Erde (GLTF + Loop-Animation) aus /public/models.
-// Die Animation (Erde dreht sich, Strahlen rotateiren seltenen Störsequenzen aus.
 function EarthModel({ glitch }) {
   const group = useRef(null)
   const { scene, animations } = useGLTF("/ErdBaeren2/models/scene.gltf")
@@ -22,6 +20,7 @@ function EarthModel({ glitch }) {
     if (!glitch || !actionRef.current) return
     const action = actionRef.current
 
+    // Glitch-Sequenz: pausiert die Animation zu bestimmten Zeitpunkten
     const seq = [
       { after: 0, pause: 45 },
       { after: 95, pause: 40 },
@@ -49,6 +48,17 @@ function EarthModel({ glitch }) {
   )
 }
 
+// Hilfsfunktion: führt eine Sichtbarkeits-Sequenz aus (blinken ein/aus)
+function runVisibilitySequence(seq, setVisible, cleanup) {
+  const timeouts = seq.map(({ after, visible }) =>
+    setTimeout(() => setVisible(visible), after)
+  )
+  return () => {
+    timeouts.forEach(id => clearTimeout(id))
+    cleanup && cleanup()
+  }
+}
+
 // Echtes 3D-Canvas mit der Hologramm-Erde. Nur auf Desktop eingebunden
 // (lg+); auf schwachen Geräten render wir stattdessen einen CSS-Fallback.
 export default function HoloEarth() {
@@ -57,6 +67,7 @@ export default function HoloEarth() {
   const [containerVisible, setContainerVisible] = useState(true)
   const [bootGlitch, setBootGlitch] = useState(false)
 
+  // Boot-Sequenz: 1.2s Verzögerung, dann Glitch-Effekt starten
   useEffect(() => {
     if (booted) return
     const t1 = setTimeout(() => {
@@ -66,6 +77,7 @@ export default function HoloEarth() {
     return () => clearTimeout(t1)
   }, [booted])
 
+  // Boot-Glitch: initiales Blinken beim Start
   useEffect(() => {
     if (!bootGlitch) return
 
@@ -86,21 +98,13 @@ export default function HoloEarth() {
       { after: 780, visible: true },
     ]
 
-    const timeouts = seq.map(({ after, visible }) =>
-      setTimeout(() => setContainerVisible(visible), after)
-    )
-
-    const end = setTimeout(() => {
+    return runVisibilitySequence(seq, setContainerVisible, () => {
       setContainerVisible(true)
       setBootGlitch(false)
-    }, 850)
-
-    return () => {
-      timeouts.forEach(id => clearTimeout(id))
-      clearTimeout(end)
-    }
+    })
   }, [bootGlitch])
 
+  // Periodischer Glitch: alle 12s ein kurzer Störimpuls
   useEffect(() => {
     if (!glitch) return
 
@@ -115,21 +119,13 @@ export default function HoloEarth() {
       { after: 210, visible: true },
     ]
 
-    const timeouts = seq.map(({ after, visible }) =>
-      setTimeout(() => setContainerVisible(visible), after)
-    )
-
-    const end = setTimeout(() => {
+    return runVisibilitySequence(seq, setContainerVisible, () => {
       setContainerVisible(true)
       setGlitch(false)
-    }, 250)
-
-    return () => {
-      timeouts.forEach(id => clearTimeout(id))
-      clearTimeout(end)
-    }
+    })
   }, [glitch])
 
+  // Intervall für periodische Glitches (nach Boot abgeschlossen)
   useEffect(() => {
     if (bootGlitch) return
     const id = setInterval(() => {

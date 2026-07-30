@@ -83,9 +83,8 @@
   pointer-events: none;
   mix-blend-mode: screen;
 }
-/* Das diffuse Galaxie-Band: leicht rotiert, lila->türkis->gold,
-/* Das diffuse Galaxie-Band + Sternenfeld werden jetzt per Canvas
-   in MilkyWay.jsx gezeichnet (zuverlässiger als CSS-radial-gradient-Stapel). */
+/* Das diffuse Galaxie-Band + Sternenfeld werden per Canvas
+   in MilkyWayBackground.jsx gezeichnet (zuverlässiger als CSS-radial-gradient-Stapel). */
 
 /* CLS: keep animation transforms local and avoid sharing layout with surrounding siblings. */
 .phase-gated {

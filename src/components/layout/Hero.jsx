@@ -1,8 +1,9 @@
 import { motion, useScroll, useTransform } from "framer-motion"
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { EASE, titleLine } from "../motion/variants"
 import { site } from "../../data/content"
 import { useVotes } from "../../lib/votes"
+import { useCountUp } from "../../lib/countup"
 import { T } from "../RunenText"
 import HoloEarthLazy from "../HoloEarthLazy"
 import { useTimeline } from "../TimelineProvider"
@@ -14,28 +15,36 @@ function randomNeon() {
   return NEON[(Math.random() * NEON.length) | 0]
 }
 
+// Event delegation: ein Handler für alle 600 Zellen statt 600 Handler-Instanzen.
 function HeroGrid() {
-  if (typeof window !== "undefined" && window.matchMedia("(max-width: 640px)").matches) {
-    return null
-  }
+  const [showGrid, setShowGrid] = useState(false)
 
-  const onGridOver = (e) => {
-    const cell = e.target.closest("div[data-grid-cell]")
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 641px)")
+    setShowGrid(mq.matches)
+    const handler = (e) => setShowGrid(e.matches)
+    mq.addEventListener("change", handler)
+    return () => mq.removeEventListener("change", handler)
+  }, [])
+
+  if (!showGrid) return null
+
+  const onOver = (e) => {
+    const cell = e.target.closest("[data-cell]")
     if (!cell) return
     const c = randomNeon()
     cell.style.background = `${c}22`
     cell.style.borderColor = c
     cell.style.boxShadow = `0 0 18px ${c}66, inset 0 0 12px ${c}33`
   }
-  const onGridOut = (e) => {
-    const cell = e.target.closest("div[data-grid-cell]")
+  const onOut = (e) => {
+    const cell = e.target.closest("[data-cell]")
     if (!cell) return
     cell.style.background = "transparent"
     cell.style.borderColor = "rgba(232,121,249,0.07)"
     cell.style.boxShadow = "none"
   }
 
-  const cells = Array.from({ length: 600 })
   return (
     <div
       aria-hidden="true"
@@ -45,13 +54,13 @@ function HeroGrid() {
         gridTemplateRows: "repeat(auto-fill, minmax(56px, 1fr))",
         zIndex: 2,
       }}
-      onMouseOver={onGridOver}
-      onMouseOut={onGridOut}
+      onMouseOver={onOver}
+      onMouseOut={onOut}
     >
-      {cells.map((_, i) => (
+      {Array.from({ length: 600 }).map((_, i) => (
         <div
           key={i}
-          data-grid-cell
+          data-cell
           className="border transition-[background,border-color,box-shadow] duration-200 pointer-events-auto"
           style={{ borderColor: "rgba(232,121,249,0.07)" }}
         />
@@ -72,32 +81,18 @@ export default function Hero() {
   const [t1en, t2en] = h.title.en.split("\n")
   const votes = useVotes()
 
-  // Count-up-Hook: zählt sanft von `from` auf den Zielwert, sobald geladen.
-  const useCountUp = (target, from = 0) => {
-    const [v, setV] = useState(from)
-    useEffect(() => {
-      if (!votes.loaded) return
-      let raf, start
-      const dur = 1200
-      const step = (t) => {
-        if (!start) start = t
-        const p = Math.min((t - start) / dur, 1)
-        setV(Math.round(from + p * (target - from)))
-        if (p < 1) raf = requestAnimationFrame(step)
-      }
-      raf = requestAnimationFrame(step)
-      return () => cancelAnimationFrame(raf)
-    }, [votes.loaded, target, from])
-    return v
-  }
-
   // Basis-Stand der Milchmäuse (lore-seitig höher als der Widerstand).
-  const MILCHMAEUSE_BASE = 17171
+  const MILCHMAEUSE_BASE = h.milchmaeuseBase || 17171
 
-  const nWiderstand = useCountUp(votes.loaded ? votes.erdbaeren : 0)
+  const nWiderstand = useCountUp(
+    votes.loaded ? votes.erdbaeren : 0,
+    0,
+    votes.loaded
+  )
   const nUnterdruecker = useCountUp(
     votes.loaded ? MILCHMAEUSE_BASE + votes.milchmaeuse : MILCHMAEUSE_BASE,
-    MILCHMAEUSE_BASE
+    MILCHMAEUSE_BASE,
+    votes.loaded
   )
 
   // Live-Zähler ersetzen die statischen Werte.

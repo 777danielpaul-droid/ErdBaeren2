@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useMemo } from "react"
 
 const SECTORS = [
   {
@@ -71,72 +71,136 @@ const SECTORS = [
       { x: 140, y: 170, r: 8, c: "#99f6e4" },
     ],
   },
-];
+]
 
-const STAR_COUNT = 110;
-const STAR_SPREAD = 40;
-const BASE = 0.45;
-const RADIUS = 140;
+const STAR_COUNT = 110
+const STAR_SPREAD = 40
+const RADIUS = 140
 
 function rand(min, max) {
-  return min + Math.random() * (max - min);
+  return min + Math.random() * (max - min)
 }
 
 function makeSectorStars(sec) {
-  const tints = sec.starTints;
+  const tints = sec.starTints
   return Array.from({ length: STAR_COUNT }, () => {
-    const ang = Math.random() * Math.PI * 2;
-    const rad = Math.abs(rand(-1, 1)) * STAR_SPREAD + rand(0, 8);
-    const tint = tints[(Math.random() * tints.length) | 0];
-    const size = rand(0.6, 1.8) * rand(0.8, 1.3);
-    const baseA = rand(0.35, 0.7);
-    const tw = rand(0.25, 0.55);
-    const phase = Math.random() * Math.PI * 2;
-    const bg = tint.map((v) => Math.round(v * rand(0.85, 1.0))).join(",");
-    const x = RADIUS + Math.cos(ang) * rad;
-    const y = RADIUS + Math.sin(ang) * rad;
-    return { x, y, size, baseA, tw, phase, bg };
-  });
+    const ang = Math.random() * Math.PI * 2
+    const rad = Math.abs(rand(-1, 1)) * STAR_SPREAD + rand(0, 8)
+    const tint = tints[(Math.random() * tints.length) | 0]
+    const size = rand(0.6, 1.8) * rand(0.8, 1.3)
+    const baseA = rand(0.35, 0.7)
+    const tw = rand(0.25, 0.55)
+    const phase = Math.random() * Math.PI * 2
+    const bg = tint.map((v) => Math.round(v * rand(0.85, 1.0))).join(",")
+    const x = RADIUS + Math.cos(ang) * rad
+    const y = RADIUS + Math.sin(ang) * rad
+    return { x, y, size, baseA, tw, phase, bg }
+  })
 }
 
 function twinkle(star, t) {
-  const wave = Math.sin(t * star.tw + star.phase);
-  const a = Math.max(0.2, Math.min(1, star.baseA + wave * 0.35));
-  const r = Math.max(0.4, star.size * (0.85 + 0.15 * wave));
-  return { a, r };
+  const wave = Math.sin(t * star.tw + star.phase)
+  const a = Math.max(0.2, Math.min(1, star.baseA + wave * 0.35))
+  const r = Math.max(0.4, star.size * (0.85 + 0.15 * wave))
+  return { a, r }
+}
+
+// Canvas-Rendering für Sterne: 330 DOM-Elemente → 1 Canvas
+function SectorStars({ sec, stars, t }) {
+  const canvasRef = useRef(null)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    const size = 280
+
+    const draw = () => {
+      canvas.width = size * dpr
+      canvas.height = size * dpr
+      canvas.style.width = `${size}px`
+      canvas.style.height = `${size}px`
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+
+      ctx.clearRect(0, 0, size, size)
+
+      for (const s of stars) {
+        const { a, r } = twinkle(s, t)
+        ctx.beginPath()
+        ctx.fillStyle = `rgba(${s.bg},${a.toFixed(3)})`
+        ctx.arc(s.x, s.y, r, 0, Math.PI * 2)
+        ctx.fill()
+        if (r > 1.1) {
+          ctx.shadowColor = `rgba(${s.bg},${(a * 0.5).toFixed(3)})`
+          ctx.shadowBlur = r * 1.6
+          ctx.beginPath()
+          ctx.arc(s.x, s.y, r, 0, Math.PI * 2)
+          ctx.fill()
+          ctx.shadowBlur = 0
+        }
+      }
+
+      // Planeten
+      for (const p of sec.planets) {
+        ctx.save()
+        ctx.translate(p.x, p.y)
+        const grad = ctx.createRadialGradient(-p.r * 0.3, -p.r * 0.3, p.r * 0.1, 0, 0, p.r)
+        grad.addColorStop(0, `${p.c}`)
+        grad.addColorStop(1, `rgba(0,0,0,0.35)`)
+        ctx.fillStyle = grad
+        ctx.shadowColor = `${p.c}44`
+        ctx.shadowBlur = p.r * 1.2
+        ctx.beginPath()
+        ctx.arc(0, 0, p.r, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.restore()
+      }
+    }
+
+    draw()
+    return () => {}
+  }, [stars, sec.planets, t])
+
+  return <canvas ref={canvasRef} className="absolute inset-0" />
 }
 
 export default function SectorCanvas() {
-  const [hovered, setHovered] = useState(null);
-  const [tick, setTick] = useState(0);
-  const sectors = SECTORS.map((sec) => ({
-    sec,
-    stars: makeSectorStars(sec),
-  }));
+  const [hovered, setHovered] = useState(null)
+
+  // Sterne nur einmal generieren (memoisiert) — vermeidet Re-Generierung bei jedem Render.
+  const sectors = useMemo(
+    () => SECTORS.map((sec) => ({ sec, stars: makeSectorStars(sec) })),
+    []
+  )
+
+  // Canvas-Animation: tick-State erzwingt Re-render für Stern-Twinkle-Animation.
+  const [tick, setTick] = useState(0)
 
   useEffect(() => {
-    let raf;
-    let last = 0;
+    let raf
+    let last = 0
     const step = (now) => {
-      const dt = now - last || 0;
+      const dt = now - last || 0
       if (dt >= 50) {
-        setTick((n) => n + 1);
-        last = now;
+        setTick((n) => n + 1)
+        last = now
       }
-      raf = requestAnimationFrame(step);
-    };
-    raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
-  }, []);
+      raf = requestAnimationFrame(step)
+    }
+    raf = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(raf)
+  }, [])
 
-  const t = tick * 0.5;
+  const t = tick * 0.5
 
   return (
     <div aria-hidden="true" className="absolute inset-0 overflow-hidden pointer-events-none">
-      <style>{``}</style>
       {sectors.map(({ sec, stars }) => {
-        const isHovered = hovered === sec.id;
-        const scale = isHovered ? 1.45 : 1;
+        const isHovered = hovered === sec.id
+        const scale = isHovered ? 1.45 : 1
 
         return (
           <div
@@ -164,44 +228,7 @@ export default function SectorCanvas() {
               }}
             />
 
-            <div className="absolute inset-0">
-              {stars.map((s, i) => {
-                const { a, r } = twinkle(s, t);
-                return (
-                  <span
-                    key={`${sec.id}-s-${i}`}
-                    className="absolute rounded-full"
-                    style={{
-                      left: s.x,
-                      top: s.y,
-                      width: r * 2,
-                      height: r * 2,
-                      margin: `-${r}px 0 0 -${r}px`,
-                      background: `rgba(${s.bg},${a.toFixed(3)})`,
-                      boxShadow: r > 1.1 ? `0 0 ${r * 1.6}px rgba(${s.bg},${(a * 0.5).toFixed(3)})` : "none",
-                    }}
-                  />
-                );
-              })}
-            </div>
-
-            <div className="absolute inset-0">
-              {(sec.planets || []).map((p, i) => (
-                <span
-                  key={`${sec.id}-p-${i}`}
-                  className="absolute rounded-full pointer-events-none"
-                  style={{
-                    left: p.x,
-                    top: p.y,
-                    width: p.r * 2,
-                    height: p.r * 2,
-                    margin: `-${p.r}px 0 0 -${p.r}px`,
-                    background: `radial-gradient(circle at 35% 30%, ${p.c} 0%, rgba(0,0,0,0.35) 100%)`,
-                    boxShadow: `inset -${p.r * 0.4}px -${p.r * 0.3}px ${p.r * 0.6}px rgba(0,0,0,0.45), 0 0 ${p.r * 1.2}px ${p.c}44`,
-                  }}
-                />
-              ))}
-            </div>
+            <SectorStars sec={sec} stars={stars} t={t} />
 
             <div
               className="absolute left-2.5 top-2.5 transition-all duration-500 pointer-events-none"
@@ -230,8 +257,8 @@ export default function SectorCanvas() {
               />
             )}
           </div>
-        );
+        )
       })}
     </div>
-  );
+  )
 }

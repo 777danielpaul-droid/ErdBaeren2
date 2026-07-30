@@ -24,6 +24,7 @@ export const site = {
     },
     primaryCta: { label: { de: "Einsatzprotokoll lesen", en: "Read the field report" }, href: "#doktrin" },
     secondaryCta: { label: { de: "Feindanalyse", en: "Enemy analysis" }, href: "#konflikt" },
+    milchmaeuseBase: 17171,
     stats: [
       { value: { de: "3", en: "3" }, label: { de: "Anführer der ersten Stunde", en: "Leaders of the first hour" } },
       { value: { de: "1. Welle", en: "1st Wave" }, label: { de: "im Alleingang abgewehrt", en: "repelled single-handed" } },

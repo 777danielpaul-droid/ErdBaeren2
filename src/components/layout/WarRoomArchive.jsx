@@ -198,13 +198,13 @@ export default function WarRoomArchive() {
   const f = FACTIONS[active]
 
   const handleVote = async (key) => {
-    setActive(key)
     if (busy) return
     setBusy(true)
     try {
       await castVote(key)
+      setActive(key)
     } catch {
-      /* Fehler still */
+      /* Fehler still — Status bleibt unverändert */
     } finally {
       setBusy(false)
     }
