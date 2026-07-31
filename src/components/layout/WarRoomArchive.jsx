@@ -188,7 +188,7 @@ export default function WarRoomArchive() {
   const glowShadow = useTransform(glow, (g) => `0 0 ${30 + g * 70}px rgba(192,38,211,${g})`)
 
   return (
-    <section ref={ref} id="kriegskonsole" className="relative">
+    <section ref={ref} id="kriegskonsole" className="relative phase-gated">
       <div className="relative h-[280vh]">
         <div className="sticky top-0 h-screen overflow-y-auto sm:overflow-hidden">
 

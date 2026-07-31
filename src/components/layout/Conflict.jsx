@@ -5,7 +5,7 @@ import { T } from "../RunenText"
 export default function Conflict() {
   const c = site.conflict
   return (
-    <section id="konflikt" className="relative py-28 bg-ink/10">
+    <section id="konflikt" className="relative py-28 bg-ink/10 phase-gated">
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         <Reveal className="mb-14 max-w-3xl" variant="up">
           <p className="mono-label text-neon mb-4"><T en={c.eyebrow.en}>{c.eyebrow.de}</T></p>

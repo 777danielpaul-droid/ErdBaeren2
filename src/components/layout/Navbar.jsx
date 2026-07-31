@@ -28,9 +28,9 @@ export default function Navbar() {
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      className="fixed top-0 inset-x-0 z-50"
+      className="fixed top-0 inset-x-0 z-50 phase-gated"
     >
-      <nav className="backdrop-blur-md bg-ink/40 border-b border-white/10 glass">
+      <nav className="backdrop-blur-md bg-ink/40 border-b border-white/10 glass phase-gated">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-2 md:h-16 md:py-0 flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-0">
           <a href="#top" className="flex items-center gap-3 group">
             <span className="relative grid place-items-center w-8 h-8 rounded-md bg-neon/15 border border-neon/40">

@@ -27,7 +27,7 @@ export default function Battle() {
   } = useScrollRevealStage(ref)
 
   return (
-    <section id="schlacht" ref={ref} className="relative bg-ink/10 border-y border-white/5">
+    <section id="schlacht" ref={ref} className="relative bg-ink/10 border-y border-white/5 phase-gated">
       <div className="absolute inset-0 hud-grid opacity-40" aria-hidden="true" />
 
       {/* PIN-BÜHNE: sticky, füllt Viewport, läuft über lange Scroll-Strecke ab */}

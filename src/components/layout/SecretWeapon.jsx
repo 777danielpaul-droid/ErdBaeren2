@@ -27,7 +27,7 @@ export default function SecretWeapon() {
   } = useScrollRevealStage(ref)
 
   return (
-    <section id="geheimwaffe" ref={ref} className="relative bg-ink border-y border-white/5">
+    <section id="geheimwaffe" ref={ref} className="relative bg-ink border-y border-white/5 phase-gated">
       <div className="absolute inset-0 hud-grid opacity-40" aria-hidden="true" />
 
       {/* PIN-BÜHNE: sticky, füllt Viewport, läuft über lange Scroll-Strecke ab */}

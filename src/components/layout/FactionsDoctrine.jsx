@@ -144,7 +144,7 @@ function BattleVideo({ baseUrl }) {
 
 export default function FactionsDoctrine() {
   return (
-    <section id="fraktionen" className="relative z-20">
+    <section id="fraktionen" className="relative z-20 phase-gated">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 py-12 sm:py-20 relative z-20">
         <p className="mono-label text-gold mb-4">// FRAKTIONEN</p>
         <h2 className="font-display font-bold text-4xl sm:text-5xl tracking-tight mb-12">
