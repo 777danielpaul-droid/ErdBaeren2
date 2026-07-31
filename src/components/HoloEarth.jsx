@@ -1,11 +1,12 @@
 import { Suspense, useRef, useState, useEffect } from "react"
 import { Canvas } from "@react-three/fiber"
 import { useGLTF, useAnimations, OrbitControls, Float } from "@react-three/drei"
+import { asset } from "../lib/asset"
 
 // Lädt die animierte Erde (GLTF + Loop-Animation) aus /public/models.
 function EarthModel({ glitch }) {
   const group = useRef(null)
-  const { scene, animations } = useGLTF("/ErdBaeren2/models/scene.gltf")
+  const { scene, animations } = useGLTF(asset("/models/scene.gltf"))
   const { actions } = useAnimations(animations, group)
   const actionRef = useRef(null)
 
@@ -174,4 +175,4 @@ export default function HoloEarth() {
   )
 }
 
-useGLTF.preload("/ErdBaeren2/models/scene.gltf")
+useGLTF.preload(asset("/models/scene.gltf"))

@@ -4,13 +4,11 @@ import { site } from "../../data/content"
 import { getInitialTheme, toggleTheme } from "../../lib/theme"
 import { useLang } from "../RunenContext"
 import { useTimeline } from "../TimelineProvider"
-import TerminalModal from "../TerminalModal"
 
 const NEON = ["#c026d3", "#7c3aed", "#c9a227"]
 
-export default function Navbar() {
+export default function Navbar({ termOpen, setTermOpen }) {
   const [open, setOpen] = useState(false)
-  const [termOpen, setTermOpen] = useState(false)
   const [theme, setTheme] = useState(() => getInitialTheme())
   const { mode, cycle: cycleLang } = useLang()
   const [hover, setHover] = useState({})
@@ -60,7 +58,7 @@ export default function Navbar() {
           <div className="flex items-center justify-end gap-2">
             <button
               type="button"
-              onClick={() => setTermOpen(true)}
+              onClick={() => setTermOpen((v) => !v)}
               className="inline-flex mono-label bg-ink text-cyan border border-cyan/50 hover:bg-cyan/10 transition-colors px-3 py-1.5 rounded-sm"
             >
               Terminal
@@ -131,7 +129,7 @@ export default function Navbar() {
                 <li>
                   <button
                     type="button"
-                    onClick={() => { setOpen(false); setTermOpen(true) }}
+                    onClick={() => { setOpen(false); setTermOpen((v) => !v) }}
                     className="mono-label text-cyan"
                   >
                     Terminal
@@ -142,8 +140,6 @@ export default function Navbar() {
           )}
         </AnimatePresence>
       </nav>
-
-      <TerminalModal open={termOpen} onClose={() => setTermOpen(false)} />
     </motion.header>
   )
 }

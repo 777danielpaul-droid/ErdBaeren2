@@ -9,13 +9,16 @@ import Footer from "./components/layout/Footer"
 import SpaceStage from "./components/SpaceStage"
 import MoonLayer from "./components/MoonLayer"
 import CloudVolume from "./components/CloudVolume"
+import TerminalCard from "./components/TerminalCard"
 import { ScrollProgress } from "./components/motion/ScrollFX"
 import { TimelineProvider, useTimeline } from "./components/TimelineProvider"
 import { LangProvider } from "./components/RunenContext"
 import Intro from "./components/Intro"
+import { useState } from "react"
 
 function AppInner() {
   const { start } = useTimeline()
+  const [termOpen, setTermOpen] = useState(false)
   return (
     <LangProvider>
       <Intro onDone={start} />
@@ -23,7 +26,8 @@ function AppInner() {
       <SpaceStage />
       <CloudVolume />
       <ScrollProgress />
-      <Navbar />
+      <Navbar termOpen={termOpen} setTermOpen={setTermOpen} />
+      <TerminalCard open={termOpen} onClose={() => setTermOpen(false)} />
       <main>
         <Hero />
         <FactionsDoctrine />
