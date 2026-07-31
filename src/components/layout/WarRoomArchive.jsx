@@ -1,4 +1,4 @@
-import { useState, useRef } from "react"
+import { useState, useRef, useLayoutEffect } from "react"
 import { motion, useScroll, useTransform, AnimatePresence, useMotionValue } from "framer-motion"
 import Reveal from "../motion/Reveal"
 import { site } from "../../data/content"

@@ -13,8 +13,15 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
+          // React in eigenen Chunk, damit es geladen wird, bevor Fiber es referenziert
+          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
+            return 'react-vendor'
+          }
           if (id.includes('node_modules/three') || id.includes('@react-three')) {
             return 'three'
+          }
+          if (id.includes('node_modules/framer-motion')) {
+            return 'framer-motion'
           }
         },
       },
